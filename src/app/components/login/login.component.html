@@ -1,0 +1,141 @@
+<div class="content">
+  <div class="card-login">
+    <div
+      class="card-header bg-corhuila-v header-usco-card"
+      [ngClass]="selectedColor"
+    >
+      <div class="row">
+        <div class="col">
+          <img
+            title="USCO"
+            mat-card-image
+            src="assets/logo-horizontal-blanco.png"
+            class="img-fluid"
+          />
+        </div>
+      </div>
+      <hr class="punteada" />
+      <div class="row">
+        <div class="col p-2">
+          <h6 class="font-weight-bold text-white">INICIO DE SESIÓN</h6>
+        </div>
+      </div>
+    </div>
+    <div class="card-body text-center font-usco-gr">
+      <div class="container">
+        <form [formGroup]="formLogin">
+          <div class="row mt-3">
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <span matPrefix class="p-3"
+                  ><i class="fa-solid fa-user"></i
+                ></span>
+                <mat-label>Usuario</mat-label>
+                <input
+                  matInput
+                  formControlName="usuario"
+                  name="usuario"
+                  autocomplete="off"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <span matPrefix class="p-3"
+                  ><i class="fa-solid fa-lock"></i
+                ></span>
+                <mat-label>Contraseña</mat-label>
+                <input
+                  matInput
+                  [type]="hide ? 'password' : 'text'"
+                  formControlName="contrasenia"
+                  type="password"
+                  name="contrasenia"
+                  placeholder="Digite la clave"
+                  autocomplete="off"
+                />
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="hide = !hide"
+                  [attr.aria-label]="'Hide password'"
+                  [attr.aria-pressed]="hide"
+                >
+                  <mat-icon>{{
+                    hide ? "visibility_off" : "visibility"
+                  }}</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row mt-2 mb-4">
+            <div class="col">
+              <button
+                (click)="login()"
+                type="submit"
+                class="btn btn-corhuila-v"
+                [disabled]="!formLogin.valid"
+              >
+                Ingresar
+                <span
+                  *ngIf="cargando"
+                  class="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+              </button>
+            </div>
+          </div>
+          <div class="row mb-4">
+            <div class="col">
+              <a href="https://www.usco.edu.co/cambio_clave/" target="_blank"
+                ><small class="font-corhuila-p-as-2 font-weight-bold"
+                  >Recuperar contraseña</small
+                ></a
+              >
+            </div>
+          </div>
+          <div>
+            <small
+              ><b class="version"
+                >© {{ today | date : "yyyy" }} Oficina de Tecnologías de la
+                Información <br />
+                y las Comunicaciones - Versión 1</b
+              ></small
+            >
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col text-center">
+      <button
+        class="btn btn-corhuila-v mr-2"
+        (click)="setColor('bg-corhuila-v')"
+      >
+        General
+      </button>
+      <button
+        class="btn btn-corhuila-p-1 mr-2"
+        (click)="setColor('bg-corhuila-p-as-1')"
+      >
+        Principal 1
+      </button>
+      <button
+        class="btn btn-corhuila-p-2 mr-2"
+        (click)="setColor('bg-corhuila-p-as-2')"
+      >
+        Principal 2
+      </button>
+      <button
+        class="btn btn-corhuila-p-3 mr-2"
+        (click)="setColor('bg-corhuila-p-as-3')"
+      >
+        Principal 2
+      </button>
+    </div>
+  </div>
+</div>
