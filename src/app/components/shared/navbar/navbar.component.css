@@ -1,0 +1,62 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 250px;
+  background-color: #002f47;
+}
+
+:host ::ng-deep .mat-expansion-panel-body {
+  padding: 0px;
+}
+
+.sidenav-accordion {
+  width: 250px;
+  background-color: #002f47;
+  color: white;
+}
+
+.sidenav-accordion:hover {
+  width: 250px;
+  background-color: #006983;
+  color: white;
+}
+
+.list {
+  color: #fff;
+}
+
+.list:hover {
+  background-color: #006983;
+}
+
+.sidenav .mat-toolbar {
+  background: #00692e;
+  color: #fff;
+}
+
+.toolbar {
+  background: #009640;
+  color: #fff;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.disable_ripple:hover {
+  color: #006983;
+  background: currentColor !important;
+}
+
+::ng-deep .specific-class > .mat-expansion-indicator:after {
+  color: white;
+}
+
+#gradiante {
+  background-image: linear-gradient(#006983 20%, white 10%);
+}
+

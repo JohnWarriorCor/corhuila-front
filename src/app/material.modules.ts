@@ -20,6 +20,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   imports: [
@@ -43,6 +44,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatRadioModule,
     MatDialogModule,
     MatFormFieldModule,
+    MatNativeDateModule
   ],
   exports: [
     MatButtonModule,
@@ -65,6 +67,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatRadioModule,
     MatDialogModule,
     MatFormFieldModule,
+    MatNativeDateModule
+  ],
+  providers: [  
+    MatDatepickerModule,
+    MatNativeDateModule  
   ],
 })
 export class MaterialModules {}

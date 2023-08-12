@@ -1,0 +1,178 @@
+<mat-sidenav-container class="sidenav-container" id="page-container">
+  <mat-sidenav
+    #drawer
+    style="width: 281px"
+    *ngIf="navbarHiddenService.visibleSideBar"
+    class="sidenav"
+    fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+    #target
+  >
+    <mat-toolbar>
+      <span class="logo-lg"
+        ><b
+          ><img
+            class="img-fluid p-3"
+            src="assets/logo-horizontal-blanco.png" /></b
+      ></span>
+    </mat-toolbar>
+    <mat-nav-list>
+      <a class="list" mat-list-item [routerLink]="['/inicio']">
+        <h6 class="pl-2 item-principal text-white">
+          <i class="fas fa-home"></i> Inicio
+        </h6>
+      </a>
+      <a class="list" mat-list-item [routerLink]="['/institucion']">
+        <h6 class="pl-2 item-principal text-white">
+          <i class="fa-solid fa-building-columns"></i> Institución
+        </h6>
+      </a>
+    </mat-nav-list>
+    <mat-accordion>
+      <mat-expansion-panel
+        class="sidenav"
+        style="width: 280px"
+        (opened)="panelOpenState = true"
+        (closed)="panelOpenState = false"
+      >
+        <mat-expansion-panel-header class="disable_ripple specific-class">
+          <mat-panel-title>
+            <h6 class="text-white mt-2">
+              <i class="fa-solid fa-gear"></i> Configuración
+            </h6>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a
+            class="pl-5 sidenav-accordion"
+            mat-list-item
+            style="width: 300px"
+            [routerLink]="['/desarrollo']"
+            routerLinkActive="router-link-active"
+          >
+            <h6 class="text-white">
+              <i class="fa-solid fa-user-pen"></i> Registrar Persona
+            </h6>
+          </a>
+          <a
+            class="pl-5 sidenav-accordion"
+            mat-list-item
+            style="width: 300px"
+            [routerLink]="['/desarrollo']"
+            routerLinkActive="router-link-active"
+          >
+            <h6 class="text-white">
+              <i class="fa-solid fa-user-plus"></i> Crear Usuario
+            </h6>
+          </a>
+          <a
+            class="pl-5 sidenav-accordion"
+            mat-list-item
+            style="width: 300px"
+            [routerLink]="['/desarrollo']"
+            routerLinkActive="router-link-active"
+          >
+            <h6 class="text-white">
+              <i class="fa-solid fa-lock"></i> Contraseñas
+            </h6>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <mat-nav-list>
+      <a
+        class="list"
+        mat-list-item
+        [routerLink]="['/desarrollo']"
+        routerLinkActive="router-link-active"
+      >
+        <h6 class="pl-2 item-principal text-white">
+          <i class="fa-solid fa-earth-americas"></i> División política
+        </h6>
+      </a>
+      <a
+        class="list"
+        mat-list-item
+        [routerLink]="['/desarrollo']"
+        routerLinkActive="router-link-active"
+      >
+        <h6 class="pl-2 item-principal text-white">
+          <i class="fa-solid fa-chart-simple"></i> Reportes
+        </h6>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <!--  -->
+  <mat-sidenav-content (validarToken)="receiveMessage($event)">
+    <mat-toolbar class="toolbar">
+      <button
+        type="button"
+        class="btn btn-usco-vt m-1 text-white"
+        aria-label="Toggle sidenav"
+        (click)="toggle()"
+        *ngIf="isHandset$"
+      >
+        <i class="fas fa-bars"></i>
+      </button>
+      <h6 class="font-weight-bold">Administrador CORHUILA</h6>
+      <ul class="navbar-nav ml-auto cursor-select">
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle text-white"
+            id="navbarDropdownMenu"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <img
+              src="assets/foto-m.png"
+              width="40"
+              height="40"
+              class="rounded-circle d-inline-block align-top"
+              style="border: solid 3px white;"
+              alt="avatar image"
+            />
+            <span class="pl-2"
+              >{{ nombre | titlecase }} {{ apellido | titlecase }}</span
+            ></a
+          >
+          <div
+            class="dropdown-menu dropdown-menu-right dropdown-info"
+            aria-labelledby="navbarDropdownMenu"
+            id="gradiante"
+          >
+            <div class="text-center">
+              <a class="dropdown-info"
+                ><img
+                  src="assets/foto-m.png"
+                  class="rounded-circle z-depth-0"
+                  style="border: solid 3px white;"
+                  alt="avatar image"
+                  height="100"
+              /></a>
+              <a class="dropdown-item font-usco-default"
+                ><b> {{ nombre | titlecase }} {{ apellido | titlecase }}</b></a
+              >
+              <a class="dropdown-item font-usco-default"
+                >Dependencia u Oficina</a
+              >
+              <div class="dropdown-divider"></div>
+              <a class="dropdown"
+                ><button
+                  (click)="logout()"
+                  class="btn btn-corhuila-p-2"
+                  type="button"
+                >
+                  Cerrar Sesión
+                </button></a
+              >
+            </div>
+          </div>
+        </li>
+      </ul>
+    </mat-toolbar>
+    <ng-content (validarToken)="receiveMessage($event)"></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

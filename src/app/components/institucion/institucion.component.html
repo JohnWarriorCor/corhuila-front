@@ -1,0 +1,344 @@
+<app-navbar>
+  <div id="content-wrap" class="mt-3 mb-4 text-center">
+    <div class="card rounded-2 p-0 shadow-sm mt-5">
+      <div
+        class="card-header text-center ml-4 mr-4 cursor-select"
+        [routerLink]="['/inicio']"
+        routerLinkActive="router-link-active"
+      >
+        <h4 class="font-usco-default">
+          <strong>Institución</strong>
+        </h4>
+      </div>
+      <div class="card-body ls">
+        <div class="row pl-5 pr-5">
+          <div class="col">
+            <form>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Nit</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        id="nit"
+                        class="form_control"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Código IES</mat-label>
+                      <input matInput id="ies" class="form_control" required />
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>IES Padre</mat-label>
+                      <input
+                        matInput
+                        id="iesPadre"
+                        class="form_control"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Sector</mat-label>
+                      <mat-select id="sector">
+                        <mat-option [value]="null">NINGUNO</mat-option>
+                        <mat-option [value]="1">OFICIAL</mat-option>
+                        <mat-option [value]="2">PRIVADO</mat-option>
+                        <mat-option [value]="3">DESCONOCIDO</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Nombre de la Institución</mat-label>
+                      <input
+                        matInput
+                        class="form_control"
+                        type="text"
+                        id="nombre"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Carácter Académico</mat-label>
+                      <mat-select id="caracterAcademico">
+                        <mat-option [value]="null">NINGUNO</mat-option>
+                        <mat-option [value]="1"
+                          >INSTITUCIÓN TÉCNICA PROFESIONAL</mat-option
+                        >
+                        <mat-option [value]="2"
+                          >INSTITUCIÓN TECNOLÓGICA</mat-option
+                        >
+                        <mat-option [value]="3"
+                          >INSTITUCIÓN UNIVERSITARIA O ESCUELA
+                          TECNOLÓGICA</mat-option
+                        >
+                        <mat-option [value]="4">UNIVERSIDAD</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>País</mat-label>
+                      <mat-select id="pais">
+                        <mat-option [value]="null">NINGUNO</mat-option>
+                        <mat-option
+                          *ngFor="let pais of paisLocal"
+                          [value]="pais.codigo"
+                          (click)="obtenerDepartamentosPorPais(pais.codigo)"
+                          >{{ pais.nombre }}</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Departamento</mat-label>
+                      <mat-select id="departamento">
+                        <mat-option [value]="null">NINGUNO</mat-option>
+                        <mat-option
+                          *ngFor="let dep of departamentos"
+                          [value]="dep.codigo"
+                          (click)="
+                            obtenerMunicipiosPorDepartamento(dep.divipola)
+                          "
+                          >{{ dep.nombre }}</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Municipio</mat-label>
+                      <mat-select id="municipio">
+                        <mat-option [value]="null">NINGUNO</mat-option>
+                        <mat-option
+                          *ngFor="let mun of municipios"
+                          [value]="mun.codigo"
+                          >{{ mun.nombre }}</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Dirección</mat-label>
+                      <input
+                        matInput
+                        class="form_control"
+                        id="direccion"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Teléfonos</mat-label>
+                      <input
+                        matInput
+                        class="form_control"
+                        id="telefonos"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Página Web</mat-label>
+                      <input matInput id="web" class="form_control" required />
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Choose a date</mat-label>
+                      <input matInput [matDatepicker]="picker" />
+                      <mat-hint>MM/DD/YYYY</mat-hint>
+                      <mat-datepicker-toggle
+                        matIconSuffix
+                        [for]="picker"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Número de años de existencia</mat-label>
+                      <input
+                        matInput
+                        class="form_control"
+                        readonly
+                        id="existencia"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Estado</mat-label>
+                      <input
+                        matInput
+                        class="form_control"
+                        id="estado"
+                        readonly
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Nombre de la Norma</mat-label>
+                      <input
+                        matInput
+                        class="form_control"
+                        id="nombrenorma"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>¿Acreditada?</mat-label>
+                      <input
+                        matInput
+                        class="form_control"
+                        id="acreditada"
+                        readonly
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <!--   <div class="col">
+                  <div class="form-group mt-2">
+                    <div>
+                      <label class="file example-full-width">
+                        <input
+                          type="file"
+                          accept="application/pdf"
+                          id="exampleFormControlFile1"
+                          aria-label="file browser example"
+                        />
+                        <span class="file-custom text-left">{{nameFile}}</span>
+                      </label>
+                    </div>
+                  </div>
+                </div> -->
+              </div>
+              <hr />
+              <div class="row">
+                <div class="col text-center">
+                  <button type="button" class="btn btn-success mr-2">
+                    <i class="far fa-save"></i> Guardar
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-navbar>

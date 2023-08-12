@@ -1,1 +1,183 @@
-<p>inicio works!</p>
+<app-navbar>
+  <div class="container p-5">
+    <div class="row">
+      <div class="col">
+        <div
+          class="card mb-4 cursor-select card-usco-menu shadow"
+          [routerLink]="['/institucion']"
+        >
+          <div class="row">
+            <div class="col-md-4 text-center">
+              <img
+                class="rounded w-100 p-3 shadow filter-green"
+                src="assets/building-columns-solid.png"
+              />
+            </div>
+            <div class="col-md-8 mt-3 text-left p-0">
+              <div class="card-block pr-4">
+                <h6
+                  class="card-title text-left font-corhuila-p-ai-1 font-weight-bold cursor-select"
+                >
+                  Institución
+                </h6>
+                <p style="font-size: 11px">
+                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                  Facilis vitae eaque eum quos suscipit? Ullam omnis sit aperiam
+                  necessitatibus modi
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="card mb-4 cursor-select card-usco-menu shadow"
+          [routerLink]="['/desarrollo']"
+        >
+          <div class="row">
+            <div class="col-md-4 text-center">
+              <img
+                class="rounded w-100 p-3 shadow"
+                src="assets/earth-americas-solid.png"
+              />
+            </div>
+            <div class="col-md-8 mt-3 text-left p-0">
+              <div class="card-block pr-4">
+                <h6
+                  class="card-title text-left font-corhuila-p-ai-1 font-weight-bold cursor-select"
+                >
+                  División política
+                </h6>
+                <p style="font-size: 11px">
+                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                  Facilis vitae eaque eum quos suscipit? Ullam omnis sit aperiam
+                  necessitatibus modi
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div
+          class="card mb-4 cursor-select card-usco-menu shadow"
+          [routerLink]="['/desarrollo']"
+        >
+          <div class="row">
+            <div class="col-md-4 text-center">
+              <img
+                class="rounded w-100 p-3 shadow"
+                src="assets/gear-solid.png"
+              />
+            </div>
+            <div class="col-md-8 mt-3 text-left p-0">
+              <div class="card-block pr-4">
+                <h6
+                  class="card-title text-left font-corhuila-p-ai-1 font-weight-bold cursor-select"
+                >
+                  Configuración
+                </h6>
+                <p style="font-size: 11px">
+                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                  Facilis vitae eaque eum quos suscipit? Ullam omnis sit aperiam
+                  necessitatibus modi
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="card mb-4 cursor-select card-usco-menu shadow"
+          [routerLink]="['/desarrollo']"
+        >
+          <div class="row">
+            <div class="col-md-4 text-center">
+              <img
+                class="rounded w-100 p-3 shadow"
+                src="assets/chart-simple-solid.png"
+              />
+            </div>
+            <div class="col-md-8 mt-3 text-left p-0">
+              <div class="card-block pr-4">
+                <h6
+                  class="card-title text-left font-corhuila-p-ai-1 font-weight-bold cursor-select"
+                >
+                  Reportes
+                </h6>
+                <p style="font-size: 11px">
+                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                  Facilis vitae eaque eum quos suscipit? Ullam omnis sit aperiam
+                  necessitatibus modi
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--   <div class="row mt-5">
+      <div class="col-md-6 col-lg-4">
+        <div
+          class="card mx-30 cursor-select card-usco-menu"
+          [routerLink]="['/institucion']"
+        >
+          <img
+            src="assets/building-columns-solid.png"
+            class="card-img-top p-4 shadow"
+          />
+          <div class="card-body">
+            <h5 class="card-title font-corhuila-p-ai-1 font-weight-bold">
+              Institución
+            </h5>
+            <hr class="dashed" />
+            <p class="card-text font-usco-gr font-usco-default">
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Facilis
+              vitae eaque eum quos suscipit? Ullam omnis sit aperiam
+              necessitatibus modi
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4 mb-5">
+        <div
+          class="card mx-30 cursor-select card-usco-menu"
+          [routerLink]="['/desarrollo']"
+        >
+          <img src="assets/gear-solid.png" class="card-img-top p-4 shadow" />
+          <div class="card-body">
+            <h5 class="card-title font-corhuila-p-ai-1 font-weight-bold">
+              Configuración
+            </h5>
+            <hr class="dashed" />
+            <p class="card-text font-usco-gr font-usco-default">
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Facilis
+              vitae eaque eum quos suscipit? Ullam omnis sit aperiam
+              necessitatibus modi
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4 mb-5">
+        <div
+          class="card mx-30 cursor-select card-usco-menu"
+          [routerLink]="['/desarrollo']"
+        >
+          <img
+            src="assets/earth-americas-solid.png"
+            class="card-img-top p-4 shadow"
+          />
+          <div class="card-body">
+            <h5 class="card-title font-corhuila-p-ai-1 font-weight-bold">
+              División política
+            </h5>
+            <hr class="dashed" />
+            <p class="card-text font-usco-gr font-usco-default">
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Facilis
+              vitae eaque eum quos suscipit? Ullam omnis sit aperiam
+              necessitatibus modi
+            </p>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</app-navbar>

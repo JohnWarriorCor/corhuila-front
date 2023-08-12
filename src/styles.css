@@ -175,6 +175,9 @@ h6 {
 }
 
 /*----------------------------------------*/
+.example-full-width {
+  width: 100%;
+}
 .font-corh-gr {
   color: #4e6470;
   font-family: "Poppins", sans-serif;
@@ -289,9 +292,9 @@ h6 {
   height: 2.5rem;
   padding: 0.5rem 1rem;
   line-height: 1.5;
-  color: #dfd4a6;
-  content: "Foto";
-  background-color: #8f141b;
+  color: white;
+  content: "Seleccionar";
+  background-color: #006983;
   border: 0.075rem solid #ddd;
   border-radius: 0 0.25rem 0.25rem 0;
 }

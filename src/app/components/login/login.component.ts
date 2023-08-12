@@ -17,51 +17,23 @@ import Swal from 'sweetalert2';
 })
 export class LoginComponent implements OnInit {
   selectedColor: string = 'default';
-  usuario: Usuario = new Usuario;
+  usuario: Usuario;
   hide = true;
   ver = true;
   today = new Date();
   cargando: boolean = false;
   formLogin!: FormGroup;
-  uid: string = '';
 
   constructor(
     public authService: AuthService,
     private router: Router,
     private formBuilder: FormBuilder
-  ) {}
+  ) {
+    this.usuario = new Usuario();
+  }
 
   ngOnInit() {
     this.crearFormularioLogin();
-
-    // Si el usuario ya ha iniciado sesión, redirigirlo a la página de inicio o de token según el caso
-    if (this.authService.isAuthenticated()) {
-      if (this.authService.codigoverificacion != null) {
-        // Mostrar un mensaje de notificación si ya se ha iniciado sesión con un token de verificación
-        const Toast = Swal.mixin({
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 2000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer);
-            toast.addEventListener('mouseleave', Swal.resumeTimer);
-          },
-        });
-
-        Toast.fire({
-          icon: 'info',
-          title: 'Ya se ha iniciado sesión.',
-        });
-
-        // Redirigir al usuario a la página de inicio
-        this.router.navigate(['/inicio']);
-      } else {
-        // Redirigir al usuario a la página de inicio o de token según el valor del parámetro web
-        this.router.navigate(['/inicio']);
-      }
-    }
   }
 
   private crearFormularioLogin(): void {
@@ -77,36 +49,9 @@ export class LoginComponent implements OnInit {
 
   // Método para realizar el inicio de sesión del usuario
   login(): void {
-    console.log('Entra login::',  this.formLogin.get('usuario')!.value);
     this.cargando = true;
     this.usuario.username = this.formLogin.get('usuario')!.value;
     this.usuario.password = this.formLogin.get('contrasenia')!.value;
-    console.log(this.usuario);
-
-    // Validar que no se ingresen campos de inicio de sesión vacíos
-    if (this.usuario.username == null || this.usuario.password == null) {
-      const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.addEventListener('mouseenter', Swal.stopTimer);
-          toast.addEventListener('mouseleave', Swal.resumeTimer);
-        },
-      });
-
-      // Mostrar un mensaje de error si se ingresan campos vacíos
-      Toast.fire({
-        icon: 'error',
-        title: 'Error de inicio de sesión',
-        text: 'Usuario o contraseña vacía',
-      });
-
-      this.cargando = false;
-      return;
-    }
 
     // Realizar la solicitud de inicio de sesión al servicio authService
     this.authService.login(this.usuario).subscribe(
@@ -119,7 +64,7 @@ export class LoginComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Inicio de sesión exitoso.',
-          confirmButtonColor: '#8f141b',
+          confirmButtonColor: '#006983',
           confirmButtonText: 'Listo',
           showClass: {
             popup: 'slide-top',

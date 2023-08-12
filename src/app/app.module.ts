@@ -10,12 +10,18 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './components/login/login.component';
 import { InicioComponent } from './components/inicio/inicio.component';
+import { NavbarComponent } from './components/shared/navbar/navbar.component';
+import { DesarrolloComponent } from './components/desarrollo/desarrollo.component';
+import { InstitucionComponent } from './components/institucion/institucion.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    InicioComponent
+    InicioComponent,
+    NavbarComponent,
+    DesarrolloComponent,
+    InstitucionComponent
   ],
   imports: [
     BrowserModule,
