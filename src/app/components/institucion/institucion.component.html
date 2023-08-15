@@ -13,7 +13,7 @@
       <div class="card-body ls">
         <div class="row pl-5 pr-5">
           <div class="col">
-            <form>
+            <form [formGroup]="formInstitucion">
               <div class="row">
                 <div class="col">
                   <div class="form-group">
@@ -26,6 +26,7 @@
                         matInput
                         type="text"
                         id="nit"
+                        formControlName="nit"
                         class="form_control"
                         required
                       />
@@ -39,22 +40,10 @@
                       appearance="outline"
                     >
                       <mat-label>Código IES</mat-label>
-                      <input matInput id="ies" class="form_control" required />
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>IES Padre</mat-label>
                       <input
                         matInput
-                        id="iesPadre"
+                        id="ies"
+                        formControlName="ies"
                         class="form_control"
                         required
                       />
@@ -67,12 +56,66 @@
                       class="example-full-width"
                       appearance="outline"
                     >
+                      <mat-label>Código IES Padre</mat-label>
+                      <input
+                        formControlName="iesPadre"
+                        matInput
+                        id="iesPadre"
+                        class="form_control"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Naturaleza Jurídica</mat-label>
+                      <mat-select id="naturaleza" formControlName="naturaleza">
+                        <mat-option
+                          *ngFor="let listado of listadoNaturalezaJuridica"
+                          [value]="listado.codigo"
+                          >{{ listado.nombre }}</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
                       <mat-label>Sector</mat-label>
-                      <mat-select id="sector">
-                        <mat-option [value]="null">NINGUNO</mat-option>
-                        <mat-option [value]="1">OFICIAL</mat-option>
-                        <mat-option [value]="2">PRIVADO</mat-option>
-                        <mat-option [value]="3">DESCONOCIDO</mat-option>
+                      <mat-select id="sector" formControlName="sector">
+                        <mat-option
+                          *ngFor="let listado of listadoSector"
+                          [value]="listado.codigo"
+                          >{{ listado.nombre }}</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Carácter Académico</mat-label>
+                      <mat-select id="caracter" formControlName="caracter">
+                        <mat-option
+                          *ngFor="let listado of listadoCaracterAcademico"
+                          [value]="listado.codigo"
+                          >{{ listado.nombre }}</mat-option
+                        >
                       </mat-select>
                     </mat-form-field>
                   </div>
@@ -89,34 +132,11 @@
                       <input
                         matInput
                         class="form_control"
+                        formControlName="nombre"
                         type="text"
                         id="nombre"
                         required
                       />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Carácter Académico</mat-label>
-                      <mat-select id="caracterAcademico">
-                        <mat-option [value]="null">NINGUNO</mat-option>
-                        <mat-option [value]="1"
-                          >INSTITUCIÓN TÉCNICA PROFESIONAL</mat-option
-                        >
-                        <mat-option [value]="2"
-                          >INSTITUCIÓN TECNOLÓGICA</mat-option
-                        >
-                        <mat-option [value]="3"
-                          >INSTITUCIÓN UNIVERSITARIA O ESCUELA
-                          TECNOLÓGICA</mat-option
-                        >
-                        <mat-option [value]="4">UNIVERSIDAD</mat-option>
-                      </mat-select>
                     </mat-form-field>
                   </div>
                 </div>
@@ -129,8 +149,7 @@
                       appearance="outline"
                     >
                       <mat-label>País</mat-label>
-                      <mat-select id="pais">
-                        <mat-option [value]="null">NINGUNO</mat-option>
+                      <mat-select id="pais" formControlName="pais">
                         <mat-option
                           *ngFor="let pais of paisLocal"
                           [value]="pais.codigo"
@@ -148,11 +167,13 @@
                       appearance="outline"
                     >
                       <mat-label>Departamento</mat-label>
-                      <mat-select id="departamento">
-                        <mat-option [value]="null">NINGUNO</mat-option>
+                      <mat-select
+                        id="departamento"
+                        formControlName="departamento"
+                      >
                         <mat-option
                           *ngFor="let dep of departamentos"
-                          [value]="dep.codigo"
+                          [value]="dep.divipola"
                           (click)="
                             obtenerMunicipiosPorDepartamento(dep.divipola)
                           "
@@ -169,11 +190,10 @@
                       appearance="outline"
                     >
                       <mat-label>Municipio</mat-label>
-                      <mat-select id="municipio">
-                        <mat-option [value]="null">NINGUNO</mat-option>
+                      <mat-select id="municipio" formControlName="municipio">
                         <mat-option
                           *ngFor="let mun of municipios"
-                          [value]="mun.codigo"
+                          [value]="mun.divipola"
                           >{{ mun.nombre }}</mat-option
                         >
                       </mat-select>
@@ -192,6 +212,7 @@
                       <input
                         matInput
                         class="form_control"
+                        formControlName="direccion"
                         id="direccion"
                         required
                       />
@@ -208,7 +229,8 @@
                       <input
                         matInput
                         class="form_control"
-                        id="telefonos"
+                        formControlName="telefono"
+                        id="telefono"
                         required
                       />
                     </mat-form-field>
@@ -221,7 +243,13 @@
                       appearance="outline"
                     >
                       <mat-label>Página Web</mat-label>
-                      <input matInput id="web" class="form_control" required />
+                      <input
+                        matInput
+                        id="url"
+                        class="form_control"
+                        formControlName="url"
+                        required
+                      />
                     </mat-form-field>
                   </div>
                 </div>
@@ -233,81 +261,35 @@
                       class="example-full-width"
                       appearance="outline"
                     >
-                      <mat-label>Choose a date</mat-label>
-                      <input matInput [matDatepicker]="picker" />
+                      <mat-label>Norma de creación</mat-label>
+                      <input
+                        matInput
+                        formControlName="norma"
+                        class="form_control"
+                        id="norma"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Fecha de la norma de creación</mat-label>
+                      <input
+                        matInput
+                        [matDatepicker]="picker"
+                        formControlName="fechaNorma"
+                      />
                       <mat-hint>MM/DD/YYYY</mat-hint>
                       <mat-datepicker-toggle
                         matIconSuffix
                         [for]="picker"
                       ></mat-datepicker-toggle>
                       <mat-datepicker #picker></mat-datepicker>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Número de años de existencia</mat-label>
-                      <input
-                        matInput
-                        class="form_control"
-                        readonly
-                        id="existencia"
-                        required
-                      />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Estado</mat-label>
-                      <input
-                        matInput
-                        class="form_control"
-                        id="estado"
-                        readonly
-                      />
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Nombre de la Norma</mat-label>
-                      <input
-                        matInput
-                        class="form_control"
-                        id="nombrenorma"
-                        required
-                      />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>¿Acreditada?</mat-label>
-                      <input
-                        matInput
-                        class="form_control"
-                        id="acreditada"
-                        readonly
-                      />
                     </mat-form-field>
                   </div>
                 </div>
@@ -330,12 +312,125 @@
               <hr />
               <div class="row">
                 <div class="col text-center">
-                  <button type="button" class="btn btn-success mr-2">
+                  <button
+                    type="button"
+                    class="btn btn-success mr-2"
+                    [disabled]="!formInstitucion.valid"
+                    (click)="generarInstitucion()"
+                  >
                     <i class="far fa-save"></i> Guardar
                   </button>
                 </div>
               </div>
             </form>
+            <div class="row mt-5">
+              <div class="col">
+                <table
+                  mat-table
+                  [dataSource]="dataSource"
+                  class="table table-hover shadow"
+                >
+                  <ng-container matColumnDef="index">
+                    <th mat-header-cell *matHeaderCellDef>N°</th>
+                    <td
+                      mat-cell
+                      *matCellDef="let element; let i = index"
+                      class="font-sm-usco"
+                    >
+                      {{ dataSource.filteredData.indexOf(element) + 1 }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="nit">
+                    <th mat-header-cell *matHeaderCellDef>Nit</th>
+                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                      {{ element.nit }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="ies">
+                    <th mat-header-cell *matHeaderCellDef>Ies</th>
+                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                      {{ element.ies }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="iespadre">
+                    <th mat-header-cell *matHeaderCellDef>Ies Padre</th>
+                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                      {{ element.iesPadre }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="nombre">
+                    <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                      {{ element.nombre }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="municipio">
+                    <th mat-header-cell *matHeaderCellDef>Municipio</th>
+                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                      {{ element.municipio.nombre }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="naturaleza">
+                    <th mat-header-cell *matHeaderCellDef>Naturaleza</th>
+                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                      {{ element.municipio.nombre }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="sector">
+                    <th mat-header-cell *matHeaderCellDef>Sector</th>
+                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                      {{ element.municipio.nombre }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="caracter">
+                    <th mat-header-cell *matHeaderCellDef>Caracter</th>
+                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                      {{ element.municipio.nombre }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="norma">
+                    <th mat-header-cell *matHeaderCellDef>Norma</th>
+                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                      {{ element.norma }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="fechanorma">
+                    <th mat-header-cell *matHeaderCellDef>Fecha Norma</th>
+                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                      {{ element.fechaNorma | date : "dd/MM/yyyy" }}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="estado">
+                    <th mat-header-cell *matHeaderCellDef>Estado</th>
+                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                      <button
+                        *ngIf="element.estado === 1"
+                        class="btn btn-success btn-sm mr-2"
+                        title="Activo"
+                      >
+                        <i class="fas fa-check-square"></i>
+                      </button>
+                      <button
+                        *ngIf="element.estado === 0"
+                        class="btn btn-danger btn-sm mr-2"
+                        title="Inactivo"
+                      >
+                        <i class="fa-solid fa-xmark"></i>
+                      </button>
+                    </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr
+                    mat-row
+                    *matRowDef="let row; columns: displayedColumns"
+                  ></tr>
+                </table>
+                <mat-paginator
+                  [pageSizeOptions]="[10, 20, 30]"
+                  showFirstLastButtons
+                ></mat-paginator>
+              </div>
+            </div>
           </div>
         </div>
       </div>

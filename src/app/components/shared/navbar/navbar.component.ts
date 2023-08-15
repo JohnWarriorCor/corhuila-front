@@ -33,7 +33,9 @@ export class NavbarComponent implements OnInit {
     public auth: AuthService,
     private router: Router,
     public navbarHiddenService: NavbarHiddenService
-  ) {}
+  ) {
+    console.log('Usuario: ', JSON.stringify(this.auth.user));
+  }
 
   receiveMessage($event: any) {
     this.rol = $event;

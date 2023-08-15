@@ -13,6 +13,7 @@ import { InicioComponent } from './components/inicio/inicio.component';
 import { NavbarComponent } from './components/shared/navbar/navbar.component';
 import { DesarrolloComponent } from './components/desarrollo/desarrollo.component';
 import { InstitucionComponent } from './components/institucion/institucion.component';
+import { PersonaComponent } from './components/configuracion/persona/persona.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { InstitucionComponent } from './components/institucion/institucion.compo
     InicioComponent,
     NavbarComponent,
     DesarrolloComponent,
-    InstitucionComponent
+    InstitucionComponent,
+    PersonaComponent
   ],
   imports: [
     BrowserModule,

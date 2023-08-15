@@ -21,6 +21,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   imports: [
@@ -44,7 +45,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatRadioModule,
     MatDialogModule,
     MatFormFieldModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatTableModule
   ],
   exports: [
     MatButtonModule,
@@ -67,7 +69,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatRadioModule,
     MatDialogModule,
     MatFormFieldModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatTableModule
   ],
   providers: [  
     MatDatepickerModule,

@@ -4,6 +4,7 @@ import { LoginComponent } from './components/login/login.component';
 import { InicioComponent } from './components/inicio/inicio.component';
 import { DesarrolloComponent } from './components/desarrollo/desarrollo.component';
 import { InstitucionComponent } from './components/institucion/institucion.component';
+import { PersonaComponent } from './components/configuracion/persona/persona.component';
 
 const routes: Routes = [
   //COMPONENTES DEL SISTEMA
@@ -11,6 +12,8 @@ const routes: Routes = [
 
   { path: 'inicio', component: InicioComponent },
   { path: 'institucion', component: InstitucionComponent },
+
+  { path: 'persona', component: PersonaComponent },
 
   { path: 'desarrollo', component: DesarrolloComponent },
 
