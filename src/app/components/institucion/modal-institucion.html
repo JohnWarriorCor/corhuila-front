@@ -1,0 +1,202 @@
+<div mat-dialog-title class="bg-corhuila-p-as-2" style="padding-top: 0">
+  <div class="row mb-2">
+    <div class="col">
+      <h4 class="text-white">
+        <i class="fa-solid fa-circle-info"></i> Información complementaria
+      </h4>
+    </div>
+    <div class="col text-right text-white font-weight-bold">
+      <i class="fa-solid fa-xmark" mat-dialog-close></i>
+    </div>
+  </div>
+</div>
+<mat-dialog-content>
+  <div class="container">
+    <form>
+      <div class="row mt-4">
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width">
+              <mat-label>Nit</mat-label>
+              <input
+                matInput
+                type="text"
+                [value]="data.institucion.nit"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width">
+              <mat-label>Código IES</mat-label>
+              <input matInput [value]="data.institucion.ies" readonly />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width">
+              <mat-label>Código IES Padre</mat-label>
+              <input matInput [value]="data.institucion.iesPadre" readonly />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width">
+              <mat-label>Naturaleza Jurídica</mat-label>
+              <input
+                matInput
+                [value]="data.institucion.naturaleza.nombre"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width">
+              <mat-label>Sector</mat-label>
+              <input
+                matInput
+                [value]="data.institucion.sector.nombre"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width">
+              <mat-label>Carácter Académico</mat-label>
+              <input
+                matInput
+                [value]="data.institucion.caracter.nombre"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width">
+              <mat-label>Nombre de la Institución</mat-label>
+              <input
+                matInput
+                [value]="data.institucion.nombre"
+                type="text"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width">
+              <mat-label>País</mat-label>
+              <input matInput [value]="data.institucion.pais.nombre" readonly />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width">
+              <mat-label>Departamento</mat-label>
+              <input
+                matInput
+                [value]="data.institucion.departamento.nombre"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width">
+              <mat-label>Municipio</mat-label>
+              <input
+                matInput
+                [value]="data.institucion.municipio.nombre"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width">
+              <mat-label>Dirección</mat-label>
+              <input matInput [value]="data.institucion.direccion" readonly />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width">
+              <mat-label>Teléfonos</mat-label>
+              <input matInput [value]="data.institucion.telefono" readonly />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width">
+              <mat-label>Página Web</mat-label>
+              <input matInput [value]="data.institucion.url" readonly />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width">
+              <mat-label>Norma de creación</mat-label>
+              <input matInput [value]="data.institucion.norma" readonly />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width">
+              <mat-label>Fecha de la norma de creación</mat-label>
+              <input matInput [value]="data.institucion.fechaNorma | date: 'dd/MM/yyyy'" readonly />
+            </mat-form-field>
+          </div>
+        </div>
+        <!--   <div class="col">
+        <div class="form-group mt-2">
+          <div>
+            <label class="file example-full-width">
+              <input
+                type="file"
+                accept="application/pdf"
+                id="exampleFormControlFile1"
+                aria-label="file browser example"
+              />
+              <span class="file-custom text-left">{{nameFile}}</span>
+            </label>
+          </div>
+        </div>
+      </div> -->
+      </div>
+    </form>
+  </div>
+</mat-dialog-content>
+<!-- <hr />
+<div mat-dialog-actions align="center">
+  <div class="row text-right p-2">
+    <div class="col"></div>
+  </div>
+</div>
+ -->

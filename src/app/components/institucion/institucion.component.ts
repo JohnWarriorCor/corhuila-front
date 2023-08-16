@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  Inject,
+  ElementRef,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -62,6 +68,8 @@ export class InstitucionComponent {
     'estado',
   ];
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  // Referencia al elemento div oculto
+  @ViewChild('hiddenDiv') hiddenDiv!: ElementRef;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -104,6 +112,18 @@ export class InstitucionComponent {
     });
   }
 
+  // Función para mostrar el div oculto y desplazarse hacia él
+  showAndScrollToHiddenDiv() {
+    this.hiddenDiv.nativeElement.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  openDialog(element: any): void {
+    const dialogRef = this.dialog.open(ModalInstitucion, {
+      width: '60%',
+      data: { institucion: element },
+    });
+  }
+
   obtenerListadoInstitucion() {
     this.institucionService.obtenerListadoInstitucion().subscribe((data) => {
       this.listadoInstitucion = data;
@@ -143,12 +163,11 @@ export class InstitucionComponent {
     institucion.url = this.formInstitucion.get('url')!.value;
     institucion.norma = this.formInstitucion.get('norma')!.value;
     institucion.fechaNorma = this.formInstitucion.get('fechaNorma')!.value;
-
-    if (this.editar) {
+    this.registrarInstitucio(institucion);
+    /* if (this.editar) {
       this.actualizarInstitucion(institucion);
     } else {
-      this.registrarInstitucio(institucion);
-    }
+    } */
   }
 
   registrarInstitucio(institucion: Institucion) {
@@ -163,9 +182,9 @@ export class InstitucionComponent {
             timer: 2500,
           });
           this.obtenerListadoInstitucion();
-          /* this.cancelar();
-          this.crearFormularioVigilante();
-          this.obtenerVigilanstes(); */
+          this.cancelar();
+          this.crearFormInstitucion();
+          this.obtenerListadoInstitucion();
         } else {
           this.mensajeError();
         }
@@ -174,7 +193,7 @@ export class InstitucionComponent {
     );
   }
 
-  actualizarInstitucion(institucion: Institucion) {
+  /* actualizarInstitucion(institucion: Institucion) {
     this.institucionService.actualizarInstitucion(institucion).subscribe(
       (data) => {
         if (data > 0) {
@@ -186,14 +205,52 @@ export class InstitucionComponent {
             confirmButtonColor: '#8f141b',
             timer: 2500,
           });
-          /* this.cancelar();
-          this.obtenerVigilanstes(); */
+          this.cancelar();
+          this.obtenerListadoInstitucion();
         } else {
           this.mensajeError();
         }
       },
       (err) => this.fError(err)
     );
+  } */
+
+  editarInstitucion(element: Institucion) {
+    this.showAndScrollToHiddenDiv();
+    this.editar = true;
+    this.formInstitucion.get('codigo')!.setValue(element.codigo);
+    this.formInstitucion.get('nit')!.setValue(element.nit);
+    this.formInstitucion.get('ies')!.setValue(element.ies);
+    this.formInstitucion.get('iesPadre')!.setValue(element.iesPadre);
+    this.formInstitucion.get('naturaleza')!.setValue(element.naturaleza.codigo);
+    this.formInstitucion.get('sector')!.setValue(element.sector.codigo);
+    this.formInstitucion.get('caracter')!.setValue(element.caracter.codigo);
+    this.formInstitucion.get('nombre')!.setValue(element.nombre);
+    this.formInstitucion.get('pais')!.setValue(element.pais.codigo);
+    this.obtenerDepartamentosPorPais(element.pais.codigo);
+    this.formInstitucion
+      .get('departamento')!
+      .setValue(element.departamento.divipola);
+    this.obtenerMunicipiosPorDepartamento(element.departamento.divipola);
+    this.formInstitucion.get('municipio')!.setValue(element.municipio.divipola);
+    this.formInstitucion.get('direccion')!.setValue(element.direccion);
+    this.formInstitucion.get('telefono')!.setValue(element.telefono);
+    this.formInstitucion.get('url')!.setValue(element.url);
+    this.formInstitucion.get('norma')!.setValue(element.norma);
+    this.formInstitucion.get('fechaNorma')!.setValue(element.fechaNorma);
+    this.formInstitucion.get('estado')!.setValue(element.estado);
+  }
+
+  cancelar() {
+    this.formInstitucion.reset();
+    this.obtenerPaises();
+    this.obtenerPaisLocal();
+    this.obtenerListadoCaracterAcademico();
+    this.obtenerListadoNaturalezaJuridica();
+    this.obtenerListadoSector();
+    this.crearFormInstitucion();
+    this.obtenerListadoInstitucion();
+    this.editar = false;
   }
 
   obtenerListadoCaracterAcademico() {
@@ -277,5 +334,87 @@ export class InstitucionComponent {
     } else {
       this.mensajeError();
     }
+  }
+}
+
+//// MODAL
+
+@Component({
+  selector: 'modal-institucion',
+  templateUrl: 'modal-institucion.html',
+  styleUrls: ['./institucion.component.css'],
+})
+export class ModalInstitucion implements OnInit {
+  paises: Pais[] = [];
+  departamentos: Departamento[] = [];
+  municipios: Municipio[] = [];
+  paisLocal: Pais[] = [];
+  listadoCaracterAcademico: CaracterAcademico[] = [];
+  listadoNaturalezaJuridica: NaturalezaJuridica[] = [];
+  listadoSector: Sector[] = [];
+
+  constructor(
+    public dialogRef: MatDialogRef<ModalInstitucion>,
+    public dialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public ubicacionService: UbicacionService,
+    public institucionService: InstitucionService
+  ) {}
+
+  ngOnInit() {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  obtenerListadoCaracterAcademico() {
+    this.institucionService
+      .obtenerListadoCaracterAcademico()
+      .subscribe((data) => {
+        this.listadoCaracterAcademico = data;
+      });
+  }
+
+  obtenerListadoNaturalezaJuridica() {
+    this.institucionService
+      .obtenerListadoNaturalezaJuridica()
+      .subscribe((data) => {
+        this.listadoNaturalezaJuridica = data;
+      });
+  }
+
+  obtenerListadoSector() {
+    this.institucionService.obtenerListadoSector().subscribe((data) => {
+      this.listadoSector = data;
+    });
+  }
+
+  obtenerPaises() {
+    this.ubicacionService.obtenerPaises().subscribe((data) => {
+      this.paises = data;
+    });
+  }
+
+  obtenerPaisLocal() {
+    this.ubicacionService.obtenerPaisLocal().subscribe((data) => {
+      this.paisLocal = data;
+    });
+  }
+
+  obtenerDepartamentosPorPais(codigo: number) {
+    this.municipios = [];
+    this.ubicacionService
+      .obtenerDepartamentosPorPais(codigo)
+      .subscribe((data) => {
+        this.departamentos = data;
+      });
+  }
+
+  obtenerMunicipiosPorDepartamento(codigo: string) {
+    this.ubicacionService
+      .obtenerMunicipiosPorDepartamento(codigo)
+      .subscribe((data) => {
+        this.municipios = data;
+      });
   }
 }

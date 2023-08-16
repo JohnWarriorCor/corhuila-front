@@ -12,7 +12,7 @@ import { LoginComponent } from './components/login/login.component';
 import { InicioComponent } from './components/inicio/inicio.component';
 import { NavbarComponent } from './components/shared/navbar/navbar.component';
 import { DesarrolloComponent } from './components/desarrollo/desarrollo.component';
-import { InstitucionComponent } from './components/institucion/institucion.component';
+import { InstitucionComponent, ModalInstitucion } from './components/institucion/institucion.component';
 import { PersonaComponent } from './components/configuracion/persona/persona.component';
 
 @NgModule({
@@ -23,7 +23,8 @@ import { PersonaComponent } from './components/configuracion/persona/persona.com
     NavbarComponent,
     DesarrolloComponent,
     InstitucionComponent,
-    PersonaComponent
+    PersonaComponent,
+    ModalInstitucion
   ],
   imports: [
     BrowserModule,
@@ -33,6 +34,9 @@ import { PersonaComponent } from './components/configuracion/persona/persona.com
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule
+  ],
+  entryComponents: [
+    ModalInstitucion
   ],
   providers: [],
   bootstrap: [AppComponent]
