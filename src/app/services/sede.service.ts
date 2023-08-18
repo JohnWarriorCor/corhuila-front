@@ -5,16 +5,14 @@ import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
-import { Pais } from '../models/pais';
-import { Departamento } from '../models/departamento';
-import { Municipio } from '../models/municipio';
-import { CabecerasCentrosPoblados } from '../models/cabeceras-centros-poblados';
+import { Sede } from '../models/sede';
+import { SedeTipo } from '../models/sede-tipo';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UbicacionService {
-  private url: string = `${environment.URL_BACKEND}/ubicacion`;
+export class SedeService {
+  private url: string = `${environment.URL_BACKEND}/sede`;
   private httpHeaders = new HttpHeaders({ 'Content-type': 'application/json' });
 
   userLogeado: String = this.authservice.user.username;
@@ -44,9 +42,9 @@ export class UbicacionService {
     return false;
   }
 
-  obtenerPaises(): Observable<Pais[]> {
+  obtenerListadoTiposSedes(): Observable<SedeTipo[]> {
     return this.http
-      .get<Pais[]>(`${this.url}/obtener-paises`, {
+      .get<SedeTipo[]>(`${this.url}/obtener-listado-tipo-sedes`, {
         headers: this.aggAutorizacionHeader(),
       })
       .pipe(
@@ -59,9 +57,9 @@ export class UbicacionService {
       );
   }
 
-  obtenerPaisLocal(): Observable<Pais[]> {
+  obtenerListadoSedes(): Observable<Sede[]> {
     return this.http
-      .get<Pais[]>(`${this.url}/obtener-pais-local`, {
+      .get<Sede[]>(`${this.url}/obtener-listado-sedes`, {
         headers: this.aggAutorizacionHeader(),
       })
       .pipe(
@@ -74,24 +72,15 @@ export class UbicacionService {
       );
   }
 
-  obtenerDepartamentosPorPais(codigo: number): Observable<Departamento[]> {
-    return this.http.get<Departamento[]>(
-      `${this.url}/obtener-departamentos-por-pais/${codigo}`,
-      { headers: this.aggAutorizacionHeader() }
-    );
+  registrarSede(sede: Sede): Observable<number> {
+    return this.http.post<number>(`${this.url}/registrar-sede`, sede, {
+      headers: this.aggAutorizacionHeader(),
+    });
   }
 
-  obtenerMunicipiosPorDepartamento(codigo: string): Observable<Municipio[]> {
-    return this.http.get<Municipio[]>(
-      `${this.url}/obtener-municipios-por-departamento/${codigo}`,
-      { headers: this.aggAutorizacionHeader() }
-    );
-  }
-
-  obtenerCcpPorMunicipio(codigo: string): Observable<CabecerasCentrosPoblados[]> {
-    return this.http.get<CabecerasCentrosPoblados[]>(
-      `${this.url}/obtener-ccp-por-municipio/${codigo}`,
-      { headers: this.aggAutorizacionHeader() }
-    );
+  actualizarSede(sede: Sede): Observable<number> {
+    return this.http.put<number>(`${this.url}/actualizar-sede`, sede, {
+      headers: this.aggAutorizacionHeader(),
+    });
   }
 }

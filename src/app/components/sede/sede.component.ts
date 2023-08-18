@@ -28,59 +28,45 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Departamento } from 'src/app/models/departamento';
 import { Municipio } from '../../models/municipio';
 import { InstitucionService } from 'src/app/services/institucion.service';
-import { CaracterAcademico } from 'src/app/models/caracter-academico';
-import { NaturalezaJuridica } from 'src/app/models/naturaleza-juridica';
-import { Sector } from 'src/app/models/sector';
 import { Institucion } from 'src/app/models/institucion';
 import { CabecerasCentrosPoblados } from 'src/app/models/cabeceras-centros-poblados';
+import { SedeTipo } from 'src/app/models/sede-tipo';
+import { SedeService } from 'src/app/services/sede.service';
+import { Sede } from 'src/app/models/sede';
 
 @Component({
-  selector: 'app-institucion',
-  templateUrl: './institucion.component.html',
-  styleUrls: ['./institucion.component.css'],
+  selector: 'app-sede',
+  templateUrl: './sede.component.html',
+  styleUrls: ['./sede.component.css'],
 })
-export class InstitucionComponent {
+export class SedeComponent {
   editar: boolean = false;
   nameFile: string = 'Archivo: pdf';
   paises: Pais[] = [];
   departamentos: Departamento[] = [];
   municipios: Municipio[] = [];
   paisLocal: Pais[] = [];
-  listadoCaracterAcademico: CaracterAcademico[] = [];
-  listadoNaturalezaJuridica: NaturalezaJuridica[] = [];
-  listadoSector: Sector[] = [];
   listadoCcp: CabecerasCentrosPoblados[] = [];
   listadoInstitucion: Institucion[] = [];
+  institucion: Institucion[] = [];
+  listadoTipoSede: SedeTipo[] = [];
+  listadoSede: Sede[] = [];
 
-  formInstitucion!: FormGroup;
+  formSede!: FormGroup;
 
-  dataSource = new MatTableDataSource<Institucion>([]);
+  dataSource = new MatTableDataSource<Sede>([]);
   displayedColumns: string[] = [
     'index',
     'nit',
-    'ies',
-    'iespadre',
-    'nombre',
-    'ccp',
-    'naturaleza',
-    'sector',
-    'caracter',
-    'estado',
+    'institucion',
+    'sede',
+    'ubicacion',
+    'dirección',
+    'telefono',
+    'tipo',
+    'fecha',
+    'opciones',
   ];
-  /* displayedColumns: string[] = [
-    'index',
-    'nit',
-    'ies',
-    'iespadre',
-    'nombre',
-    'ccp',
-    'naturaleza',
-    'sector',
-    'caracter',
-    'norma',
-    'fechanorma',
-    'estado',
-  ]; */
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   // Referencia al elemento div oculto
   @ViewChild('hiddenDiv') hiddenDiv!: ElementRef;
@@ -89,6 +75,7 @@ export class InstitucionComponent {
     private formBuilder: FormBuilder,
     public ubicacionService: UbicacionService,
     public institucionService: InstitucionService,
+    public sedeService: SedeService,
     public dialog: MatDialog,
     private authService: AuthService,
     private router: Router
@@ -96,23 +83,17 @@ export class InstitucionComponent {
     if (this.authService.validacionToken()) {
       this.obtenerPaises();
       this.obtenerPaisLocal();
-      this.obtenerListadoCaracterAcademico();
-      this.obtenerListadoNaturalezaJuridica();
-      this.obtenerListadoSector();
-      this.crearFormInstitucion();
-      this.obtenerListadoInstitucion();
+      this.crearFormSede();
+      this.obtenerListadoSedes();
+      this.obtenerInstitucion();
+      this.obtenerListadoTiposSedes();
     }
   }
 
-  private crearFormInstitucion(): void {
-    this.formInstitucion = this.formBuilder.group({
+  private crearFormSede(): void {
+    this.formSede = this.formBuilder.group({
       codigo: new FormControl(''),
       nit: new FormControl('', Validators.required),
-      ies: new FormControl('', Validators.required),
-      iesPadre: new FormControl('', Validators.required),
-      naturaleza: new FormControl('', Validators.required),
-      sector: new FormControl('', Validators.required),
-      caracter: new FormControl('', Validators.required),
       nombre: new FormControl('', Validators.required),
       pais: new FormControl('', Validators.required),
       departamento: new FormControl('', Validators.required),
@@ -120,9 +101,7 @@ export class InstitucionComponent {
       ccp: new FormControl('', Validators.required),
       direccion: new FormControl('', Validators.required),
       telefono: new FormControl('', Validators.required),
-      url: new FormControl('', Validators.required),
-      norma: new FormControl('', Validators.required),
-      fechaNorma: new FormControl('', Validators.required),
+      tipo: new FormControl('', Validators.required),
       estado: new FormControl(''),
     });
   }
@@ -132,64 +111,46 @@ export class InstitucionComponent {
     this.hiddenDiv.nativeElement.scrollIntoView({ behavior: 'smooth' });
   }
 
-  openDialog(element: any): void {
+  /*  openDialog(element: any): void {
     const dialogRef = this.dialog.open(ModalInstitucion, {
       width: '60%',
       data: { institucion: element },
     });
   }
+ */
 
-  obtenerListadoInstitucion() {
-    this.institucionService.obtenerListadoInstitucion().subscribe((data) => {
-      this.listadoInstitucion = data;
-      console.log(this.listadoInstitucion);
-      this.dataSource = new MatTableDataSource<Institucion>(data);
+  obtenerListadoSedes() {
+    this.sedeService.obtenerListadoSedes().subscribe((data) => {
+      this.listadoSede = data;
+      this.dataSource = new MatTableDataSource<Sede>(data);
       this.paginator.firstPage();
       this.dataSource.paginator = this.paginator;
     });
   }
 
-  generarInstitucion(): void {
-    let institucion: Institucion = new Institucion();
-    institucion.nit = this.formInstitucion.get('nit')!.value;
-    institucion.ies = this.formInstitucion.get('ies')!.value;
-    institucion.iesPadre = this.formInstitucion.get('iesPadre')!.value;
-    let naturalezaJuridica: NaturalezaJuridica = new NaturalezaJuridica();
-    naturalezaJuridica.codigo = this.formInstitucion.get('naturaleza')!.value;
-    institucion.naturaleza = naturalezaJuridica;
-    let sector: Sector = new Sector();
-    sector.codigo = this.formInstitucion.get('sector')!.value;
-    institucion.sector = sector;
-    let caracterAcademico: CaracterAcademico = new CaracterAcademico();
-    caracterAcademico.codigo = this.formInstitucion.get('caracter')!.value;
-    institucion.caracter = caracterAcademico;
-    institucion.nombre = this.formInstitucion.get('nombre')!.value;
-    /* let pais: Pais = new Pais();
-    pais.codigo = this.formInstitucion.get('pais')!.value;
-    institucion.pais = pais;
-    let departamento: Departamento = new Departamento();
-    departamento.divipola = this.formInstitucion.get('departamento')!.value;
-    institucion.departamento = departamento;
-    let municipio: Municipio = new Municipio();
-    municipio.divipola = this.formInstitucion.get('municipio')!.value;
-    institucion.municipio = municipio; */
+  generarSede(): void {
+    let sede: Sede = new Sede();
+    sede.codigo = this.formSede.get('codigo')!.value;
+    sede.nit = this.formSede.get('nit')!.value;
+    sede.nombre = this.formSede.get('nombre')!.value;
     let ccp: CabecerasCentrosPoblados = new CabecerasCentrosPoblados();
-    ccp.divipola = this.formInstitucion.get('ccp')!.value;
-    institucion.ccp = ccp;
-    institucion.direccion = this.formInstitucion.get('direccion')!.value;
-    institucion.telefono = this.formInstitucion.get('telefono')!.value;
-    institucion.url = this.formInstitucion.get('url')!.value;
-    institucion.norma = this.formInstitucion.get('norma')!.value;
-    institucion.fechaNorma = this.formInstitucion.get('fechaNorma')!.value;
-    this.registrarInstitucio(institucion);
-    /* if (this.editar) {
-      this.actualizarInstitucion(institucion);
+    ccp.divipola = this.formSede.get('ccp')!.value;
+    sede.ccp = ccp;
+    sede.direccion = this.formSede.get('direccion')!.value;
+    sede.telefono = this.formSede.get('telefono')!.value;
+    let tipo: SedeTipo = new SedeTipo();
+    tipo.codigo = this.formSede.get('tipo')!.value;
+    sede.sedeTipo = tipo;
+    sede.estado = this.formSede.get('estado')!.value;
+    if (this.editar) {
+      this.actualizarSede(sede);
     } else {
-    } */
+      this.registrarSede(sede);
+    }
   }
 
-  registrarInstitucio(institucion: Institucion) {
-    this.institucionService.registrarInstitucion(institucion).subscribe(
+  registrarSede(sede: Sede) {
+    this.sedeService.registrarSede(sede).subscribe(
       (data) => {
         if (data > 0) {
           Swal.fire({
@@ -199,10 +160,10 @@ export class InstitucionComponent {
             showConfirmButton: false,
             timer: 2500,
           });
-          this.obtenerListadoInstitucion();
+          this.obtenerListadoSedes();
           this.cancelar();
-          this.crearFormInstitucion();
-          this.obtenerListadoInstitucion();
+          this.crearFormSede();
+          this.obtenerListadoSedes();
         } else {
           this.mensajeError();
         }
@@ -211,88 +172,69 @@ export class InstitucionComponent {
     );
   }
 
-  /* actualizarInstitucion(institucion: Institucion) {
-    this.institucionService.actualizarInstitucion(institucion).subscribe(
+  actualizarSede(sede: Sede) {
+    this.sedeService.actualizarSede(sede).subscribe(
       (data) => {
         if (data > 0) {
           Swal.fire({
             icon: 'success',
             title: 'Actualizado',
             text: '¡Operación exitosa!',
-            showConfirmButton: true,
-            confirmButtonColor: '#8f141b',
-            timer: 2500,
+            showConfirmButton: false,
           });
           this.cancelar();
-          this.obtenerListadoInstitucion();
+          this.obtenerListadoSedes();
         } else {
           this.mensajeError();
         }
       },
       (err) => this.fError(err)
     );
-  } */
+  }
 
-  editarInstitucion(element: Institucion) {
+  editarSede(element: Sede) {
     this.showAndScrollToHiddenDiv();
     this.editar = true;
-    this.formInstitucion.get('codigo')!.setValue(element.codigo);
-    this.formInstitucion.get('nit')!.setValue(element.nit);
-    this.formInstitucion.get('ies')!.setValue(element.ies);
-    this.formInstitucion.get('iesPadre')!.setValue(element.iesPadre);
-    this.formInstitucion.get('naturaleza')!.setValue(element.naturaleza.codigo);
-    this.formInstitucion.get('sector')!.setValue(element.sector.codigo);
-    this.formInstitucion.get('caracter')!.setValue(element.caracter.codigo);
-    this.formInstitucion.get('nombre')!.setValue(element.nombre);
-    this.formInstitucion.get('pais')!.setValue(element.pais.codigo);
+    this.formSede.get('codigo')!.setValue(element.codigo);
+    this.formSede.get('nit')!.setValue(element.nit);
+    this.formSede.get('nombre')!.setValue(element.nombre);
+    this.formSede.get('pais')!.setValue(element.pais.codigo);
     this.obtenerDepartamentosPorPais(element.pais.codigo);
-    this.formInstitucion
-      .get('departamento')!
-      .setValue(element.departamento.divipola);
+    this.formSede.get('departamento')!.setValue(element.departamento.divipola);
     this.obtenerMunicipiosPorDepartamento(element.departamento.divipola);
-    this.formInstitucion.get('municipio')!.setValue(element.municipio.divipola);
+    this.formSede.get('municipio')!.setValue(element.municipio.divipola);
     this.obtenerCcpPorMunicipio(element.municipio.divipola);
-    this.formInstitucion.get('ccp')!.setValue(element.ccp.divipola);
-    this.formInstitucion.get('direccion')!.setValue(element.direccion);
-    this.formInstitucion.get('telefono')!.setValue(element.telefono);
-    this.formInstitucion.get('url')!.setValue(element.url);
-    this.formInstitucion.get('norma')!.setValue(element.norma);
-    this.formInstitucion.get('fechaNorma')!.setValue(element.fechaNorma);
-    this.formInstitucion.get('estado')!.setValue(element.estado);
+    this.formSede.get('ccp')!.setValue(element.ccp.divipola);
+    this.formSede.get('direccion')!.setValue(element.direccion);
+    this.formSede.get('telefono')!.setValue(element.telefono);
+    this.formSede.get('tipo')!.setValue(element.sedeTipo.codigo);
+    this.formSede.get('estado')!.setValue(element.estado);
+  }
+
+  eliminarSede() {
+    let sede: Sede = new Sede();
+    sede.codigo = this.formSede.get('codigo')!.value;
+    sede.nit = this.formSede.get('nit')!.value;
+    sede.nombre = this.formSede.get('nombre')!.value;
+    let ccp: CabecerasCentrosPoblados = new CabecerasCentrosPoblados();
+    ccp.divipola = this.formSede.get('ccp')!.value;
+    sede.ccp = ccp;
+    sede.direccion = this.formSede.get('direccion')!.value;
+    sede.telefono = this.formSede.get('telefono')!.value;
+    let tipo: SedeTipo = new SedeTipo();
+    tipo.codigo = this.formSede.get('tipo')!.value;
+    sede.sedeTipo = tipo;
+    sede.estado = 0;
+    this.actualizarSede(sede);
   }
 
   cancelar() {
-    this.formInstitucion.reset();
+    this.formSede.reset();
     this.obtenerPaises();
     this.obtenerPaisLocal();
-    this.obtenerListadoCaracterAcademico();
-    this.obtenerListadoNaturalezaJuridica();
-    this.obtenerListadoSector();
-    this.crearFormInstitucion();
-    this.obtenerListadoInstitucion();
+    this.crearFormSede();
+    this.obtenerListadoSedes();
     this.editar = false;
-  }
-
-  obtenerListadoCaracterAcademico() {
-    this.institucionService
-      .obtenerListadoCaracterAcademico()
-      .subscribe((data) => {
-        this.listadoCaracterAcademico = data;
-      });
-  }
-
-  obtenerListadoNaturalezaJuridica() {
-    this.institucionService
-      .obtenerListadoNaturalezaJuridica()
-      .subscribe((data) => {
-        this.listadoNaturalezaJuridica = data;
-      });
-  }
-
-  obtenerListadoSector() {
-    this.institucionService.obtenerListadoSector().subscribe((data) => {
-      this.listadoSector = data;
-    });
   }
 
   obtenerPaises() {
@@ -331,6 +273,18 @@ export class InstitucionComponent {
     });
   }
 
+  obtenerInstitucion() {
+    this.institucionService.obtenerInstitucion().subscribe((data) => {
+      this.institucion = data;
+    });
+  }
+
+  obtenerListadoTiposSedes() {
+    this.sedeService.obtenerListadoTiposSedes().subscribe((data) => {
+      this.listadoTipoSede = data;
+    });
+  }
+
   mensajeSuccses() {
     Swal.fire({
       icon: 'success',
@@ -366,10 +320,10 @@ export class InstitucionComponent {
 
 //// MODAL
 
-@Component({
+/* @Component({
   selector: 'modal-institucion',
-  templateUrl: 'modal-institucion.html',
-  styleUrls: ['./institucion.component.css'],
+  templateUrl: '../institucion/modal-institucion.html',
+  styleUrls: ['./sede.component.css'],
 })
 export class ModalInstitucion implements OnInit {
   paises: Pais[] = [];
@@ -452,4 +406,6 @@ export class ModalInstitucion implements OnInit {
       this.listadoCcp = data;
     });
   }
+
 }
+ */

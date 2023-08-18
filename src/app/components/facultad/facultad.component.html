@@ -7,7 +7,7 @@
         routerLinkActive="router-link-active"
       >
         <h4 #hiddenDiv class="font-usco-default">
-          <strong>Institución</strong>
+          <strong>Facultad</strong>
         </h4>
       </div>
       <div class="card-body ls">
@@ -15,6 +15,23 @@
           <div class="col">
             <form [formGroup]="formInstitucion">
               <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Institucion</mat-label>
+                      <mat-select id="naturaleza" formControlName="naturaleza">
+                        <mat-option
+                          *ngFor="let listado of listadoNaturalezaJuridica"
+                          [value]="listado.codigo"
+                          >{{ listado.nombre }}</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
                 <div class="col">
                   <div class="form-group">
                     <mat-form-field
@@ -394,7 +411,9 @@
                 </td>
               </ng-container>
               <ng-container matColumnDef="ccp">
-                <th mat-header-cell *matHeaderCellDef>Ubicación</th>
+                <th mat-header-cell *matHeaderCellDef>
+                  Cabecera Municipal o Centro Poblado
+                </th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
                   {{ element.municipio.nombre }}
                 </td>
@@ -446,11 +465,7 @@
                   >
                     <i class="fa-solid fa-square-minus fa-xs"></i>
                   </button>
-                  <button
-                    class="btn btn-info btn-sm mr-2"
-                    title="Informacion"
-                    (click)="openDialog(element)"
-                  >
+                  <button class="btn btn-info btn-sm mr-2" title="Informacion">
                     <i class="fa-solid fa-circle-info fa-xs"></i>
                   </button>
                   <button

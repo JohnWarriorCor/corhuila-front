@@ -3,7 +3,7 @@
     <div class="card rounded-2 p-0 shadow-sm mt-5">
       <div
         class="card-header text-center ml-4 mr-4 cursor-select"
-        [routerLink]="['/inicio']"
+        [routerLink]="['/configuracion']"
         routerLinkActive="router-link-active"
       >
         <h4 class="font-usco-default">
@@ -13,7 +13,7 @@
       <div class="card-body ls">
         <div class="row pl-5 pr-5">
           <div class="col">
-            <form>
+            <form [formGroup]="formPersona">
               <div class="row mb-2">
                 <div class="col text-left">
                   <h6>Datos personales:</h6>
@@ -32,6 +32,7 @@
                         #input
                         maxlength="16"
                         type="number"
+                        formControlName="identificacion"
                         required
                       />
                       <button matSuffix mat-icon-button>
@@ -50,7 +51,7 @@
                       appearance="outline"
                     >
                       <mat-label>Tipo de documento</mat-label>
-                      <mat-select id="sector">
+                      <mat-select formControlName="identificacionTipo">
                         <mat-option
                           *ngFor="let tipoId of tipoIndentificacion"
                           [value]="tipoId.codigo"
@@ -68,7 +69,11 @@
                       appearance="outline"
                     >
                       <mat-label>Fecha de expedicion</mat-label>
-                      <input matInput [matDatepicker]="picker" />
+                      <input
+                        matInput
+                        [matDatepicker]="picker"
+                        formControlName="fechaExpedicion"
+                      />
                       <mat-hint>MM/DD/AAAA</mat-hint>
                       <mat-datepicker-toggle
                         matIconSuffix
@@ -87,7 +92,7 @@
                       appearance="outline"
                     >
                       <mat-label>Lugar de expedición</mat-label>
-                      <mat-select id="municipio">
+                      <mat-select formControlName="lugarExpedicion">
                         <mat-option [value]="null">NINGUNO</mat-option>
                         <mat-option
                           *ngFor="let mun of municipios"
@@ -105,12 +110,7 @@
                       appearance="outline"
                     >
                       <mat-label>Nombres</mat-label>
-                      <input
-                        matInput
-                        id="iesPadre"
-                        class="form_control"
-                        required
-                      />
+                      <input matInput formControlName="nombre" required />
                     </mat-form-field>
                   </div>
                 </div>
@@ -121,12 +121,7 @@
                       appearance="outline"
                     >
                       <mat-label>Apellidos</mat-label>
-                      <input
-                        matInput
-                        id="iesPadre"
-                        class="form_control"
-                        required
-                      />
+                      <input matInput formControlName="apellido" required />
                     </mat-form-field>
                   </div>
                 </div>
@@ -139,7 +134,7 @@
                       appearance="outline"
                     >
                       <mat-label>Sexo biológico</mat-label>
-                      <mat-select id="sector">
+                      <mat-select formControlName="sexo">
                         <mat-option
                           *ngFor="let genero of generos"
                           [value]="genero.codigo"
@@ -156,7 +151,11 @@
                       appearance="outline"
                     >
                       <mat-label>Fecha de nacimiento</mat-label>
-                      <input matInput [matDatepicker]="picker1" />
+                      <input
+                        matInput
+                        [matDatepicker]="picker1"
+                        formControlName="fechaNacimiento"
+                      />
                       <mat-hint>MM/DD/AAAA</mat-hint>
                       <mat-datepicker-toggle
                         matIconSuffix
@@ -173,7 +172,7 @@
                       appearance="outline"
                     >
                       <mat-label>Grupo sanguíneo</mat-label>
-                      <mat-select id="sector">
+                      <mat-select formControlName="grupoSanguineo">
                         <mat-option
                           *ngFor="let grupo of gruposSanguineos"
                           [value]="grupo.codigo"
@@ -190,7 +189,7 @@
                       appearance="outline"
                     >
                       <mat-label>Estado civil</mat-label>
-                      <mat-select id="sector">
+                      <mat-select formControlName="estadoCivil">
                         <mat-option
                           *ngFor="let estado of estadosCivil"
                           [value]="estado.codigo"
@@ -215,7 +214,7 @@
                       appearance="outline"
                     >
                       <mat-label>País residencia</mat-label>
-                      <mat-select id="pais">
+                      <mat-select formControlName="pais">
                         <mat-option
                           *ngFor="let pais of paisLocal"
                           [value]="pais.codigo"
@@ -233,7 +232,7 @@
                       appearance="outline"
                     >
                       <mat-label>Departamento residencia</mat-label>
-                      <mat-select id="departamento">
+                      <mat-select formControlName="departamento">
                         <mat-option
                           *ngFor="let dep of departamentos"
                           [value]="dep.codigo"
@@ -253,12 +252,31 @@
                       appearance="outline"
                     >
                       <mat-label>Municipio residencia</mat-label>
-                      <mat-select id="municipio">
+                      <mat-select formControlName="municipio">
                         <mat-option [value]="null">NINGUNO</mat-option>
                         <mat-option
                           *ngFor="let mun of municipios"
                           [value]="mun.codigo"
                           >{{ mun.nombre }}</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label
+                        >Cabecera Municipale o Centro Poblado</mat-label
+                      >
+                      <mat-select formControlName="ccp">
+                        <mat-option
+                          *ngFor="let ccp of listadoCcp"
+                          [value]="ccp.divipola"
+                          >{{ ccp.nombre }}</mat-option
                         >
                       </mat-select>
                     </mat-form-field>
@@ -273,12 +291,7 @@
                       appearance="outline"
                     >
                       <mat-label>Dirección</mat-label>
-                      <input
-                        matInput
-                        class="form_control"
-                        id="direccion"
-                        required
-                      />
+                      <input matInput formControlName="direccion" required />
                     </mat-form-field>
                   </div>
                 </div>
@@ -289,12 +302,7 @@
                       appearance="outline"
                     >
                       <mat-label>Barrio</mat-label>
-                      <input
-                        matInput
-                        class="form_control"
-                        id="direccion"
-                        required
-                      />
+                      <input matInput formControlName="barrio" required />
                     </mat-form-field>
                   </div>
                 </div>
@@ -305,7 +313,7 @@
                       appearance="outline"
                     >
                       <mat-label>Estrato</mat-label>
-                      <mat-select id="municipio">
+                      <mat-select formControlName="estrato">
                         <mat-option
                           *ngFor="let est of estrato"
                           [value]="est.codigo"
@@ -326,8 +334,7 @@
                       <mat-label>Teléfono movil</mat-label>
                       <input
                         matInput
-                        class="form_control"
-                        id="telefonos"
+                        formControlName="telefonoMovil"
                         required
                       />
                     </mat-form-field>
@@ -340,12 +347,7 @@
                       appearance="outline"
                     >
                       <mat-label>Teléfono fijo</mat-label>
-                      <input
-                        matInput
-                        class="form_control"
-                        id="telefonos"
-                        required
-                      />
+                      <input matInput formControlName="telefonoFijo" required />
                     </mat-form-field>
                   </div>
                 </div>
@@ -358,8 +360,7 @@
                       <mat-label>Correo personal</mat-label>
                       <input
                         matInput
-                        class="form_control"
-                        id="telefonos"
+                        formControlName="correoPersonal"
                         required
                       />
                     </mat-form-field>
@@ -380,7 +381,7 @@
                       appearance="outline"
                     >
                       <mat-label>Grupo étnico</mat-label>
-                      <mat-select id="pais">
+                      <mat-select formControlName="grupoEtnico">
                         <mat-option
                           *ngFor="let grupo of grupoEtnico"
                           [value]="grupo.codigo"
@@ -397,7 +398,18 @@
                       appearance="outline"
                     >
                       <mat-label>Pueblo indigena</mat-label>
-                      <mat-select id="departamento">
+                      <!-- <mat-select
+                        *ngIf="formPersona.get('grupoEtnico')!.value !== 1"
+                        id="departamento"
+                        disabled
+                      >
+                        <mat-option
+                          *ngFor="let pueblo of puebloIndigena"
+                          [value]="pueblo.codigo"
+                          >{{ pueblo.nombre }}</mat-option
+                        >
+                      </mat-select> -->
+                      <mat-select formControlName="puebloIndigena">
                         <mat-option
                           *ngFor="let pueblo of puebloIndigena"
                           [value]="pueblo.codigo"
@@ -414,7 +426,7 @@
                       appearance="outline"
                     >
                       <mat-label>Comunidad negra</mat-label>
-                      <mat-select id="municipio">
+                      <mat-select formControlName="comunidadNegra">
                         <mat-option
                           *ngFor="let comunidad of comunidadNegra"
                           [value]="comunidad.codigo"
@@ -433,7 +445,7 @@
                       appearance="outline"
                     >
                       <mat-label>Persona discapacidad</mat-label>
-                      <mat-select id="pais">
+                      <mat-select formControlName="personaDiscapacidad">
                         <mat-option
                           *ngFor="let persona of personaDiscapacidad"
                           [value]="persona.codigo"
@@ -450,7 +462,7 @@
                       appearance="outline"
                     >
                       <mat-label>Tipo discapacidad</mat-label>
-                      <mat-select id="departamento">
+                      <mat-select formControlName="discapacidadTipo">
                         <mat-option
                           *ngFor="let discapacidad of discapacidadTipo"
                           [value]="discapacidad.codigo"
@@ -467,7 +479,7 @@
                       appearance="outline"
                     >
                       <mat-label>Talento excepcional</mat-label>
-                      <mat-select id="municipio">
+                      <mat-select formControlName="talentoExepcional">
                         <mat-option
                           *ngFor="let talento of talentoExepcional"
                           [value]="talento.codigo"
@@ -494,8 +506,7 @@
                       <mat-label>Nombre completo</mat-label>
                       <input
                         matInput
-                        class="form_control"
-                        id="nombrenorma"
+                        formControlName="nombreFamiliar"
                         required
                       />
                     </mat-form-field>
@@ -510,8 +521,7 @@
                       <mat-label>Teléfono</mat-label>
                       <input
                         matInput
-                        class="form_control"
-                        id="acreditada"
+                        formControlName="telefonoFamiliar"
                         readonly
                       />
                     </mat-form-field>
@@ -525,27 +535,10 @@
                       class="example-full-width"
                       appearance="outline"
                     >
-                      <mat-label>Teléfono móvil</mat-label>
-                      <input
-                        matInput
-                        class="form_control"
-                        id="acreditada"
-                        readonly
-                      />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
                       <mat-label>Lugar de residencia</mat-label>
                       <input
                         matInput
-                        class="form_control"
-                        id="acreditada"
+                        formControlName="residenciaFamiliar"
                         readonly
                       />
                     </mat-form-field>
@@ -560,8 +553,7 @@
                       <mat-label>Dirección</mat-label>
                       <input
                         matInput
-                        class="form_control"
-                        id="nombrenorma"
+                        formControlName="direccionFamiliar"
                         required
                       />
                     </mat-form-field>
@@ -595,7 +587,7 @@
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="nit">
-                    <th mat-header-cell *matHeaderCellDef>Nit</th>
+                    <th mat-header-cell *matHeaderCellDef>Identificación</th>
                     <td
                       mat-cell
                       *matCellDef="let element"
@@ -603,7 +595,7 @@
                     ></td>
                   </ng-container>
                   <ng-container matColumnDef="ies">
-                    <th mat-header-cell *matHeaderCellDef>Ies</th>
+                    <th mat-header-cell *matHeaderCellDef>Nombres</th>
                     <td
                       mat-cell
                       *matCellDef="let element"
@@ -611,7 +603,7 @@
                     ></td>
                   </ng-container>
                   <ng-container matColumnDef="padre">
-                    <th mat-header-cell *matHeaderCellDef>Ies Padre</th>
+                    <th mat-header-cell *matHeaderCellDef>Fecha nacimiento</th>
                     <td
                       mat-cell
                       *matCellDef="let element"
@@ -619,7 +611,7 @@
                     ></td>
                   </ng-container>
                   <ng-container matColumnDef="nombre">
-                    <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                    <th mat-header-cell *matHeaderCellDef>Sexo biológico</th>
                     <td
                       mat-cell
                       *matCellDef="let element"
@@ -627,7 +619,7 @@
                     ></td>
                   </ng-container>
                   <ng-container matColumnDef="creacion">
-                    <th mat-header-cell *matHeaderCellDef>Creacion</th>
+                    <th mat-header-cell *matHeaderCellDef>Telefono</th>
                     <td
                       mat-cell
                       *matCellDef="let element"
@@ -635,7 +627,7 @@
                     ></td>
                   </ng-container>
                   <ng-container matColumnDef="existencia">
-                    <th mat-header-cell *matHeaderCellDef>Vigencia</th>
+                    <th mat-header-cell *matHeaderCellDef>Correo</th>
                     <td
                       mat-cell
                       *matCellDef="let element"
@@ -643,7 +635,7 @@
                     ></td>
                   </ng-container>
                   <ng-container matColumnDef="estado">
-                    <th mat-header-cell *matHeaderCellDef>Existencia</th>
+                    <th mat-header-cell *matHeaderCellDef>Municipio</th>
                     <td
                       mat-cell
                       *matCellDef="let element"

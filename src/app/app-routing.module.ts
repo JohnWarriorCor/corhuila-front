@@ -5,13 +5,22 @@ import { InicioComponent } from './components/inicio/inicio.component';
 import { DesarrolloComponent } from './components/desarrollo/desarrollo.component';
 import { InstitucionComponent } from './components/institucion/institucion.component';
 import { PersonaComponent } from './components/configuracion/persona/persona.component';
+import { EstructuraComponent } from './components/inicio/estructura/estructura.component';
+import { ConfiguracionComponent } from './components/inicio/configuracion/configuracion.component';
+import { SedeComponent } from './components/sede/sede.component';
+import { FacultadComponent } from './components/facultad/facultad.component';
 
 const routes: Routes = [
   //COMPONENTES DEL SISTEMA
   { path: 'login', component: LoginComponent },
 
   { path: 'inicio', component: InicioComponent },
+  { path: 'estructura', component: EstructuraComponent },
+  { path: 'configuracion', component: ConfiguracionComponent },
+
   { path: 'institucion', component: InstitucionComponent },
+  { path: 'sede', component: SedeComponent },
+  { path: 'facultad', component: FacultadComponent },
 
   { path: 'persona', component: PersonaComponent },
 

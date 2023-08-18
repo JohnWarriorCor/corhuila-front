@@ -110,6 +110,21 @@ export class InstitucionService {
       );
   }
 
+  obtenerInstitucion(): Observable<Institucion[]> {
+    return this.http
+      .get<Institucion[]>(`${this.url}/obtener-institucion`, {
+        headers: this.aggAutorizacionHeader(),
+      })
+      .pipe(
+        catchError((e) => {
+          if (this.isNoAutorizado(e)) {
+            return throwError(e);
+          }
+          return throwError(e);
+        })
+      );
+  }
+
   registrarInstitucion(institucion: Institucion): Observable<number> {
     return this.http.post<number>(
       `${this.url}/registrar-institucion`,

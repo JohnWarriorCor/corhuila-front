@@ -33,6 +33,7 @@ import { DiscapacidadTipo } from '../../../models/discapacidad-tipo';
 import { PersonaDiscapacidad } from '../../../models/persona-discapacidad';
 import { PuebloIndigena } from '../../../models/pueblo-indigena';
 import { TalentoExepcional } from '../../../models/talento-exepcional';
+import { CabecerasCentrosPoblados } from 'src/app/models/cabeceras-centros-poblados';
 
 @Component({
   selector: 'app-persona',
@@ -56,6 +57,9 @@ export class PersonaComponent {
   personaDiscapacidad: PersonaDiscapacidad[] = [];
   puebloIndigena: PuebloIndigena[] = [];
   talentoExepcional: TalentoExepcional[] = [];
+  listadoCcp: CabecerasCentrosPoblados[] = [];
+
+  formPersona!: FormGroup;
 
   dataSource = new MatTableDataSource<Pais>([]);
   displayedColumns: string[] = [
@@ -93,7 +97,49 @@ export class PersonaComponent {
       this.obtenerPersonaDiscapacidades();
       this.obtenerPueblosIndigenas();
       this.obtenerTalentosExcepcionales();
+      this.crearFormPersona();
     }
+  }
+
+  private crearFormPersona(): void {
+    this.formPersona = this.formBuilder.group({
+      //DATOS PERSONALES
+      codigo: new FormControl(''),
+      identificacion: new FormControl('', Validators.required),
+      identificacionTipo: new FormControl('', Validators.required),
+      fechaExpedicion: new FormControl('', Validators.required),
+      lugarExpedicion: new FormControl('', Validators.required),
+      nombre: new FormControl('', Validators.required),
+      apellido: new FormControl('', Validators.required),
+      sexo: new FormControl('', Validators.required),
+      fechaNacimiento: new FormControl('', Validators.required),
+      grupoSanguineo: new FormControl('', Validators.required),
+      estadoCivil: new FormControl('', Validators.required),
+      //DATOS DE CONTACTO
+      pais: new FormControl('', Validators.required),
+      departamento: new FormControl('', Validators.required),
+      municipio: new FormControl('', Validators.required),
+      ccp: new FormControl('', Validators.required),
+      direccion: new FormControl('', Validators.required),
+      barrio: new FormControl('', Validators.required),
+      estrato: new FormControl('', Validators.required),
+      telefonoMovil: new FormControl('', Validators.required),
+      telefonoFijo: new FormControl('', Validators.required),
+      correoPersonal: new FormControl('', Validators.required),
+      //DATOS CARACTERIZACION
+      grupoEtnico: new FormControl('', Validators.required),
+      puebloIndigena: new FormControl(''),
+      comunidadNegra: new FormControl(''),
+      personaDiscapacidad: new FormControl('', Validators.required),
+      discapacidadTipo: new FormControl(''),
+      talentoExepcional: new FormControl('', Validators.required),
+      //FAMILIAR DE CONTACTO
+      nombreFamiliar: new FormControl('', Validators.required),
+      telefonoFamiliar: new FormControl('', Validators.required),
+      residenciaFamiliar: new FormControl(''),
+      direccionFamiliar: new FormControl('', Validators.required),
+      estado: new FormControl(''),
+    });
   }
 
   obtenerGenero() {
@@ -136,6 +182,13 @@ export class PersonaComponent {
         this.municipios = data;
       });
   }
+
+  obtenerCcpPorMunicipio(codigo: string) {
+    this.ubicacionService.obtenerCcpPorMunicipio(codigo).subscribe((data) => {
+      this.listadoCcp = data;
+    });
+  }
+
 
   obtenerRh() {
     this.personaService.obtenerRh().subscribe((data) => {

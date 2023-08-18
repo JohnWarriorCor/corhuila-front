@@ -35,11 +35,11 @@ import { Institucion } from 'src/app/models/institucion';
 import { CabecerasCentrosPoblados } from 'src/app/models/cabeceras-centros-poblados';
 
 @Component({
-  selector: 'app-institucion',
-  templateUrl: './institucion.component.html',
-  styleUrls: ['./institucion.component.css'],
+  selector: 'app-facultad',
+  templateUrl: './facultad.component.html',
+  styleUrls: ['./facultad.component.css'],
 })
-export class InstitucionComponent {
+export class FacultadComponent {
   editar: boolean = false;
   nameFile: string = 'Archivo: pdf';
   paises: Pais[] = [];
@@ -65,22 +65,10 @@ export class InstitucionComponent {
     'naturaleza',
     'sector',
     'caracter',
-    'estado',
-  ];
-  /* displayedColumns: string[] = [
-    'index',
-    'nit',
-    'ies',
-    'iespadre',
-    'nombre',
-    'ccp',
-    'naturaleza',
-    'sector',
-    'caracter',
     'norma',
     'fechanorma',
     'estado',
-  ]; */
+  ];
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   // Referencia al elemento div oculto
   @ViewChild('hiddenDiv') hiddenDiv!: ElementRef;
@@ -132,13 +120,13 @@ export class InstitucionComponent {
     this.hiddenDiv.nativeElement.scrollIntoView({ behavior: 'smooth' });
   }
 
-  openDialog(element: any): void {
+  /*  openDialog(element: any): void {
     const dialogRef = this.dialog.open(ModalInstitucion, {
       width: '60%',
       data: { institucion: element },
     });
   }
-
+ */
   obtenerListadoInstitucion() {
     this.institucionService.obtenerListadoInstitucion().subscribe((data) => {
       this.listadoInstitucion = data;
@@ -366,10 +354,10 @@ export class InstitucionComponent {
 
 //// MODAL
 
-@Component({
+/* @Component({
   selector: 'modal-institucion',
-  templateUrl: 'modal-institucion.html',
-  styleUrls: ['./institucion.component.css'],
+  templateUrl: '../institucion/modal-institucion.html',
+  styleUrls: ['./sede.component.css'],
 })
 export class ModalInstitucion implements OnInit {
   paises: Pais[] = [];
@@ -452,4 +440,6 @@ export class ModalInstitucion implements OnInit {
       this.listadoCcp = data;
     });
   }
+
 }
+ */

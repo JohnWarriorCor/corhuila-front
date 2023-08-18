@@ -14,6 +14,10 @@ import { NavbarComponent } from './components/shared/navbar/navbar.component';
 import { DesarrolloComponent } from './components/desarrollo/desarrollo.component';
 import { InstitucionComponent, ModalInstitucion } from './components/institucion/institucion.component';
 import { PersonaComponent } from './components/configuracion/persona/persona.component';
+import { EstructuraComponent } from './components/inicio/estructura/estructura.component';
+import { ConfiguracionComponent } from './components/inicio/configuracion/configuracion.component';
+import { SedeComponent } from './components/sede/sede.component';
+import { FacultadComponent } from './components/facultad/facultad.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +28,11 @@ import { PersonaComponent } from './components/configuracion/persona/persona.com
     DesarrolloComponent,
     InstitucionComponent,
     PersonaComponent,
-    ModalInstitucion
+    ModalInstitucion,
+    EstructuraComponent,
+    ConfiguracionComponent,
+    SedeComponent,
+    FacultadComponent
   ],
   imports: [
     BrowserModule,

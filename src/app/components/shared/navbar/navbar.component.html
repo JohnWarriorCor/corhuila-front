@@ -24,12 +24,63 @@
           <i class="fas fa-home"></i> Inicio
         </h6>
       </a>
-      <a class="list" mat-list-item [routerLink]="['/institucion']">
+      <!--  <a class="list" mat-list-item [routerLink]="['/institucion']">
         <h6 class="pl-2 item-principal text-white">
           <i class="fa-solid fa-building-columns"></i> Institución
         </h6>
-      </a>
+      </a> -->
     </mat-nav-list>
+    <mat-accordion>
+      <mat-expansion-panel
+        class="sidenav"
+        style="width: 280px"
+        (opened)="panelOpenState = true"
+        (closed)="panelOpenState = false"
+      >
+        <mat-expansion-panel-header class="disable_ripple specific-class">
+          <mat-panel-title>
+            <h6 class="text-white mt-2">
+              <i class="fa-solid fa-school"></i> Estructura
+            </h6>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a
+            class="pl-5 sidenav-accordion"
+            mat-list-item
+            style="width: 300px"
+            [routerLink]="['/institucion']"
+            routerLinkActive="router-link-active"
+          >
+            <h6 class="text-white">
+              <i class="fa-solid fa-building-columns"></i> Institución
+            </h6>
+          </a>
+          <a
+            class="pl-5 sidenav-accordion"
+            mat-list-item
+            style="width: 300px"
+            [routerLink]="['/desarrollo']"
+            routerLinkActive="router-link-active"
+          >
+            <h6 class="text-white">
+              <i class="fa-solid fa-landmark-flag"></i> Sede
+            </h6>
+          </a>
+          <a
+            class="pl-5 sidenav-accordion"
+            mat-list-item
+            style="width: 300px"
+            [routerLink]="['/desarrollo']"
+            routerLinkActive="router-link-active"
+          >
+            <h6 class="text-white">
+              <i class="fa-solid fa-building-flag"></i> Facultad
+            </h6>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+    </mat-accordion>
     <mat-accordion>
       <mat-expansion-panel
         class="sidenav"

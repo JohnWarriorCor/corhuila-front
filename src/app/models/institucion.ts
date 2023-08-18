@@ -1,3 +1,4 @@
+import { CabecerasCentrosPoblados } from "./cabeceras-centros-poblados";
 import { CaracterAcademico } from "./caracter-academico";
 import { Departamento } from "./departamento";
 import { Municipio } from "./municipio";
@@ -17,6 +18,7 @@ export class Institucion {
 	pais!: Pais;
 	departamento!: Departamento;
 	municipio!: Municipio;
+  ccp!: CabecerasCentrosPoblados
 	direccion!: string;
 	telefono!: string;
 	url!: string;
