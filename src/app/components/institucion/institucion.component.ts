@@ -142,7 +142,6 @@ export class InstitucionComponent {
   obtenerListadoInstitucion() {
     this.institucionService.obtenerListadoInstitucion().subscribe((data) => {
       this.listadoInstitucion = data;
-      console.log(this.listadoInstitucion);
       this.dataSource = new MatTableDataSource<Institucion>(data);
       this.paginator.firstPage();
       this.dataSource.paginator = this.paginator;

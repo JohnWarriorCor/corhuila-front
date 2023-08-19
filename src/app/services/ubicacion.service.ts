@@ -94,4 +94,21 @@ export class UbicacionService {
       { headers: this.aggAutorizacionHeader() }
     );
   }
+
+
+  obtenerMunicipios(): Observable<Municipio[]> {
+    return this.http
+      .get<Municipio[]>(`${this.url}/obtener-municipios`, {
+        headers: this.aggAutorizacionHeader(),
+      })
+      .pipe(
+        catchError((e) => {
+          if (this.isNoAutorizado(e)) {
+            return throwError(e);
+          }
+          return throwError(e);
+        })
+      );
+  }
+
 }

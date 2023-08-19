@@ -34,6 +34,7 @@ import { PersonaDiscapacidad } from '../../../models/persona-discapacidad';
 import { PuebloIndigena } from '../../../models/pueblo-indigena';
 import { TalentoExepcional } from '../../../models/talento-exepcional';
 import { CabecerasCentrosPoblados } from 'src/app/models/cabeceras-centros-poblados';
+import { Persona } from 'src/app/models/persona';
 
 @Component({
   selector: 'app-persona',
@@ -41,6 +42,7 @@ import { CabecerasCentrosPoblados } from 'src/app/models/cabeceras-centros-pobla
   styleUrls: ['./persona.component.css'],
 })
 export class PersonaComponent {
+  editar: boolean = false;
   nameFile: string = 'Archivo: pdf';
   paises: Pais[] = [];
   departamentos: Departamento[] = [];
@@ -58,10 +60,12 @@ export class PersonaComponent {
   puebloIndigena: PuebloIndigena[] = [];
   talentoExepcional: TalentoExepcional[] = [];
   listadoCcp: CabecerasCentrosPoblados[] = [];
+  listadoPerosna: Persona[] = [];
+  listadoMunicipios: Municipio[] = [];
 
   formPersona!: FormGroup;
 
-  dataSource = new MatTableDataSource<Pais>([]);
+  dataSource = new MatTableDataSource<Persona>([]);
   displayedColumns: string[] = [
     'index',
     'nit',
@@ -98,6 +102,8 @@ export class PersonaComponent {
       this.obtenerPueblosIndigenas();
       this.obtenerTalentosExcepcionales();
       this.crearFormPersona();
+      this.obtenerPersonas();
+      this.obtenerMunicipios();
     }
   }
 
@@ -142,6 +148,288 @@ export class PersonaComponent {
     });
   }
 
+  generarPersona(): void {
+    let persona: Persona = new Persona();
+    persona.codigo = this.formPersona.get('codigo')!.value;
+    persona.identificacion = this.formPersona.get('identificacion')!.value;
+    let tipoId: TipoIdentificacion = new TipoIdentificacion();
+    tipoId.codigo = this.formPersona.get('identificacionTipo')!.value;
+    persona.tipoId = tipoId;
+    persona.fechaExpedicion = this.formPersona.get('fechaExpedicion')!.value;
+    persona.lugarExpedicion = this.formPersona.get('lugarExpedicion')!.value;
+    persona.nombre = this.formPersona.get('nombre')!.value;
+    persona.apellido = this.formPersona.get('apellido')!.value;
+    let genero: SexoBilogico = new SexoBilogico();
+    genero.codigo = this.formPersona.get('sexo')!.value;
+    persona.sexoBiologico = genero;
+    persona.fechaNacimiento = this.formPersona.get('fechaNacimiento')!.value;
+    let grupo: GrupoSanguineo = new GrupoSanguineo();
+    grupo.codigo = this.formPersona.get('grupoSanguineo')!.value;
+    persona.grupoSanguineo = grupo;
+    let estadoCivil: EstadoCivil = new EstadoCivil();
+    estadoCivil.codigo = this.formPersona.get('estadoCivil')!.value;
+    persona.estadoCivil = estadoCivil;
+    //DATOS DE CONTACTO
+    persona.paisResidencia = this.formPersona.get('pais')!.value;
+    persona.departamentoResidencia =
+      this.formPersona.get('departamento')!.value;
+    persona.municipioResidencia = this.formPersona.get('municipio')!.value;
+    persona.lugarResidencia = this.formPersona.get('ccp')!.value;
+    persona.direccion = this.formPersona.get('direccion')!.value;
+    persona.barrio = this.formPersona.get('barrio')!.value;
+    let estrato: Estrato = new Estrato();
+    estrato.codigo = this.formPersona.get('estrato')!.value;
+    persona.estrato = estrato;
+    persona.fijo = this.formPersona.get('telefonoMovil')!.value;
+    persona.movil = this.formPersona.get('telefonoFijo')!.value;
+    persona.correo = this.formPersona.get('correoPersonal')!.value;
+    //DATOS CARACTERIZACION
+    let grupoEtnico: GrupoEtnico = new GrupoEtnico();
+    grupoEtnico.codigo = this.formPersona.get('grupoEtnico')!.value;
+    persona.grupoEtnico = grupoEtnico;
+    let puebloIndigena: PuebloIndigena = new PuebloIndigena();
+    puebloIndigena.codigo = this.formPersona.get('puebloIndigena')!.value;
+    persona.puebloIndigena = puebloIndigena;
+    let comunidadNegra: ComunidadNegra = new ComunidadNegra();
+    comunidadNegra.codigo = this.formPersona.get('comunidadNegra')!.value;
+    persona.comunidadNegra = comunidadNegra;
+    let personaDiscapacidad: PersonaDiscapacidad = new PersonaDiscapacidad();
+    personaDiscapacidad.codigo = this.formPersona.get(
+      'personaDiscapacidad'
+    )!.value;
+    persona.personaDiscapacidad = personaDiscapacidad;
+    let discapacidadTipo: DiscapacidadTipo = new DiscapacidadTipo();
+    discapacidadTipo.codigo = this.formPersona.get('discapacidadTipo')!.value;
+    persona.discapacidadTipo = discapacidadTipo;
+    let talentoExepcional: TalentoExepcional = new TalentoExepcional();
+    talentoExepcional.codigo = this.formPersona.get('talentoExepcional')!.value;
+    persona.talentoExepcional = talentoExepcional;
+    //FAMILIAR DE CONTACTO
+    persona.familiarNombre = this.formPersona.get('nombreFamiliar')!.value;
+    persona.familiarTelefono = this.formPersona.get('telefonoFamiliar')!.value;
+    persona.familiarLugarResidencia =
+      this.formPersona.get('residenciaFamiliar')!.value;
+    persona.familiarDireccion =
+      this.formPersona.get('direccionFamiliar')!.value;
+
+    //CONDICIONAL
+    if (this.formPersona.get('grupoEtnico')!.value === 0) {
+      puebloIndigena.codigo = 0;
+      persona.puebloIndigena = puebloIndigena;
+      comunidadNegra.codigo = 0;
+      persona.comunidadNegra = comunidadNegra;
+    }
+
+    if (this.formPersona.get('grupoEtnico')!.value === 1) {
+      comunidadNegra.codigo = 0;
+      persona.comunidadNegra = comunidadNegra;
+    }
+
+    if (this.formPersona.get('grupoEtnico')!.value === 2) {
+      puebloIndigena.codigo = 0;
+      persona.puebloIndigena = puebloIndigena;
+    }
+
+    if (this.formPersona.get('personaDiscapacidad')!.value === 2) {
+      discapacidadTipo.codigo = 0;
+      persona.discapacidadTipo = discapacidadTipo;
+    }
+
+    persona.estado = this.formPersona.get('estado')!.value;
+    if (this.editar) {
+      this.actualizarPersona(persona);
+    } else {
+      this.registrarPersona(persona);
+    }
+  }
+
+  registrarPersona(persona: Persona) {
+    this.personaService.registrarPersona(persona).subscribe(
+      (data) => {
+        if (data > 0) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Registrado',
+            text: '¡Operación exitosa!',
+            showConfirmButton: false,
+            timer: 2500,
+          });
+          this.obtenerPersonas();
+          this.cancelar();
+          this.crearFormPersona();
+        } else {
+          this.mensajeError();
+        }
+      },
+      (err) => this.fError(err)
+    );
+  }
+
+  actualizarPersona(persona: Persona) {
+    this.personaService.actualizarPersona(persona).subscribe(
+      (data) => {
+        if (data > 0) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Actualizado',
+            text: '¡Operación exitosa!',
+            showConfirmButton: false,
+          });
+          this.cancelar();
+          this.obtenerPersonas();
+        } else {
+          this.mensajeError();
+        }
+      },
+      (err) => this.fError(err)
+    );
+  }
+
+  editarPersona(element: Persona) {
+    //this.showAndScrollToHiddenDiv();
+    this.editar = true;
+    this.formPersona.get('codigo')!.setValue(element.codigo);
+    this.formPersona.get('identificacion')!.setValue(element.identificacion);
+    this.formPersona.get('identificacionTipo')!.setValue(element.tipoId.codigo);
+    this.formPersona.get('fechaExpedicion')!.setValue(element.fechaExpedicion);
+    this.formPersona.get('lugarExpedicion')!.setValue(element.lugarExpedicion);
+    this.formPersona.get('nombre')!.setValue(element.nombre);
+    this.formPersona.get('apellido')!.setValue(element.apellido);
+    this.formPersona.get('sexo')!.setValue(element.sexoBiologico.codigo);
+    this.formPersona.get('fechaNacimiento')!.setValue(element.fechaNacimiento);
+    this.formPersona
+      .get('grupoSanguineo')!
+      .setValue(element.grupoSanguineo.codigo);
+    this.formPersona.get('estadoCivil')!.setValue(element.estadoCivil.codigo);
+    this.formPersona.get('pais')!.setValue(element.paisResidencia);
+    this.obtenerDepartamentosPorPais(element.paisResidencia);
+    this.formPersona
+      .get('departamento')!
+      .setValue(element.departamentoResidencia);
+    this.obtenerMunicipiosPorDepartamento(element.departamentoResidencia);
+    this.formPersona.get('municipio')!.setValue(element.municipioResidencia);
+    this.obtenerCcpPorMunicipio(element.municipioResidencia);
+    this.formPersona.get('ccp')!.setValue(element.lugarResidencia);
+    this.formPersona.get('direccion')!.setValue(element.direccion);
+    this.formPersona.get('barrio')!.setValue(element.barrio);
+    this.formPersona.get('estrato')!.setValue(element.estrato.codigo);
+    this.formPersona.get('telefonoMovil')!.setValue(element.fijo);
+    this.formPersona.get('telefonoFijo')!.setValue(element.movil);
+    this.formPersona.get('correoPersonal')!.setValue(element.correo);
+    this.formPersona.get('grupoEtnico')!.setValue(element.grupoEtnico.codigo);
+    this.formPersona
+      .get('puebloIndigena')!
+      .setValue(element.puebloIndigena.codigo);
+    this.formPersona
+      .get('comunidadNegra')!
+      .setValue(element.comunidadNegra.codigo);
+    this.formPersona
+      .get('personaDiscapacidad')!
+      .setValue(element.personaDiscapacidad.codigo);
+    this.formPersona
+      .get('discapacidadTipo')!
+      .setValue(element.discapacidadTipo.codigo);
+    this.formPersona
+      .get('talentoExepcional')!
+      .setValue(element.talentoExepcional.codigo);
+    this.formPersona.get('nombreFamiliar')!.setValue(element.familiarNombre);
+    this.formPersona
+      .get('telefonoFamiliar')!
+      .setValue(element.familiarTelefono);
+    this.formPersona
+      .get('residenciaFamiliar')!
+      .setValue(element.familiarLugarResidencia);
+    this.formPersona
+      .get('direccionFamiliar')!
+      .setValue(element.familiarDireccion);
+    this.formPersona.get('estado')!.setValue(element.estado);
+  }
+
+  eliminarPersona() {
+    let persona: Persona = new Persona();
+    persona.codigo = this.formPersona.get('codigo')!.value;
+    persona.identificacion = this.formPersona.get('identificacion')!.value;
+    let tipoId: TipoIdentificacion = new TipoIdentificacion();
+    tipoId.codigo = this.formPersona.get('identificacionTipo')!.value;
+    persona.tipoId = tipoId;
+    persona.fechaExpedicion = this.formPersona.get('fechaExpedicion')!.value;
+    persona.lugarExpedicion = this.formPersona.get('lugarExpedicion')!.value;
+    persona.nombre = this.formPersona.get('nombre')!.value;
+    persona.apellido = this.formPersona.get('apellido')!.value;
+    let genero: SexoBilogico = new SexoBilogico();
+    genero.codigo = this.formPersona.get('sexo')!.value;
+    persona.sexoBiologico = genero;
+    persona.fechaNacimiento = this.formPersona.get('fechaNacimiento')!.value;
+    let grupo: GrupoSanguineo = new GrupoSanguineo();
+    grupo.codigo = this.formPersona.get('grupoSanguineo')!.value;
+    persona.grupoSanguineo = grupo;
+    let estadoCivil: EstadoCivil = new EstadoCivil();
+    estadoCivil.codigo = this.formPersona.get('estadoCivil')!.value;
+    persona.estadoCivil = estadoCivil;
+    //DATOS DE CONTACTO
+    persona.paisResidencia = this.formPersona.get('pais')!.value;
+    persona.departamentoResidencia =
+      this.formPersona.get('departamento')!.value;
+    persona.municipioResidencia = this.formPersona.get('municipio')!.value;
+    persona.lugarResidencia = this.formPersona.get('ccp')!.value;
+    persona.direccion = this.formPersona.get('direccion')!.value;
+    persona.barrio = this.formPersona.get('barrio')!.value;
+    let estrato: Estrato = new Estrato();
+    estrato.codigo = this.formPersona.get('estrato')!.value;
+    persona.estrato = estrato;
+    persona.fijo = this.formPersona.get('telefonoMovil')!.value;
+    persona.movil = this.formPersona.get('telefonoFijo')!.value;
+    persona.correo = this.formPersona.get('correoPersonal')!.value;
+    //DATOS CARACTERIZACION
+    let grupoEtnico: GrupoEtnico = new GrupoEtnico();
+    grupoEtnico.codigo = this.formPersona.get('grupoEtnico')!.value;
+    persona.grupoEtnico = grupoEtnico;
+    let puebloIndigena: PuebloIndigena = new PuebloIndigena();
+    puebloIndigena.codigo = this.formPersona.get('puebloIndigena')!.value;
+    persona.puebloIndigena = puebloIndigena;
+    let comunidadNegra: ComunidadNegra = new ComunidadNegra();
+    comunidadNegra.codigo = this.formPersona.get('comunidadNegra')!.value;
+    persona.comunidadNegra = comunidadNegra;
+    let personaDiscapacidad: PersonaDiscapacidad = new PersonaDiscapacidad();
+    personaDiscapacidad.codigo = this.formPersona.get(
+      'personaDiscapacidad'
+    )!.value;
+    persona.personaDiscapacidad = personaDiscapacidad;
+    let discapacidadTipo: DiscapacidadTipo = new DiscapacidadTipo();
+    discapacidadTipo.codigo = this.formPersona.get('discapacidadTipo')!.value;
+    persona.discapacidadTipo = discapacidadTipo;
+    let talentoExepcional: TalentoExepcional = new TalentoExepcional();
+    talentoExepcional.codigo = this.formPersona.get('talentoExepcional')!.value;
+    persona.talentoExepcional = talentoExepcional;
+    //FAMILIAR DE CONTACTO
+    persona.familiarNombre = this.formPersona.get('nombreFamiliar')!.value;
+    persona.familiarTelefono = this.formPersona.get('telefonoFamiliar')!.value;
+    persona.familiarLugarResidencia =
+      this.formPersona.get('residenciaFamiliar')!.value;
+    persona.familiarDireccion =
+      this.formPersona.get('direccionFamiliar')!.value;
+    persona.estado = 0;
+    this.actualizarPersona(persona);
+  }
+
+  cancelar() {
+    this.formPersona.reset();
+    this.obtenerPaises();
+    this.obtenerPaisLocal();
+    this.crearFormPersona();
+    this.editar = false;
+  }
+
+  obtenerPersonas() {
+    this.personaService.obtenerPersonas().subscribe((data) => {
+      console.log(data);
+      this.listadoPerosna = data;
+      this.dataSource = new MatTableDataSource<Persona>(data);
+      this.paginator.firstPage();
+      this.dataSource.paginator = this.paginator;
+    });
+  }
+
   obtenerGenero() {
     this.personaService.obtenerGenero().subscribe((data) => {
       this.generos = data;
@@ -176,6 +464,7 @@ export class PersonaComponent {
   }
 
   obtenerMunicipiosPorDepartamento(codigo: string) {
+    this.listadoCcp = [];
     this.ubicacionService
       .obtenerMunicipiosPorDepartamento(codigo)
       .subscribe((data) => {
@@ -188,7 +477,6 @@ export class PersonaComponent {
       this.listadoCcp = data;
     });
   }
-
 
   obtenerRh() {
     this.personaService.obtenerRh().subscribe((data) => {
@@ -242,5 +530,43 @@ export class PersonaComponent {
     this.personaService.obtenerTalentosExcepcionales().subscribe((data) => {
       this.talentoExepcional = data;
     });
+  }
+
+  obtenerMunicipios() {
+    this.ubicacionService.obtenerMunicipios().subscribe((data) => {
+      this.listadoMunicipios = data;
+    });
+  }
+
+  mensajeSuccses() {
+    Swal.fire({
+      icon: 'success',
+      title: 'Proceso realizado',
+      text: '¡Operación exitosa!',
+      showConfirmButton: false,
+      timer: 2500,
+    });
+  }
+
+  mensajeError() {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo completar el proceso.',
+      showConfirmButton: true,
+      confirmButtonText: 'Listo',
+      confirmButtonColor: '#8f141b',
+    });
+  }
+
+  fError(er: any): void {
+    let err = er.error.error_description;
+    let arr: string[] = err.split(':');
+    if (arr[0] == 'Access token expired') {
+      this.authService.logout();
+      this.router.navigate(['login']);
+    } else {
+      this.mensajeError();
+    }
   }
 }

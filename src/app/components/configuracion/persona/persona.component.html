@@ -93,11 +93,10 @@
                     >
                       <mat-label>Lugar de expedición</mat-label>
                       <mat-select formControlName="lugarExpedicion">
-                        <mat-option [value]="null">NINGUNO</mat-option>
                         <mat-option
-                          *ngFor="let mun of municipios"
-                          [value]="mun.codigo"
-                          >{{ mun.nombre }}</mat-option
+                          *ngFor="let municipio of listadoMunicipios"
+                          [value]="municipio.divipola"
+                          >{{ municipio.nombre }}</mat-option
                         >
                       </mat-select>
                     </mat-form-field>
@@ -235,7 +234,7 @@
                       <mat-select formControlName="departamento">
                         <mat-option
                           *ngFor="let dep of departamentos"
-                          [value]="dep.codigo"
+                          [value]="dep.divipola"
                           (click)="
                             obtenerMunicipiosPorDepartamento(dep.divipola)
                           "
@@ -253,10 +252,10 @@
                     >
                       <mat-label>Municipio residencia</mat-label>
                       <mat-select formControlName="municipio">
-                        <mat-option [value]="null">NINGUNO</mat-option>
                         <mat-option
                           *ngFor="let mun of municipios"
-                          [value]="mun.codigo"
+                          (click)="obtenerCcpPorMunicipio(mun.divipola)"
+                          [value]="mun.divipola"
                           >{{ mun.nombre }}</mat-option
                         >
                       </mat-select>
@@ -391,25 +390,16 @@
                     </mat-form-field>
                   </div>
                 </div>
-                <div class="col">
+                <div class="col" *ngIf="formPersona.get('grupoEtnico')!.value === 1">
                   <div class="form-group">
                     <mat-form-field
                       class="example-full-width"
                       appearance="outline"
                     >
                       <mat-label>Pueblo indigena</mat-label>
-                      <!-- <mat-select
-                        *ngIf="formPersona.get('grupoEtnico')!.value !== 1"
-                        id="departamento"
-                        disabled
+                      <mat-select
+                        formControlName="puebloIndigena"
                       >
-                        <mat-option
-                          *ngFor="let pueblo of puebloIndigena"
-                          [value]="pueblo.codigo"
-                          >{{ pueblo.nombre }}</mat-option
-                        >
-                      </mat-select> -->
-                      <mat-select formControlName="puebloIndigena">
                         <mat-option
                           *ngFor="let pueblo of puebloIndigena"
                           [value]="pueblo.codigo"
@@ -419,7 +409,7 @@
                     </mat-form-field>
                   </div>
                 </div>
-                <div class="col">
+                <div class="col" *ngIf="formPersona.get('grupoEtnico')!.value === 2">
                   <div class="form-group">
                     <mat-form-field
                       class="example-full-width"
@@ -455,7 +445,7 @@
                     </mat-form-field>
                   </div>
                 </div>
-                <div class="col">
+                <div class="col" *ngIf="formPersona.get('personaDiscapacidad')!.value === 1">
                   <div class="form-group">
                     <mat-form-field
                       class="example-full-width"
@@ -522,7 +512,7 @@
                       <input
                         matInput
                         formControlName="telefonoFamiliar"
-                        readonly
+                        required
                       />
                     </mat-form-field>
                   </div>
@@ -536,11 +526,13 @@
                       appearance="outline"
                     >
                       <mat-label>Lugar de residencia</mat-label>
-                      <input
-                        matInput
-                        formControlName="residenciaFamiliar"
-                        readonly
-                      />
+                      <mat-select formControlName="residenciaFamiliar">
+                        <mat-option
+                          *ngFor="let municipio of listadoMunicipios"
+                          [value]="municipio.divipola"
+                          >{{ municipio.nombre }}</mat-option
+                        >
+                      </mat-select>
                     </mat-form-field>
                   </div>
                 </div>
@@ -563,8 +555,27 @@
               <hr />
               <div class="row">
                 <div class="col text-center">
-                  <button type="button" class="btn btn-success mr-2">
+                  <button
+                    type="button"
+                    [disabled]="!formPersona.valid"
+                    class="btn btn-success mr-2"
+                    (click)="generarPersona()"
+                  >
                     <i class="far fa-save"></i> Guardar
+                  </button>
+                  <button
+                    *ngIf="editar"
+                    class="btn btn-danger mr-2"
+                    (click)="eliminarPersona()"
+                  >
+                    <i class="fa-solid fa-trash"></i> Borrar
+                  </button>
+                  <button
+                    *ngIf="editar"
+                    class="btn btn-warning"
+                    (click)="cancelar()"
+                  >
+                    <i class="fa-solid fa-xmark"></i> Cancelar
                   </button>
                 </div>
               </div>
@@ -588,51 +599,40 @@
                   </ng-container>
                   <ng-container matColumnDef="nit">
                     <th mat-header-cell *matHeaderCellDef>Identificación</th>
-                    <td
-                      mat-cell
-                      *matCellDef="let element"
-                      class="font-sm-usco"
-                    ></td>
+                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                      {{ element.tipoId.nombreCorto }} -
+                      {{ element.identificacion }}
+                    </td>
                   </ng-container>
                   <ng-container matColumnDef="ies">
                     <th mat-header-cell *matHeaderCellDef>Nombres</th>
-                    <td
-                      mat-cell
-                      *matCellDef="let element"
-                      class="font-sm-usco"
-                    ></td>
+                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                      {{ element.apellido }} {{ element.nombre }}
+                    </td>
                   </ng-container>
                   <ng-container matColumnDef="padre">
                     <th mat-header-cell *matHeaderCellDef>Fecha nacimiento</th>
-                    <td
-                      mat-cell
-                      *matCellDef="let element"
-                      class="font-sm-usco"
-                    ></td>
+                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                      {{ element.fechaNacimiento | date : "dd/MM/yyyy" }}
+                    </td>
                   </ng-container>
                   <ng-container matColumnDef="nombre">
                     <th mat-header-cell *matHeaderCellDef>Sexo biológico</th>
-                    <td
-                      mat-cell
-                      *matCellDef="let element"
-                      class="font-sm-usco"
-                    ></td>
+                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                      {{ element.sexoBiologico.nombre }}
+                    </td>
                   </ng-container>
                   <ng-container matColumnDef="creacion">
                     <th mat-header-cell *matHeaderCellDef>Telefono</th>
-                    <td
-                      mat-cell
-                      *matCellDef="let element"
-                      class="font-sm-usco"
-                    ></td>
+                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                      {{ element.fijo }}
+                    </td>
                   </ng-container>
                   <ng-container matColumnDef="existencia">
                     <th mat-header-cell *matHeaderCellDef>Correo</th>
-                    <td
-                      mat-cell
-                      *matCellDef="let element"
-                      class="font-sm-usco"
-                    ></td>
+                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                      {{ element.correo }}
+                    </td>
                   </ng-container>
                   <ng-container matColumnDef="estado">
                     <th mat-header-cell *matHeaderCellDef>Municipio</th>
@@ -643,12 +643,35 @@
                     ></td>
                   </ng-container>
                   <ng-container matColumnDef="pdf">
-                    <th mat-header-cell *matHeaderCellDef>Estado</th>
-                    <td
-                      mat-cell
-                      *matCellDef="let element"
-                      class="font-sm-usco"
-                    ></td>
+                    <th mat-header-cell *matHeaderCellDef>Opciones</th>
+                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                      <button
+                        *ngIf="element.estado === 1"
+                        class="btn btn-success btn-sm mr-2"
+                        title="Activo"
+                      >
+                        <i class="fas fa-check-square fa-xs"></i>
+                      </button>
+                      <button
+                        *ngIf="element.estado !== 1"
+                        class="btn btn-secondary btn-sm mr-2"
+                        title="Inactivo"
+                      >
+                        <i class="fa-solid fa-square-minus fa-xs"></i>
+                      </button>
+                      <button
+                        class="btn btn-info btn-sm mr-2"
+                        title="Informacion"
+                      >
+                        <i class="fa-solid fa-circle-info fa-xs"></i>
+                      </button>
+                      <button
+                        class="btn btn-primary btn-sm"
+                        (click)="editarPersona(element)"
+                      >
+                        <i class="fa-solid fa-pencil fa-xs"></i>
+                      </button>
+                    </td>
                   </ng-container>
                   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                   <tr

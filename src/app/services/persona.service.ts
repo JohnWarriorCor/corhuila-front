@@ -16,6 +16,7 @@ import { GrupoEtnico } from '../models/grupo-etnico';
 import { PersonaDiscapacidad } from '../models/persona-discapacidad';
 import { PuebloIndigena } from '../models/pueblo-indigena';
 import { TalentoExepcional } from '../models/talento-exepcional';
+import { Persona } from '../models/persona';
 
 @Injectable({
   providedIn: 'root',
@@ -49,6 +50,21 @@ export class PersonaService {
       return true;
     }
     return false;
+  }
+
+  obtenerPersonas(): Observable<Persona[]> {
+    return this.http
+      .get<Persona[]>(`${this.url}/obtener-personas`, {
+        headers: this.aggAutorizacionHeader(),
+      })
+      .pipe(
+        catchError((e) => {
+          if (this.isNoAutorizado(e)) {
+            return throwError(e);
+          }
+          return throwError(e);
+        })
+      );
   }
 
   obtenerTipoId(): Observable<TipoIdentificacion[]> {
@@ -214,5 +230,17 @@ export class PersonaService {
           return throwError(e);
         })
       );
+  }
+
+  registrarPersona(persona: Persona): Observable<number> {
+    return this.http.post<number>(`${this.url}/registrar-persona`, persona, {
+      headers: this.aggAutorizacionHeader(),
+    });
+  }
+
+  actualizarPersona(persona: Persona): Observable<number> {
+    return this.http.put<number>(`${this.url}/actualizar-persona`, persona, {
+      headers: this.aggAutorizacionHeader(),
+    });
   }
 }
