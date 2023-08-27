@@ -21,23 +21,6 @@
                       class="example-full-width"
                       appearance="outline"
                     >
-                      <mat-label>Sede</mat-label>
-                      <mat-select formControlName="sede">
-                        <mat-option
-                          *ngFor="let sede of listadoSede"
-                          [value]="sede.codigo"
-                          >{{ sede.nombre }}</mat-option
-                        >
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
                       <mat-label>Nombre de la facultad</mat-label>
                       <input
                         matInput
@@ -48,87 +31,49 @@
                     </mat-form-field>
                   </div>
                 </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                      *ngIf="editar"
+                    >
+                      <mat-label>Sede</mat-label>
+                      <mat-select formControlName="sede">
+                        <mat-option
+                          *ngFor="let sede of listadoSede"
+                          [value]="sede.codigo"
+                          >{{ sede.nombre }}</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                      *ngIf="!editar"
+                    >
+                      <mat-label>Sede(s)</mat-label>
+                      <mat-select [formControl]="sedes" multiple>
+                        <mat-select-trigger>
+                          Una sede elegida
+                          <span
+                            *ngIf="(sedes.value?.length || 0) > 1"
+                            class="example-additional-selection"
+                          >
+                            (+{{ (sedes.value?.length || 0) - 1 }}
+                            {{ sedes.value?.length === 2 ? "Otra" : "Otras" }})
+                          </span>
+                        </mat-select-trigger>
+                        <mat-option
+                          *ngFor="let sede of listadoSede"
+                          [value]="sede.codigo"
+                          >{{ sede.nombre }}</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
               </div>
-              <!--  <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>País</mat-label>
-                      <mat-select id="pais" formControlName="pais">
-                        <mat-option
-                          *ngFor="let pais of paisLocal"
-                          [value]="pais.codigo"
-                          (click)="obtenerDepartamentosPorPais(pais.codigo)"
-                          >{{ pais.nombre }}</mat-option
-                        >
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Departamento</mat-label>
-                      <mat-select
-                        id="departamento"
-                        formControlName="departamento"
-                      >
-                        <mat-option
-                          *ngFor="let dep of departamentos"
-                          [value]="dep.divipola"
-                          (click)="
-                            obtenerMunicipiosPorDepartamento(dep.divipola)
-                          "
-                          >{{ dep.nombre }}</mat-option
-                        >
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Municipio</mat-label>
-                      <mat-select formControlName="municipio">
-                        <mat-option
-                          *ngFor="let mun of municipios"
-                          (click)="obtenerCcpPorMunicipio(mun.divipola)"
-                          [value]="mun.divipola"
-                          >{{ mun.nombre }}</mat-option
-                        >
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label
-                        >Cabecera Municipale o Centro Poblado</mat-label
-                      >
-                      <mat-select formControlName="ccp">
-                        <mat-option
-                          *ngFor="let ccp of listadoCcp"
-                          [value]="ccp.divipola"
-                          >{{ ccp.nombre }}</mat-option
-                        >
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div> -->
               <div class="row">
                 <div class="col">
                   <div class="form-group">
@@ -214,13 +159,13 @@
               <ng-container matColumnDef="sede">
                 <th mat-header-cell *matHeaderCellDef>Sede</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{element.sede.ccp.nombre}} - {{ element.sede.nombre }}
+                  {{ element.sede.ccp.nombre }} - {{ element.sede.nombre }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="nombre">
                 <th mat-header-cell *matHeaderCellDef>Nombre</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{element.nombre}}
+                  {{ element.nombre }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="decano">

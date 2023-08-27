@@ -18,6 +18,10 @@ import { EstructuraComponent } from './components/inicio/estructura/estructura.c
 import { ConfiguracionComponent } from './components/inicio/configuracion/configuracion.component';
 import { SedeComponent } from './components/sede/sede.component';
 import { FacultadComponent } from './components/facultad/facultad.component';
+import { OrganizacionInternaComponent } from './components/inicio/organizacion-interna/organizacion-interna.component';
+import { CuerposColegiadosComponent } from './components/cuerpos-colegiados/cuerpos-colegiados.component';
+import { RepresentanteLegalComponent } from './components/representante-legal/representante-legal.component';
+import { AreaAcademiAdmiComponent } from './components/area-academi-admi/area-academi-admi.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +36,11 @@ import { FacultadComponent } from './components/facultad/facultad.component';
     EstructuraComponent,
     ConfiguracionComponent,
     SedeComponent,
-    FacultadComponent
+    FacultadComponent,
+    OrganizacionInternaComponent,
+    CuerposColegiadosComponent,
+    RepresentanteLegalComponent,
+    AreaAcademiAdmiComponent
   ],
   imports: [
     BrowserModule,

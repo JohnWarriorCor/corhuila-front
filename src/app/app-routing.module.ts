@@ -9,6 +9,9 @@ import { EstructuraComponent } from './components/inicio/estructura/estructura.c
 import { ConfiguracionComponent } from './components/inicio/configuracion/configuracion.component';
 import { SedeComponent } from './components/sede/sede.component';
 import { FacultadComponent } from './components/facultad/facultad.component';
+import { OrganizacionInternaComponent } from './components/inicio/organizacion-interna/organizacion-interna.component';
+import { CuerposColegiadosComponent } from './components/cuerpos-colegiados/cuerpos-colegiados.component';
+import { RepresentanteLegalComponent } from './components/representante-legal/representante-legal.component';
 
 const routes: Routes = [
   //COMPONENTES DEL SISTEMA
@@ -17,10 +20,14 @@ const routes: Routes = [
   { path: 'inicio', component: InicioComponent },
   { path: 'estructura', component: EstructuraComponent },
   { path: 'configuracion', component: ConfiguracionComponent },
+  { path: 'organizacion-interna', component: OrganizacionInternaComponent },
 
   { path: 'institucion', component: InstitucionComponent },
   { path: 'sede', component: SedeComponent },
   { path: 'facultad', component: FacultadComponent },
+
+  { path: 'cuerpos-colegiados', component: CuerposColegiadosComponent },
+  { path: 'representante-legal', component: RepresentanteLegalComponent },
 
   { path: 'persona', component: PersonaComponent },
 

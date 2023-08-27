@@ -7,7 +7,7 @@
         routerLinkActive="router-link-active"
       >
         <h4 #hiddenDiv class="font-usco-default">
-          <strong>Creación Sede</strong>
+          <strong>Cuerpos colegiados</strong>
         </h4>
       </div>
       <div class="card-body ls">
@@ -21,7 +21,7 @@
                       class="example-full-width"
                       appearance="outline"
                     >
-                      <mat-label>Nombre Sede</mat-label>
+                      <mat-label>Nombre del Cuerpo Colegiado</mat-label>
                       <input
                         matInput
                         type="text"
@@ -31,6 +31,24 @@
                     </mat-form-field>
                   </div>
                 </div>
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Acrónimo</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        formControlName="nombre"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
                 <div class="col">
                   <div class="form-group">
                     <mat-form-field
@@ -48,23 +66,19 @@
                     </mat-form-field>
                   </div>
                 </div>
-              </div>
-              <div class="row">
                 <div class="col">
                   <div class="form-group">
                     <mat-form-field
                       class="example-full-width"
                       appearance="outline"
                     >
-                      <mat-label>País</mat-label>
-                      <mat-select id="pais" formControlName="pais">
-                        <mat-option
-                          *ngFor="let pais of paisLocal"
-                          [value]="pais.codigo"
-                          (click)="obtenerDepartamentosPorPais(pais.codigo)"
-                          >{{ pais.nombre }}</mat-option
-                        >
-                      </mat-select>
+                      <mat-label>Número de norma</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        formControlName="nombre"
+                        required
+                      />
                     </mat-form-field>
                   </div>
                 </div>
@@ -74,57 +88,13 @@
                       class="example-full-width"
                       appearance="outline"
                     >
-                      <mat-label>Departamento</mat-label>
-                      <mat-select
-                        id="departamento"
-                        formControlName="departamento"
-                      >
-                        <mat-option
-                          *ngFor="let dep of departamentos"
-                          [value]="dep.divipola"
-                          (click)="
-                            obtenerMunicipiosPorDepartamento(dep.divipola)
-                          "
-                          >{{ dep.nombre }}</mat-option
-                        >
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Municipio</mat-label>
-                      <mat-select formControlName="municipio">
-                        <mat-option
-                          *ngFor="let mun of municipios"
-                          (click)="obtenerCcpPorMunicipio(mun.divipola)"
-                          [value]="mun.divipola"
-                          >{{ mun.nombre }}</mat-option
-                        >
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label
-                        >Cabecera Municipale o Centro Poblado</mat-label
-                      >
-                      <mat-select formControlName="ccp">
-                        <mat-option
-                          *ngFor="let ccp of listadoCcp"
-                          [value]="ccp.divipola"
-                          >{{ ccp.nombre }}</mat-option
-                        >
-                      </mat-select>
+                      <mat-label>Nombre de la norma</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        formControlName="nombre"
+                        required
+                      />
                     </mat-form-field>
                   </div>
                 </div>
@@ -136,8 +106,18 @@
                       class="example-full-width"
                       appearance="outline"
                     >
-                      <mat-label>Dirección</mat-label>
-                      <input matInput formControlName="direccion" required />
+                      <mat-label>Fecha de la norma</mat-label>
+                      <input
+                        matInput
+                        [matDatepicker]="picker"
+                        formControlName="fechaExpedicion"
+                      />
+                      <mat-hint>MM/DD/AAAA</mat-hint>
+                      <mat-datepicker-toggle
+                        matIconSuffix
+                        [for]="picker"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
                   </div>
                 </div>
@@ -147,25 +127,13 @@
                       class="example-full-width"
                       appearance="outline"
                     >
-                      <mat-label>Teléfonos</mat-label>
-                      <input matInput formControlName="telefono" required />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Tipo de sede</mat-label>
-                      <mat-select formControlName="tipo">
-                        <mat-option
-                          *ngFor="let tipoSede of listadoTipoSede"
-                          [value]="tipoSede.codigo"
-                          >{{ tipoSede.nombre }}</mat-option
-                        >
-                      </mat-select>
+                      <mat-label>Cantidad de miembros</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        formControlName="nombre"
+                        required
+                      />
                     </mat-form-field>
                   </div>
                 </div>

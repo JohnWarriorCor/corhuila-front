@@ -60,3 +60,12 @@
   background-image: linear-gradient(#006983 20%, white 10%);
 }
 
+.mat-sidenav-content {
+  position: relative; /* Asegura que la posición relativa esté habilitada en el contenedor */
+}
+
+.mat-toolbar {
+  position: sticky;
+  top: 0; /* Fija la barra de herramientas en la parte superior */
+  z-index: 1; /* Asegura que la barra de herramientas esté por encima del contenido */
+}

@@ -7,7 +7,7 @@
         routerLinkActive="router-link-active"
       >
         <h4 #hiddenDiv class="font-usco-default">
-          <strong>Creación Sede</strong>
+          <strong>Representante legal</strong>
         </h4>
       </div>
       <div class="card-body ls">
@@ -15,22 +15,6 @@
           <div class="col">
             <form [formGroup]="formSede">
               <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Nombre Sede</mat-label>
-                      <input
-                        matInput
-                        type="text"
-                        formControlName="nombre"
-                        required
-                      />
-                    </mat-form-field>
-                  </div>
-                </div>
                 <div class="col">
                   <div class="form-group">
                     <mat-form-field
@@ -48,6 +32,37 @@
                     </mat-form-field>
                   </div>
                 </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Persona</mat-label>
+                      <mat-select formControlName="nit">
+                        <mat-option value="0">Persona 1</mat-option>
+                        <mat-option value="0">Persona 2</mat-option>
+                        <mat-option value="0">Persona 3</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Nombre de Pila</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        formControlName="nombre"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
               </div>
               <div class="row">
                 <div class="col">
@@ -56,13 +71,10 @@
                       class="example-full-width"
                       appearance="outline"
                     >
-                      <mat-label>País</mat-label>
-                      <mat-select id="pais" formControlName="pais">
-                        <mat-option
-                          *ngFor="let pais of paisLocal"
-                          [value]="pais.codigo"
-                          (click)="obtenerDepartamentosPorPais(pais.codigo)"
-                          >{{ pais.nombre }}</mat-option
+                      <mat-label>Cargo</mat-label>
+                      <mat-select formControlName="nit">
+                        <mat-option value="0"
+                          >Cargo único - relacion código</mat-option
                         >
                       </mat-select>
                     </mat-form-field>
@@ -74,55 +86,10 @@
                       class="example-full-width"
                       appearance="outline"
                     >
-                      <mat-label>Departamento</mat-label>
-                      <mat-select
-                        id="departamento"
-                        formControlName="departamento"
-                      >
-                        <mat-option
-                          *ngFor="let dep of departamentos"
-                          [value]="dep.divipola"
-                          (click)="
-                            obtenerMunicipiosPorDepartamento(dep.divipola)
-                          "
-                          >{{ dep.nombre }}</mat-option
-                        >
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Municipio</mat-label>
-                      <mat-select formControlName="municipio">
-                        <mat-option
-                          *ngFor="let mun of municipios"
-                          (click)="obtenerCcpPorMunicipio(mun.divipola)"
-                          [value]="mun.divipola"
-                          >{{ mun.nombre }}</mat-option
-                        >
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label
-                        >Cabecera Municipale o Centro Poblado</mat-label
-                      >
-                      <mat-select formControlName="ccp">
-                        <mat-option
-                          *ngFor="let ccp of listadoCcp"
-                          [value]="ccp.divipola"
-                          >{{ ccp.nombre }}</mat-option
+                      <mat-label>Norma</mat-label>
+                      <mat-select formControlName="nit">
+                        <mat-option value="0"
+                          >Norma escrita o seleccionada?</mat-option
                         >
                       </mat-select>
                     </mat-form-field>
@@ -136,8 +103,18 @@
                       class="example-full-width"
                       appearance="outline"
                     >
-                      <mat-label>Dirección</mat-label>
-                      <input matInput formControlName="direccion" required />
+                      <mat-label>Fecha de iniciación nombramiento</mat-label>
+                      <input
+                        matInput
+                        [matDatepicker]="picker1"
+                        formControlName="nit"
+                      />
+                      <mat-hint>MM/DD/AAAA</mat-hint>
+                      <mat-datepicker-toggle
+                        matIconSuffix
+                        [for]="picker1"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
                     </mat-form-field>
                   </div>
                 </div>
@@ -147,25 +124,37 @@
                       class="example-full-width"
                       appearance="outline"
                     >
-                      <mat-label>Teléfonos</mat-label>
-                      <input matInput formControlName="telefono" required />
+                      <mat-label>Fecha de terminación nombramiento</mat-label>
+                      <input
+                        matInput
+                        [matDatepicker]="picker2"
+                        formControlName="nit"
+                      />
+                      <mat-hint>MM/DD/AAAA</mat-hint>
+                      <mat-datepicker-toggle
+                        matIconSuffix
+                        [for]="picker2"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #picker2></mat-datepicker>
                     </mat-form-field>
                   </div>
                 </div>
+              </div>
+              <div class="row">
                 <div class="col">
                   <div class="form-group">
                     <mat-form-field
                       class="example-full-width"
                       appearance="outline"
                     >
-                      <mat-label>Tipo de sede</mat-label>
-                      <mat-select formControlName="tipo">
-                        <mat-option
-                          *ngFor="let tipoSede of listadoTipoSede"
-                          [value]="tipoSede.codigo"
-                          >{{ tipoSede.nombre }}</mat-option
-                        >
-                      </mat-select>
+                      <mat-label>Justificación u observación</mat-label>
+                      <textarea
+                        matInput
+                        type="text"
+                        formControlName="nombre"
+                        required
+                        rows="5"
+                      ></textarea>
                     </mat-form-field>
                   </div>
                 </div>

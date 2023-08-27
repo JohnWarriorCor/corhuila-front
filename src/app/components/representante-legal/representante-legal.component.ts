@@ -18,7 +18,6 @@ import {
 } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSelectionList } from '@angular/material/list';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -34,15 +33,13 @@ import { CabecerasCentrosPoblados } from 'src/app/models/cabeceras-centros-pobla
 import { SedeTipo } from 'src/app/models/sede-tipo';
 import { SedeService } from 'src/app/services/sede.service';
 import { Sede } from 'src/app/models/sede';
-import { Facultad } from 'src/app/models/facultad';
-import { FacultadService } from 'src/app/services/facultad.service';
 
 @Component({
-  selector: 'app-facultad',
-  templateUrl: './facultad.component.html',
-  styleUrls: ['./facultad.component.css'],
+  selector: 'app-representante-legal',
+  templateUrl: './representante-legal.component.html',
+  styleUrls: ['./representante-legal.component.css'],
 })
-export class FacultadComponent {
+export class RepresentanteLegalComponent {
   editar: boolean = false;
   nameFile: string = 'Archivo: pdf';
   paises: Pais[] = [];
@@ -54,33 +51,31 @@ export class FacultadComponent {
   institucion: Institucion[] = [];
   listadoTipoSede: SedeTipo[] = [];
   listadoSede: Sede[] = [];
-  listadoFacultad: Facultad[] = [];
 
   formSede!: FormGroup;
 
-  dataSource = new MatTableDataSource<Facultad>([]);
+  dataSource = new MatTableDataSource<Sede>([]);
   displayedColumns: string[] = [
     'index',
+    'nit',
+    'institucion',
     'sede',
-    'nombre',
-    'decano',
-    'correo',
+    'ubicacion',
+    'dirección',
     'telefono',
+    'tipo',
+    'fecha',
     'opciones',
   ];
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  @ViewChild('allSelected', { static: false }) allSelected!: MatSelectionList;
   // Referencia al elemento div oculto
   @ViewChild('hiddenDiv') hiddenDiv!: ElementRef;
-
-  sedes = new FormControl('');
 
   constructor(
     private formBuilder: FormBuilder,
     public ubicacionService: UbicacionService,
     public institucionService: InstitucionService,
     public sedeService: SedeService,
-    public facultadServcice: FacultadService,
     public dialog: MatDialog,
     private authService: AuthService,
     private router: Router
@@ -88,22 +83,25 @@ export class FacultadComponent {
     if (this.authService.validacionToken()) {
       this.obtenerPaises();
       this.obtenerPaisLocal();
-      this.crearFormFacultad();
+      this.crearFormSede();
       this.obtenerListadoSedes();
       this.obtenerInstitucion();
       this.obtenerListadoTiposSedes();
-      this.obtenerListadoFacultades();
     }
   }
 
-  private crearFormFacultad(): void {
+  private crearFormSede(): void {
     this.formSede = this.formBuilder.group({
       codigo: new FormControl(''),
-      sede: new FormControl(''),
+      nit: new FormControl('', Validators.required),
       nombre: new FormControl('', Validators.required),
-      decano: new FormControl('', Validators.required),
-      correo: new FormControl('', Validators.required),
+      pais: new FormControl('', Validators.required),
+      departamento: new FormControl('', Validators.required),
+      municipio: new FormControl('', Validators.required),
+      ccp: new FormControl('', Validators.required),
+      direccion: new FormControl('', Validators.required),
       telefono: new FormControl('', Validators.required),
+      tipo: new FormControl('', Validators.required),
       estado: new FormControl(''),
     });
   }
@@ -121,44 +119,38 @@ export class FacultadComponent {
   }
  */
 
-  obtenerListadoFacultades() {
-    this.facultadServcice.obtenerListadoFacultades().subscribe((data) => {
-      this.listadoFacultad = data;
-      this.dataSource = new MatTableDataSource<Facultad>(data);
+  obtenerListadoSedes() {
+    this.sedeService.obtenerListadoSedes().subscribe((data) => {
+      this.listadoSede = data;
+      this.dataSource = new MatTableDataSource<Sede>(data);
       this.paginator.firstPage();
       this.dataSource.paginator = this.paginator;
     });
   }
 
-  obtenerListadoSedes() {
-    this.sedeService.obtenerListadoSedes().subscribe((data) => {
-      this.listadoSede = data;
-    });
-  }
-
-  generarFacultad(): void {
-    console.log(this.sedes.value!.length);
-    for (let index = 0; index < this.sedes.value!.length; index++) {
-      let facultad: Facultad = new Facultad();
-      facultad.nombre = this.formSede.get('nombre')!.value;
-      let sede: Sede = new Sede();
-      sede.codigo = +this.sedes.value![index];
-      facultad.sede = sede;
-      facultad.decano = this.formSede.get('decano')!.value;
-      facultad.correo = this.formSede.get('correo')!.value;
-      facultad.telefono = this.formSede.get('telefono')!.value;
-      facultad.estado = this.formSede.get('estado')!.value;
-      if (this.editar) {
-        this.actualizarFacultad(facultad);
-      } else {
-        this.registrarFacultad(facultad);
-      }
+  generarSede(): void {
+    let sede: Sede = new Sede();
+    sede.codigo = this.formSede.get('codigo')!.value;
+    sede.nit = this.formSede.get('nit')!.value;
+    sede.nombre = this.formSede.get('nombre')!.value;
+    let ccp: CabecerasCentrosPoblados = new CabecerasCentrosPoblados();
+    ccp.divipola = this.formSede.get('ccp')!.value;
+    sede.ccp = ccp;
+    sede.direccion = this.formSede.get('direccion')!.value;
+    sede.telefono = this.formSede.get('telefono')!.value;
+    let tipo: SedeTipo = new SedeTipo();
+    tipo.codigo = this.formSede.get('tipo')!.value;
+    sede.sedeTipo = tipo;
+    sede.estado = this.formSede.get('estado')!.value;
+    if (this.editar) {
+      this.actualizarSede(sede);
+    } else {
+      this.registrarSede(sede);
     }
-    this.sedes.reset();
   }
 
-  registrarFacultad(facultad: Facultad) {
-    this.facultadServcice.registrarFacultad(facultad).subscribe(
+  registrarSede(sede: Sede) {
+    this.sedeService.registrarSede(sede).subscribe(
       (data) => {
         if (data > 0) {
           Swal.fire({
@@ -168,9 +160,10 @@ export class FacultadComponent {
             showConfirmButton: false,
             timer: 2500,
           });
+          this.obtenerListadoSedes();
           this.cancelar();
-          this.crearFormFacultad();
-          this.obtenerListadoFacultades();
+          this.crearFormSede();
+          this.obtenerListadoSedes();
         } else {
           this.mensajeError();
         }
@@ -179,8 +172,8 @@ export class FacultadComponent {
     );
   }
 
-  actualizarFacultad(facultad: Facultad) {
-    this.facultadServcice.actualizarFacultad(facultad).subscribe(
+  actualizarSede(sede: Sede) {
+    this.sedeService.actualizarSede(sede).subscribe(
       (data) => {
         if (data > 0) {
           Swal.fire({
@@ -190,7 +183,7 @@ export class FacultadComponent {
             showConfirmButton: false,
           });
           this.cancelar();
-          this.obtenerListadoFacultades();
+          this.obtenerListadoSedes();
         } else {
           this.mensajeError();
         }
@@ -199,37 +192,47 @@ export class FacultadComponent {
     );
   }
 
-  editarFacultad(element: Facultad) {
+  editarSede(element: Sede) {
     this.showAndScrollToHiddenDiv();
     this.editar = true;
     this.formSede.get('codigo')!.setValue(element.codigo);
-    this.formSede.get('sede')!.setValue(element.sede.codigo);
+    this.formSede.get('nit')!.setValue(element.nit);
     this.formSede.get('nombre')!.setValue(element.nombre);
-    this.formSede.get('decano')!.setValue(element.decano);
-    this.formSede.get('correo')!.setValue(element.correo);
+    this.formSede.get('pais')!.setValue(element.pais.codigo);
+    this.obtenerDepartamentosPorPais(element.pais.codigo);
+    this.formSede.get('departamento')!.setValue(element.departamento.divipola);
+    this.obtenerMunicipiosPorDepartamento(element.departamento.divipola);
+    this.formSede.get('municipio')!.setValue(element.municipio.divipola);
+    this.obtenerCcpPorMunicipio(element.municipio.divipola);
+    this.formSede.get('ccp')!.setValue(element.ccp.divipola);
+    this.formSede.get('direccion')!.setValue(element.direccion);
     this.formSede.get('telefono')!.setValue(element.telefono);
+    this.formSede.get('tipo')!.setValue(element.sedeTipo.codigo);
     this.formSede.get('estado')!.setValue(element.estado);
   }
 
-  eliminarFacultad() {
-    let facultad: Facultad = new Facultad();
-    facultad.codigo = this.formSede.get('codigo')!.value;
-    facultad.nombre = this.formSede.get('nombre')!.value;
+  eliminarSede() {
     let sede: Sede = new Sede();
-    sede.codigo = this.formSede.get('sede')!.value;
-    facultad.sede = sede;
-    facultad.decano = this.formSede.get('decano')!.value;
-    facultad.correo = this.formSede.get('correo')!.value;
-    facultad.telefono = this.formSede.get('telefono')!.value;
-    facultad.estado = 0;
-    this.actualizarFacultad(facultad);
+    sede.codigo = this.formSede.get('codigo')!.value;
+    sede.nit = this.formSede.get('nit')!.value;
+    sede.nombre = this.formSede.get('nombre')!.value;
+    let ccp: CabecerasCentrosPoblados = new CabecerasCentrosPoblados();
+    ccp.divipola = this.formSede.get('ccp')!.value;
+    sede.ccp = ccp;
+    sede.direccion = this.formSede.get('direccion')!.value;
+    sede.telefono = this.formSede.get('telefono')!.value;
+    let tipo: SedeTipo = new SedeTipo();
+    tipo.codigo = this.formSede.get('tipo')!.value;
+    sede.sedeTipo = tipo;
+    sede.estado = 0;
+    this.actualizarSede(sede);
   }
 
   cancelar() {
     this.formSede.reset();
     this.obtenerPaises();
     this.obtenerPaisLocal();
-    this.crearFormFacultad();
+    this.crearFormSede();
     this.obtenerListadoSedes();
     this.editar = false;
   }
@@ -299,7 +302,7 @@ export class FacultadComponent {
       text: 'No se pudo completar el proceso.',
       showConfirmButton: true,
       confirmButtonText: 'Listo',
-      confirmButtonColor: '#006983',
+      confirmButtonColor: '#8f141b',
     });
   }
 
