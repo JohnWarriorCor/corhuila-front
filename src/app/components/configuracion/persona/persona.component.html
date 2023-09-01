@@ -390,16 +390,17 @@
                     </mat-form-field>
                   </div>
                 </div>
-                <div class="col" *ngIf="formPersona.get('grupoEtnico')!.value === 1">
+                <div
+                  class="col"
+                  *ngIf="formPersona.get('grupoEtnico')!.value === 1"
+                >
                   <div class="form-group">
                     <mat-form-field
                       class="example-full-width"
                       appearance="outline"
                     >
                       <mat-label>Pueblo indigena</mat-label>
-                      <mat-select
-                        formControlName="puebloIndigena"
-                      >
+                      <mat-select formControlName="puebloIndigena">
                         <mat-option
                           *ngFor="let pueblo of puebloIndigena"
                           [value]="pueblo.codigo"
@@ -409,7 +410,10 @@
                     </mat-form-field>
                   </div>
                 </div>
-                <div class="col" *ngIf="formPersona.get('grupoEtnico')!.value === 2">
+                <div
+                  class="col"
+                  *ngIf="formPersona.get('grupoEtnico')!.value === 2"
+                >
                   <div class="form-group">
                     <mat-form-field
                       class="example-full-width"
@@ -445,7 +449,10 @@
                     </mat-form-field>
                   </div>
                 </div>
-                <div class="col" *ngIf="formPersona.get('personaDiscapacidad')!.value === 1">
+                <div
+                  class="col"
+                  *ngIf="formPersona.get('personaDiscapacidad')!.value === 1"
+                >
                   <div class="form-group">
                     <mat-form-field
                       class="example-full-width"
@@ -580,111 +587,91 @@
                 </div>
               </div>
             </form>
-            <div class="row mt-5">
-              <div class="col">
-                <table
-                  mat-table
-                  [dataSource]="dataSource"
-                  class="table table-hover shadow"
+          </div>
+        </div>
+        <div class="row mt-5">
+          <div class="col">
+            <table
+              mat-table
+              [dataSource]="dataSource"
+              class="table table-hover shadow"
+            >
+              <ng-container matColumnDef="index">
+                <th mat-header-cell *matHeaderCellDef>N°</th>
+                <td
+                  mat-cell
+                  *matCellDef="let element; let i = index"
+                  class="font-sm-usco"
                 >
-                  <ng-container matColumnDef="index">
-                    <th mat-header-cell *matHeaderCellDef>N°</th>
-                    <td
-                      mat-cell
-                      *matCellDef="let element; let i = index"
-                      class="font-sm-usco"
-                    >
-                      {{ dataSource.filteredData.indexOf(element) + 1 }}
-                    </td>
-                  </ng-container>
-                  <ng-container matColumnDef="nit">
-                    <th mat-header-cell *matHeaderCellDef>Identificación</th>
-                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                      {{ element.tipoId.nombreCorto }} -
-                      {{ element.identificacion }}
-                    </td>
-                  </ng-container>
-                  <ng-container matColumnDef="ies">
-                    <th mat-header-cell *matHeaderCellDef>Nombres</th>
-                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                      {{ element.apellido }} {{ element.nombre }}
-                    </td>
-                  </ng-container>
-                  <ng-container matColumnDef="padre">
-                    <th mat-header-cell *matHeaderCellDef>Fecha nacimiento</th>
-                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                      {{ element.fechaNacimiento | date : "dd/MM/yyyy" }}
-                    </td>
-                  </ng-container>
-                  <ng-container matColumnDef="nombre">
-                    <th mat-header-cell *matHeaderCellDef>Sexo biológico</th>
-                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                      {{ element.sexoBiologico.nombre }}
-                    </td>
-                  </ng-container>
-                  <ng-container matColumnDef="creacion">
-                    <th mat-header-cell *matHeaderCellDef>Telefono</th>
-                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                      {{ element.fijo }}
-                    </td>
-                  </ng-container>
-                  <ng-container matColumnDef="existencia">
-                    <th mat-header-cell *matHeaderCellDef>Correo</th>
-                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                      {{ element.correo }}
-                    </td>
-                  </ng-container>
-                  <ng-container matColumnDef="estado">
-                    <th mat-header-cell *matHeaderCellDef>Municipio</th>
-                    <td
-                      mat-cell
-                      *matCellDef="let element"
-                      class="font-sm-usco"
-                    ></td>
-                  </ng-container>
-                  <ng-container matColumnDef="pdf">
-                    <th mat-header-cell *matHeaderCellDef>Opciones</th>
-                    <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                      <button
-                        *ngIf="element.estado === 1"
-                        class="btn btn-success btn-sm mr-2"
-                        title="Activo"
-                      >
-                        <i class="fas fa-check-square fa-xs"></i>
-                      </button>
-                      <button
-                        *ngIf="element.estado !== 1"
-                        class="btn btn-secondary btn-sm mr-2"
-                        title="Inactivo"
-                      >
-                        <i class="fa-solid fa-square-minus fa-xs"></i>
-                      </button>
-                      <button
-                        class="btn btn-info btn-sm mr-2"
-                        title="Informacion"
-                      >
-                        <i class="fa-solid fa-circle-info fa-xs"></i>
-                      </button>
-                      <button
-                        class="btn btn-primary btn-sm"
-                        (click)="editarPersona(element)"
-                      >
-                        <i class="fa-solid fa-pencil fa-xs"></i>
-                      </button>
-                    </td>
-                  </ng-container>
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                  <tr
-                    mat-row
-                    *matRowDef="let row; columns: displayedColumns"
-                  ></tr>
-                </table>
-                <mat-paginator
-                  [pageSizeOptions]="[10, 20, 30]"
-                  showFirstLastButtons
-                ></mat-paginator>
-              </div>
-            </div>
+                  {{ dataSource.filteredData.indexOf(element) + 1 }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="identificacion">
+                <th mat-header-cell *matHeaderCellDef>Identificación</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                  {{ element.tipoId.nombreCorto }} -
+                  {{ element.identificacion }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="nombres">
+                <th mat-header-cell *matHeaderCellDef>Nombres</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                  {{ element.apellido }} {{ element.nombre }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="fechaNacimiento">
+                <th mat-header-cell *matHeaderCellDef>Fecha nacimiento</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                  {{ element.fechaNacimiento | date : "dd/MM/yyyy" }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="telefononoMovil">
+                <th mat-header-cell *matHeaderCellDef>Telefono</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                  {{ element.movil }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef>Correo</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                  {{ element.correo }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="opciones">
+                <th mat-header-cell *matHeaderCellDef>Opciones</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                  <button
+                    *ngIf="element.estado === 1"
+                    class="btn btn-success btn-sm mr-2"
+                    title="Activo"
+                  >
+                    <i class="fas fa-check-square fa-xs"></i>
+                  </button>
+                  <button
+                    *ngIf="element.estado !== 1"
+                    class="btn btn-secondary btn-sm mr-2"
+                    title="Inactivo"
+                  >
+                    <i class="fa-solid fa-square-minus fa-xs"></i>
+                  </button>
+                  <button class="btn btn-info btn-sm mr-2" title="Informacion">
+                    <i class="fa-solid fa-circle-info fa-xs"></i>
+                  </button>
+                  <button
+                    class="btn btn-primary btn-sm"
+                    (click)="editarPersona(element)"
+                  >
+                    <i class="fa-solid fa-pencil fa-xs"></i>
+                  </button>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+            <mat-paginator
+              [pageSizeOptions]="[10, 20, 30]"
+              showFirstLastButtons
+            ></mat-paginator>
           </div>
         </div>
       </div>

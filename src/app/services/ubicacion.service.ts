@@ -88,13 +88,14 @@ export class UbicacionService {
     );
   }
 
-  obtenerCcpPorMunicipio(codigo: string): Observable<CabecerasCentrosPoblados[]> {
+  obtenerCcpPorMunicipio(
+    codigo: string
+  ): Observable<CabecerasCentrosPoblados[]> {
     return this.http.get<CabecerasCentrosPoblados[]>(
       `${this.url}/obtener-ccp-por-municipio/${codigo}`,
       { headers: this.aggAutorizacionHeader() }
     );
   }
-
 
   obtenerMunicipios(): Observable<Municipio[]> {
     return this.http
@@ -110,5 +111,4 @@ export class UbicacionService {
         })
       );
   }
-
 }

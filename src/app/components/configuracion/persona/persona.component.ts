@@ -14,6 +14,7 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Pais } from 'src/app/models/pais';
@@ -60,7 +61,7 @@ export class PersonaComponent {
   puebloIndigena: PuebloIndigena[] = [];
   talentoExepcional: TalentoExepcional[] = [];
   listadoCcp: CabecerasCentrosPoblados[] = [];
-  listadoPerosna: Persona[] = [];
+  listadoPersona: Persona[] = [];
   listadoMunicipios: Municipio[] = [];
 
   formPersona!: FormGroup;
@@ -68,14 +69,12 @@ export class PersonaComponent {
   dataSource = new MatTableDataSource<Persona>([]);
   displayedColumns: string[] = [
     'index',
-    'nit',
-    'ies',
-    'padre',
-    'nombre',
-    'creacion',
-    'existencia',
-    'estado',
-    'pdf',
+    'identificacion',
+    'nombres',
+    'fechaNacimiento',
+    'telefononoMovil',
+    'email',
+    'opciones',
   ];
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
@@ -85,6 +84,7 @@ export class PersonaComponent {
     public personaService: PersonaService,
     public dialog: MatDialog,
     private authService: AuthService,
+    private datePipe: DatePipe,
     private router: Router
   ) {
     if (this.authService.validacionToken()) {
@@ -291,12 +291,14 @@ export class PersonaComponent {
     this.formPersona.get('codigo')!.setValue(element.codigo);
     this.formPersona.get('identificacion')!.setValue(element.identificacion);
     this.formPersona.get('identificacionTipo')!.setValue(element.tipoId.codigo);
-    this.formPersona.get('fechaExpedicion')!.setValue(element.fechaExpedicion);
+    let fechaExpedicion = new Date(element.fechaExpedicion + ' 0:00:00');
+    this.formPersona.get('fechaExpedicion')!.setValue(fechaExpedicion);
     this.formPersona.get('lugarExpedicion')!.setValue(element.lugarExpedicion);
     this.formPersona.get('nombre')!.setValue(element.nombre);
     this.formPersona.get('apellido')!.setValue(element.apellido);
     this.formPersona.get('sexo')!.setValue(element.sexoBiologico.codigo);
-    this.formPersona.get('fechaNacimiento')!.setValue(element.fechaNacimiento);
+    let fechaNacimiento = new Date(element.fechaNacimiento + ' 0:00:00');
+    this.formPersona.get('fechaNacimiento')!.setValue(fechaNacimiento);
     this.formPersona
       .get('grupoSanguineo')!
       .setValue(element.grupoSanguineo.codigo);
@@ -423,7 +425,7 @@ export class PersonaComponent {
   obtenerPersonas() {
     this.personaService.obtenerPersonas().subscribe((data) => {
       console.log(data);
-      this.listadoPerosna = data;
+      this.listadoPersona = data;
       this.dataSource = new MatTableDataSource<Persona>(data);
       this.paginator.firstPage();
       this.dataSource.paginator = this.paginator;

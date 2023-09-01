@@ -22,17 +22,12 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { Pais } from 'src/app/models/pais';
-import { UbicacionService } from 'src/app/services/ubicacion.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { Departamento } from 'src/app/models/departamento';
-import { Municipio } from '../../models/municipio';
-import { InstitucionService } from 'src/app/services/institucion.service';
-import { Institucion } from 'src/app/models/institucion';
 import { CabecerasCentrosPoblados } from 'src/app/models/cabeceras-centros-poblados';
-import { SedeTipo } from 'src/app/models/sede-tipo';
-import { SedeService } from 'src/app/services/sede.service';
-import { Sede } from 'src/app/models/sede';
+import { Persona } from 'src/app/models/persona';
+import { PersonaService } from 'src/app/services/persona.service';
+import { RepresentanteLegalService } from '../../services/representante-legal.service';
+import { RepresentanteLegal } from 'src/app/models/representante-legal';
 
 @Component({
   selector: 'app-representante-legal',
@@ -41,30 +36,23 @@ import { Sede } from 'src/app/models/sede';
 })
 export class RepresentanteLegalComponent {
   editar: boolean = false;
-  nameFile: string = 'Archivo: pdf';
-  paises: Pais[] = [];
-  departamentos: Departamento[] = [];
-  municipios: Municipio[] = [];
-  paisLocal: Pais[] = [];
-  listadoCcp: CabecerasCentrosPoblados[] = [];
-  listadoInstitucion: Institucion[] = [];
-  institucion: Institucion[] = [];
-  listadoTipoSede: SedeTipo[] = [];
-  listadoSede: Sede[] = [];
+  listadoPersona: Persona[] = [];
+  listadoRepresentanteLegal: RepresentanteLegal[] = [];
+  correo: string = '';
 
-  formSede!: FormGroup;
+  formRepresentanteLegal!: FormGroup;
 
-  dataSource = new MatTableDataSource<Sede>([]);
+  fechaLimiteMinima!: any;
+  fechaLimiteMinimaVigencia!: any;
+
+  dataSource = new MatTableDataSource<RepresentanteLegal>([]);
   displayedColumns: string[] = [
     'index',
-    'nit',
-    'institucion',
-    'sede',
-    'ubicacion',
-    'dirección',
-    'telefono',
-    'tipo',
-    'fecha',
+    'persona',
+    'correo',
+    'norma',
+    'fechaInicio',
+    'fechaFin',
     'opciones',
   ];
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
@@ -73,35 +61,28 @@ export class RepresentanteLegalComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    public ubicacionService: UbicacionService,
-    public institucionService: InstitucionService,
-    public sedeService: SedeService,
+    public personaService: PersonaService,
+    public representanteLegalService: RepresentanteLegalService,
     public dialog: MatDialog,
     private authService: AuthService,
     private router: Router
   ) {
+    this.fechaLimiteMinima = new Date();
     if (this.authService.validacionToken()) {
-      this.obtenerPaises();
-      this.obtenerPaisLocal();
-      this.crearFormSede();
-      this.obtenerListadoSedes();
-      this.obtenerInstitucion();
-      this.obtenerListadoTiposSedes();
+      this.crearFormRepresentanteLegal();
+      this.obtenerListadoRepresentanteLegal();
+      this.obtenerPersonas();
     }
   }
 
-  private crearFormSede(): void {
-    this.formSede = this.formBuilder.group({
+  private crearFormRepresentanteLegal(): void {
+    this.formRepresentanteLegal = this.formBuilder.group({
       codigo: new FormControl(''),
-      nit: new FormControl('', Validators.required),
-      nombre: new FormControl('', Validators.required),
-      pais: new FormControl('', Validators.required),
-      departamento: new FormControl('', Validators.required),
-      municipio: new FormControl('', Validators.required),
-      ccp: new FormControl('', Validators.required),
-      direccion: new FormControl('', Validators.required),
-      telefono: new FormControl('', Validators.required),
-      tipo: new FormControl('', Validators.required),
+      persona: new FormControl('', Validators.required),
+      norma: new FormControl('', Validators.required),
+      fechaInicio: new FormControl('', Validators.required),
+      fechaFin: new FormControl('', Validators.required),
+      justificacion: new FormControl('', Validators.required),
       estado: new FormControl(''),
     });
   }
@@ -119,170 +100,148 @@ export class RepresentanteLegalComponent {
   }
  */
 
-  obtenerListadoSedes() {
-    this.sedeService.obtenerListadoSedes().subscribe((data) => {
-      this.listadoSede = data;
-      this.dataSource = new MatTableDataSource<Sede>(data);
-      this.paginator.firstPage();
-      this.dataSource.paginator = this.paginator;
+  limiteVigencia() {
+    this.fechaLimiteMinimaVigencia = new Date(
+      this.formRepresentanteLegal.get('fechaInicio')!.value
+    );
+  }
+
+  obtenerPersonas() {
+    this.personaService.obtenerPersonas().subscribe((data) => {
+      console.log(data);
+      this.listadoPersona = data;
     });
   }
 
-  generarSede(): void {
-    let sede: Sede = new Sede();
-    sede.codigo = this.formSede.get('codigo')!.value;
-    sede.nit = this.formSede.get('nit')!.value;
-    sede.nombre = this.formSede.get('nombre')!.value;
-    let ccp: CabecerasCentrosPoblados = new CabecerasCentrosPoblados();
-    ccp.divipola = this.formSede.get('ccp')!.value;
-    sede.ccp = ccp;
-    sede.direccion = this.formSede.get('direccion')!.value;
-    sede.telefono = this.formSede.get('telefono')!.value;
-    let tipo: SedeTipo = new SedeTipo();
-    tipo.codigo = this.formSede.get('tipo')!.value;
-    sede.sedeTipo = tipo;
-    sede.estado = this.formSede.get('estado')!.value;
+  obtenerListadoRepresentanteLegal() {
+    this.representanteLegalService
+      .obtenerListadoRepresentanteLegal()
+      .subscribe((data) => {
+        this.listadoRepresentanteLegal = data;
+        this.dataSource = new MatTableDataSource<RepresentanteLegal>(data);
+        this.paginator.firstPage();
+        this.dataSource.paginator = this.paginator;
+      });
+  }
+
+  precargaCorreo(element: Persona) {
+    this.correo = element.correo;
+  }
+
+  generarRepresentantLegal(): void {
+    let representanteLegal: RepresentanteLegal = new RepresentanteLegal();
+    representanteLegal.codigo =
+      this.formRepresentanteLegal.get('codigo')!.value;
+    let persona: Persona = new Persona();
+    persona.codigo = this.formRepresentanteLegal.get('persona')!.value;
+    representanteLegal.persona = persona;
+    representanteLegal.norma = this.formRepresentanteLegal.get('norma')!.value;
+    representanteLegal.fechaInicio =
+      this.formRepresentanteLegal.get('fechaInicio')!.value;
+    representanteLegal.fechaFin =
+      this.formRepresentanteLegal.get('fechaFin')!.value;
+    representanteLegal.justificacion =
+      this.formRepresentanteLegal.get('justificacion')!.value;
+    representanteLegal.estado =
+      this.formRepresentanteLegal.get('estado')!.value;
     if (this.editar) {
-      this.actualizarSede(sede);
+      this.actualizarRepresentantLegal(representanteLegal);
     } else {
-      this.registrarSede(sede);
+      this.registrarRepresentantLegal(representanteLegal);
     }
   }
 
-  registrarSede(sede: Sede) {
-    this.sedeService.registrarSede(sede).subscribe(
-      (data) => {
-        if (data > 0) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Registrado',
-            text: '¡Operación exitosa!',
-            showConfirmButton: false,
-            timer: 2500,
-          });
-          this.obtenerListadoSedes();
-          this.cancelar();
-          this.crearFormSede();
-          this.obtenerListadoSedes();
-        } else {
-          this.mensajeError();
-        }
-      },
-      (err) => this.fError(err)
-    );
+  registrarRepresentantLegal(representantLegal: RepresentanteLegal) {
+    this.representanteLegalService
+      .registrarRepresentanteLegal(representantLegal)
+      .subscribe(
+        (data) => {
+          if (data > 0) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Registrado',
+              text: '¡Operación exitosa!',
+              showConfirmButton: false,
+              timer: 2500,
+            });
+            this.obtenerListadoRepresentanteLegal();
+            this.cancelar();
+            this.crearFormRepresentanteLegal();
+          } else {
+            this.mensajeError();
+          }
+        },
+        (err) => this.fError(err)
+      );
   }
 
-  actualizarSede(sede: Sede) {
-    this.sedeService.actualizarSede(sede).subscribe(
-      (data) => {
-        if (data > 0) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Actualizado',
-            text: '¡Operación exitosa!',
-            showConfirmButton: false,
-          });
-          this.cancelar();
-          this.obtenerListadoSedes();
-        } else {
-          this.mensajeError();
-        }
-      },
-      (err) => this.fError(err)
-    );
+  actualizarRepresentantLegal(representantLegal: RepresentanteLegal) {
+    this.representanteLegalService
+      .actualizarRepresentanteLegal(representantLegal)
+      .subscribe(
+        (data) => {
+          if (data > 0) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Actualizado',
+              text: '¡Operación exitosa!',
+              showConfirmButton: false,
+            });
+            this.cancelar();
+            this.obtenerListadoRepresentanteLegal();
+          } else {
+            this.mensajeError();
+          }
+        },
+        (err) => this.fError(err)
+      );
   }
 
-  editarSede(element: Sede) {
+  editarRepresentantLegal(element: RepresentanteLegal) {
     this.showAndScrollToHiddenDiv();
     this.editar = true;
-    this.formSede.get('codigo')!.setValue(element.codigo);
-    this.formSede.get('nit')!.setValue(element.nit);
-    this.formSede.get('nombre')!.setValue(element.nombre);
-    this.formSede.get('pais')!.setValue(element.pais.codigo);
-    this.obtenerDepartamentosPorPais(element.pais.codigo);
-    this.formSede.get('departamento')!.setValue(element.departamento.divipola);
-    this.obtenerMunicipiosPorDepartamento(element.departamento.divipola);
-    this.formSede.get('municipio')!.setValue(element.municipio.divipola);
-    this.obtenerCcpPorMunicipio(element.municipio.divipola);
-    this.formSede.get('ccp')!.setValue(element.ccp.divipola);
-    this.formSede.get('direccion')!.setValue(element.direccion);
-    this.formSede.get('telefono')!.setValue(element.telefono);
-    this.formSede.get('tipo')!.setValue(element.sedeTipo.codigo);
-    this.formSede.get('estado')!.setValue(element.estado);
+    this.formRepresentanteLegal.get('codigo')!.setValue(element.codigo);
+    this.formRepresentanteLegal
+      .get('persona')!
+      .setValue(element.persona.codigo);
+    this.precargaCorreo(element.persona);
+    this.formRepresentanteLegal.get('norma')!.setValue('' + element.norma);
+    let fechaInicio = new Date(element.fechaInicio + ' 0:00:00');
+    this.formRepresentanteLegal.get('fechaInicio')!.setValue(fechaInicio);
+    let fechaFin = new Date(element.fechaFin + ' 0:00:00');
+    this.formRepresentanteLegal.get('fechaFin')!.setValue(fechaFin);
+    this.formRepresentanteLegal
+      .get('justificacion')!
+      .setValue(element.justificacion);
+    this.formRepresentanteLegal.get('estado')!.setValue(element.estado);
   }
 
-  eliminarSede() {
-    let sede: Sede = new Sede();
-    sede.codigo = this.formSede.get('codigo')!.value;
-    sede.nit = this.formSede.get('nit')!.value;
-    sede.nombre = this.formSede.get('nombre')!.value;
-    let ccp: CabecerasCentrosPoblados = new CabecerasCentrosPoblados();
-    ccp.divipola = this.formSede.get('ccp')!.value;
-    sede.ccp = ccp;
-    sede.direccion = this.formSede.get('direccion')!.value;
-    sede.telefono = this.formSede.get('telefono')!.value;
-    let tipo: SedeTipo = new SedeTipo();
-    tipo.codigo = this.formSede.get('tipo')!.value;
-    sede.sedeTipo = tipo;
-    sede.estado = 0;
-    this.actualizarSede(sede);
+  eliminarRepresentantLegal() {
+    let representanteLegal: RepresentanteLegal = new RepresentanteLegal();
+    representanteLegal.codigo =
+      this.formRepresentanteLegal.get('codigo')!.value;
+    let persona: Persona = new Persona();
+    persona.codigo = this.formRepresentanteLegal.get('persona')!.value;
+    representanteLegal.persona = persona;
+    representanteLegal.norma = this.formRepresentanteLegal.get('norma')!.value;
+    representanteLegal.fechaInicio =
+      this.formRepresentanteLegal.get('fechaInicio')!.value;
+    representanteLegal.fechaFin =
+      this.formRepresentanteLegal.get('fechaFin')!.value;
+    representanteLegal.justificacion =
+      this.formRepresentanteLegal.get('justificacion')!.value;
+    representanteLegal.estado =
+      this.formRepresentanteLegal.get('estado')!.value;
+    representanteLegal.estado = 0;
+    this.actualizarRepresentantLegal(representanteLegal);
   }
 
   cancelar() {
-    this.formSede.reset();
-    this.obtenerPaises();
-    this.obtenerPaisLocal();
-    this.crearFormSede();
-    this.obtenerListadoSedes();
+    this.formRepresentanteLegal.reset();
+    this.crearFormRepresentanteLegal();
+    this.obtenerListadoRepresentanteLegal();
     this.editar = false;
-  }
-
-  obtenerPaises() {
-    this.ubicacionService.obtenerPaises().subscribe((data) => {
-      this.paises = data;
-    });
-  }
-
-  obtenerPaisLocal() {
-    this.ubicacionService.obtenerPaisLocal().subscribe((data) => {
-      this.paisLocal = data;
-    });
-  }
-
-  obtenerDepartamentosPorPais(codigo: number) {
-    this.municipios = [];
-    this.ubicacionService
-      .obtenerDepartamentosPorPais(codigo)
-      .subscribe((data) => {
-        this.departamentos = data;
-      });
-  }
-
-  obtenerMunicipiosPorDepartamento(codigo: string) {
-    this.listadoCcp = [];
-    this.ubicacionService
-      .obtenerMunicipiosPorDepartamento(codigo)
-      .subscribe((data) => {
-        this.municipios = data;
-      });
-  }
-
-  obtenerCcpPorMunicipio(codigo: string) {
-    this.ubicacionService.obtenerCcpPorMunicipio(codigo).subscribe((data) => {
-      this.listadoCcp = data;
-    });
-  }
-
-  obtenerInstitucion() {
-    this.institucionService.obtenerInstitucion().subscribe((data) => {
-      this.institucion = data;
-    });
-  }
-
-  obtenerListadoTiposSedes() {
-    this.sedeService.obtenerListadoTiposSedes().subscribe((data) => {
-      this.listadoTipoSede = data;
-    });
+    this.correo = '';
   }
 
   mensajeSuccses() {
@@ -323,7 +282,7 @@ export class RepresentanteLegalComponent {
 /* @Component({
   selector: 'modal-institucion',
   templateUrl: '../institucion/modal-institucion.html',
-  styleUrls: ['./sede.component.css'],
+  styleUrls: ['./RepresentantLegal.component.css'],
 })
 export class ModalInstitucion implements OnInit {
   paises: Pais[] = [];

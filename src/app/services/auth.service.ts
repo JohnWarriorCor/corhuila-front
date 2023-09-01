@@ -69,7 +69,6 @@ export class AuthService {
     params.set('grant_type', 'password');
     params.set('username', usuario.username);
     params.set('password', usuario.password);
-    console.log('Params', usuario.username);
 
     return this.http
       .post<any>(url, params.toString(), { headers: httpHeaders })
@@ -119,7 +118,6 @@ export class AuthService {
   }
 
   guardarUsuario(accessToken: string): void {
-    console.log('accessToken: ' + accessToken);
     let datos = this.obtenerdatosToken(accessToken);
     //  let helper = new JwtHelperService();
     // let datos = helper.decodeToken(accessToken);

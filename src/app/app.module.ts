@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 import { MaterialModules } from './material.modules';
 
@@ -54,7 +55,7 @@ import { AreaAcademiAdmiComponent } from './components/area-academi-admi/area-ac
   entryComponents: [
     ModalInstitucion
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

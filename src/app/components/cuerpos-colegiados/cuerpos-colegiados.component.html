@@ -13,9 +13,9 @@
       <div class="card-body ls">
         <div class="row pl-5 pr-5">
           <div class="col">
-            <form [formGroup]="formSede">
+            <form [formGroup]="formCuerposColegiados">
               <div class="row">
-                <div class="col">
+                <div class="col-sm-6">
                   <div class="form-group">
                     <mat-form-field
                       class="example-full-width"
@@ -41,7 +41,23 @@
                       <input
                         matInput
                         type="text"
-                        formControlName="nombre"
+                        formControlName="nombreCorto"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Número de miembros</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        formControlName="cantidadMiembros"
                         required
                       />
                     </mat-form-field>
@@ -55,28 +71,11 @@
                       class="example-full-width"
                       appearance="outline"
                     >
-                      <mat-label>Nit Institucion</mat-label>
-                      <mat-select formControlName="nit">
-                        <mat-option
-                          *ngFor="let ins of institucion"
-                          [value]="ins.nit"
-                          >{{ ins.nit }} - {{ ins.nombre }}</mat-option
-                        >
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
                       <mat-label>Número de norma</mat-label>
                       <input
                         matInput
                         type="text"
-                        formControlName="nombre"
+                        formControlName="numeroNorma"
                         required
                       />
                     </mat-form-field>
@@ -92,14 +91,12 @@
                       <input
                         matInput
                         type="text"
-                        formControlName="nombre"
+                        formControlName="nombreNorma"
                         required
                       />
                     </mat-form-field>
                   </div>
                 </div>
-              </div>
-              <div class="row">
                 <div class="col">
                   <div class="form-group">
                     <mat-form-field
@@ -110,7 +107,7 @@
                       <input
                         matInput
                         [matDatepicker]="picker"
-                        formControlName="fechaExpedicion"
+                        formControlName="fechaNorma"
                       />
                       <mat-hint>MM/DD/AAAA</mat-hint>
                       <mat-datepicker-toggle
@@ -121,22 +118,6 @@
                     </mat-form-field>
                   </div>
                 </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Cantidad de miembros</mat-label>
-                      <input
-                        matInput
-                        type="text"
-                        formControlName="nombre"
-                        required
-                      />
-                    </mat-form-field>
-                  </div>
-                </div>
               </div>
               <hr />
               <div class="row">
@@ -144,15 +125,15 @@
                   <button
                     type="button"
                     class="btn btn-success mr-2"
-                    [disabled]="!formSede.valid"
-                    (click)="generarSede()"
+                    [disabled]="!formCuerposColegiados.valid"
+                    (click)="generarCuerpoColegiado()"
                   >
                     <i class="far fa-save"></i> Guardar
                   </button>
                   <button
                     *ngIf="editar"
                     class="btn btn-danger mr-2"
-                    (click)="eliminarSede()"
+                    (click)="eliminarCuerpoColegiado()"
                   >
                     <i class="fa-solid fa-trash"></i> Borrar
                   </button>
@@ -185,52 +166,24 @@
                   {{ dataSource.filteredData.indexOf(element) + 1 }}
                 </td>
               </ng-container>
-              <ng-container matColumnDef="nit">
-                <th mat-header-cell *matHeaderCellDef>Nit</th>
+              <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef>
+                  Nombre Cuerpo Colegiado
+                </th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.nit }}
+                  {{ element.nombreCorto }} - {{ element.nombre }}
                 </td>
               </ng-container>
-              <ng-container matColumnDef="institucion">
-                <th mat-header-cell *matHeaderCellDef>Institución</th>
+              <ng-container matColumnDef="norma">
+                <th mat-header-cell *matHeaderCellDef>Norma</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  Corporación Universitaria del Huila
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="sede">
-                <th mat-header-cell *matHeaderCellDef>Sede</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.nombre }}
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="ubicacion">
-                <th mat-header-cell *matHeaderCellDef>Ubicación</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.ccp.nombre }}
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="dirección">
-                <th mat-header-cell *matHeaderCellDef>Dirección</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.direccion }}
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="telefono">
-                <th mat-header-cell *matHeaderCellDef>Telefono</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.telefono }}
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="tipo">
-                <th mat-header-cell *matHeaderCellDef>Tipo</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.sedeTipo.nombre }}
+                  {{ element.numeroNorma }} - {{ element.nombreNorma }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="fecha">
-                <th mat-header-cell *matHeaderCellDef>Fecha Creación</th>
+                <th mat-header-cell *matHeaderCellDef>Fecha Norma</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.fechaCreacion | date : "dd/MM/yyyy" }}
+                  {{ element.fechaNorma | date : "dd/MM/yyyy" }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="opciones">
@@ -255,7 +208,7 @@
                   </button> -->
                   <button
                     class="btn btn-primary btn-sm"
-                    (click)="editarSede(element)"
+                    (click)="editarCuerpoColegiado(element)"
                     title="Editar"
                   >
                     <i class="fa-solid fa-pencil fa-xs"></i>
