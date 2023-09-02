@@ -23,6 +23,7 @@ import { OrganizacionInternaComponent } from './components/inicio/organizacion-i
 import { CuerposColegiadosComponent } from './components/cuerpos-colegiados/cuerpos-colegiados.component';
 import { RepresentanteLegalComponent } from './components/representante-legal/representante-legal.component';
 import { AreaAcademiAdmiComponent } from './components/area-academi-admi/area-academi-admi.component';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,7 @@ import { AreaAcademiAdmiComponent } from './components/area-academi-admi/area-ac
   entryComponents: [
     ModalInstitucion
   ],
-  providers: [DatePipe],
+  providers: [DatePipe, {provide: MAT_DATE_LOCALE, useValue: 'es-ES'}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
