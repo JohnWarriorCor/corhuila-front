@@ -25,7 +25,6 @@
                       <input
                         matInput
                         type="text"
-                        id="nit"
                         formControlName="nit"
                         class="form_control"
                         required
@@ -42,7 +41,7 @@
                       <mat-label>Código SNIES</mat-label>
                       <input
                         matInput
-                        id="ies"
+                        type="number"
                         formControlName="ies"
                         class="form_control"
                         required
@@ -60,7 +59,7 @@
                       <input
                         formControlName="iesPadre"
                         matInput
-                        id="iesPadre"
+                        type="number"
                         class="form_control"
                         required
                       />
@@ -76,7 +75,7 @@
                       appearance="outline"
                     >
                       <mat-label>Naturaleza Jurídica</mat-label>
-                      <mat-select id="naturaleza" formControlName="naturaleza">
+                      <mat-select formControlName="naturaleza">
                         <mat-option
                           *ngFor="let listado of listadoNaturalezaJuridica"
                           [value]="listado.codigo"
@@ -93,7 +92,7 @@
                       appearance="outline"
                     >
                       <mat-label>Sector</mat-label>
-                      <mat-select id="sector" formControlName="sector">
+                      <mat-select formControlName="sector">
                         <mat-option
                           *ngFor="let listado of listadoSector"
                           [value]="listado.codigo"
@@ -110,7 +109,7 @@
                       appearance="outline"
                     >
                       <mat-label>Carácter Académico</mat-label>
-                      <mat-select id="caracter" formControlName="caracter">
+                      <mat-select formControlName="caracter">
                         <mat-option
                           *ngFor="let listado of listadoCaracterAcademico"
                           [value]="listado.codigo"
@@ -134,7 +133,6 @@
                         class="form_control"
                         formControlName="nombre"
                         type="text"
-                        id="nombre"
                         required
                       />
                     </mat-form-field>
@@ -149,7 +147,7 @@
                       appearance="outline"
                     >
                       <mat-label>País</mat-label>
-                      <mat-select id="pais" formControlName="pais">
+                      <mat-select formControlName="pais">
                         <mat-option
                           *ngFor="let pais of paisLocal"
                           [value]="pais.codigo"
@@ -167,10 +165,7 @@
                       appearance="outline"
                     >
                       <mat-label>Departamento</mat-label>
-                      <mat-select
-                        id="departamento"
-                        formControlName="departamento"
-                      >
+                      <mat-select formControlName="departamento">
                         <mat-option
                           *ngFor="let dep of departamentos"
                           [value]="dep.divipola"
@@ -233,7 +228,6 @@
                         matInput
                         class="form_control"
                         formControlName="direccion"
-                        id="direccion"
                         required
                       />
                     </mat-form-field>
@@ -249,8 +243,8 @@
                       <input
                         matInput
                         class="form_control"
+                        type="number"
                         formControlName="telefono"
-                        id="telefono"
                         required
                       />
                     </mat-form-field>
@@ -265,7 +259,6 @@
                       <mat-label>Página Web</mat-label>
                       <input
                         matInput
-                        id="url"
                         class="form_control"
                         formControlName="url"
                         required
@@ -286,7 +279,6 @@
                         matInput
                         formControlName="norma"
                         class="form_control"
-                        id="norma"
                         required
                       />
                     </mat-form-field>
@@ -320,7 +312,6 @@
                         <input
                           type="file"
                           accept="application/pdf"
-                          id="exampleFormControlFile1"
                           aria-label="file browser example"
                         />
                         <span class="file-custom text-left">{{nameFile}}</span>

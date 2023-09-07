@@ -102,7 +102,7 @@ export class FacultadComponent {
       sede: new FormControl(''),
       nombre: new FormControl('', Validators.required),
       decano: new FormControl('', Validators.required),
-      correo: new FormControl('', Validators.required),
+      correo: new FormControl('', [Validators.required, Validators.email]),
       telefono: new FormControl('', Validators.required),
       estado: new FormControl(''),
     });
