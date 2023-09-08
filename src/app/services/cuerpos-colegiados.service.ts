@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
 import { CuerposColegiados } from '../models/cuerpos-colegiados';
+import { Funciones } from '../models/funciones';
 
 @Injectable({
   providedIn: 'root',
@@ -49,6 +50,21 @@ export class CuerposColegiadosService {
           headers: this.aggAutorizacionHeader(),
         }
       )
+      .pipe(
+        catchError((e) => {
+          if (this.isNoAutorizado(e)) {
+            return throwError(e);
+          }
+          return throwError(e);
+        })
+      );
+  }
+
+  obtenerListadoFunciones(): Observable<Funciones[]> {
+    return this.http
+      .get<Funciones[]>(`${this.url}/obtener-listado-funciones`, {
+        headers: this.aggAutorizacionHeader(),
+      })
       .pipe(
         catchError((e) => {
           if (this.isNoAutorizado(e)) {

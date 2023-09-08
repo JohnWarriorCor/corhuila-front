@@ -86,7 +86,7 @@
         <mat-expansion-panel-header class="disable_ripple specific-class">
           <mat-panel-title>
             <h6 class="text-white mt-2">
-              <i class="fa-solid fa-building-user"></i> Organización interna
+              <i class="fa-solid fa-people-group"></i> Cuerpos colegiados
             </h6>
           </mat-panel-title>
         </mat-expansion-panel-header>
@@ -99,9 +99,38 @@
             routerLinkActive="router-link-active"
           >
             <h6 class="text-white">
-              <i class="fa-solid fa-people-group"></i> Cuerpos colegiados
+              <i class="fa-solid fa-circle-plus"></i> Crear
             </h6>
           </a>
+          <a
+            class="pl-5 sidenav-accordion"
+            mat-list-item
+            style="width: 300px"
+            [routerLink]="['/integrantes-cuerpos-colegiados']"
+            routerLinkActive="router-link-active"
+          >
+            <h6 class="text-white">
+              <i class="fa-solid fa-user-gear"></i> Integrantes
+            </h6>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion>
+      <mat-expansion-panel
+        class="sidenav"
+        style="width: 100%"
+        (opened)="panelOpenState = true"
+        (closed)="panelOpenState = false"
+      >
+        <mat-expansion-panel-header class="disable_ripple specific-class">
+          <mat-panel-title>
+            <h6 class="text-white mt-2">
+              <i class="fa-solid fa-building-user"></i> Organización interna
+            </h6>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
           <a
             class="pl-5 sidenav-accordion"
             mat-list-item

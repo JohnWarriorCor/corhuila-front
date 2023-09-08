@@ -20,10 +20,11 @@ import { ConfiguracionComponent } from './components/inicio/configuracion/config
 import { SedeComponent } from './components/sede/sede.component';
 import { FacultadComponent } from './components/facultad/facultad.component';
 import { OrganizacionInternaComponent } from './components/inicio/organizacion-interna/organizacion-interna.component';
-import { CuerposColegiadosComponent } from './components/cuerpos-colegiados/cuerpos-colegiados.component';
+import { CuerposColegiadosComponent, ModalCuerpoColegiado } from './components/cuerpos-colegiados/cuerpos-colegiados.component';
 import { RepresentanteLegalComponent } from './components/representante-legal/representante-legal.component';
 import { AreaAcademiAdmiComponent } from './components/area-academi-admi/area-academi-admi.component';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { IntegranteCuerpoColegiadoComponent } from './components/integrante-cuerpo-colegiado/integrante-cuerpo-colegiado.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     InstitucionComponent,
     PersonaComponent,
     ModalInstitucion,
+    ModalCuerpoColegiado,
     EstructuraComponent,
     ConfiguracionComponent,
     SedeComponent,
@@ -42,7 +44,8 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     OrganizacionInternaComponent,
     CuerposColegiadosComponent,
     RepresentanteLegalComponent,
-    AreaAcademiAdmiComponent
+    AreaAcademiAdmiComponent,
+    IntegranteCuerpoColegiadoComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +57,8 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     HttpClientModule
   ],
   entryComponents: [
-    ModalInstitucion
+    ModalInstitucion,
+    ModalCuerpoColegiado
   ],
   providers: [DatePipe, {provide: MAT_DATE_LOCALE, useValue: 'es-ES'}],
   bootstrap: [AppComponent]

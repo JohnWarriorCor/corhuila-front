@@ -24,6 +24,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { DatePipe } from '@angular/common';
 import { CuerposColegiados } from 'src/app/models/cuerpos-colegiados';
 import { CuerposColegiadosService } from '../../services/cuerpos-colegiados.service';
+import { Funciones } from 'src/app/models/funciones';
 
 @Component({
   selector: 'app-cuerpos-colegiados',
@@ -34,6 +35,7 @@ export class CuerposColegiadosComponent {
   editar: boolean = false;
 
   listadoCuerposColegiados: CuerposColegiados[] = [];
+  listadoFunciones: Funciones[] = [];
 
   formCuerposColegiados!: FormGroup;
 
@@ -43,6 +45,7 @@ export class CuerposColegiadosComponent {
     'nombre',
     'norma',
     'fecha',
+    'funciones',
     'opciones',
   ];
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
@@ -60,6 +63,7 @@ export class CuerposColegiadosComponent {
     if (this.authService.validacionToken()) {
       this.obtenerCuerposColegiados();
       this.crearCuerposColegiados();
+      this.obtenerListadoFunciones();
     }
   }
 
@@ -71,6 +75,7 @@ export class CuerposColegiadosComponent {
       numeroNorma: new FormControl('', Validators.required),
       nombreNorma: new FormControl('', Validators.required),
       fechaNorma: new FormControl('', Validators.required),
+      funciones: new FormControl('', Validators.required),
       fechaCreacion: new FormControl(''),
       cantidadMiembros: new FormControl('', Validators.required),
       estado: new FormControl(''),
@@ -82,13 +87,20 @@ export class CuerposColegiadosComponent {
     this.hiddenDiv.nativeElement.scrollIntoView({ behavior: 'smooth' });
   }
 
-  /*  openDialog(element: any): void {
-    const dialogRef = this.dialog.open(ModalInstitucion, {
+  openDialog(element: any): void {
+    const dialogRef = this.dialog.open(ModalCuerpoColegiado, {
       width: '60%',
-      data: { institucion: element },
+      data: { cuerpoColegiado: element },
     });
   }
- */
+
+  obtenerListadoFunciones() {
+    this.cuerposColegiadosService
+      .obtenerListadoFunciones()
+      .subscribe((data) => {
+        this.listadoFunciones = data;
+      });
+  }
 
   obtenerCuerposColegiados() {
     this.cuerposColegiadosService
@@ -113,6 +125,9 @@ export class CuerposColegiadosComponent {
       this.formCuerposColegiados.get('nombreNorma')!.value;
     cuerpoColegiado.fechaNorma =
       this.formCuerposColegiados.get('fechaNorma')!.value;
+    let funciones: Funciones = new Funciones();
+    funciones.codigo = this.formCuerposColegiados.get('funciones')!.value;
+    cuerpoColegiado.funciones = funciones;
     cuerpoColegiado.fechaCreacion =
       this.formCuerposColegiados.get('fechaCreacion')!.value;
     cuerpoColegiado.cantidadMiembros =
@@ -188,6 +203,9 @@ export class CuerposColegiadosComponent {
     let fechaNorma = new Date(element.fechaNorma + ' 0:00:00');
     this.formCuerposColegiados.get('fechaNorma')!.setValue(fechaNorma);
     this.formCuerposColegiados
+      .get('funciones')!
+      .setValue(element.funciones.codigo);
+    this.formCuerposColegiados
       .get('fechaCreacion')!
       .setValue(element.fechaCreacion);
     this.formCuerposColegiados
@@ -199,19 +217,22 @@ export class CuerposColegiadosComponent {
   eliminarCuerpoColegiado() {
     let cuerposColegiados: CuerposColegiados = new CuerposColegiados();
     cuerposColegiados.codigo = this.formCuerposColegiados.get('codigo')!.value;
-    cuerposColegiados.nombre = this.formCuerposColegiados.get('codigo')!.value;
+    cuerposColegiados.nombre = this.formCuerposColegiados.get('nombre')!.value;
     cuerposColegiados.nombreCorto =
-      this.formCuerposColegiados.get('codigo')!.value;
+      this.formCuerposColegiados.get('nombreCorto')!.value;
     cuerposColegiados.numeroNorma =
-      this.formCuerposColegiados.get('codigo')!.value;
+      this.formCuerposColegiados.get('numeroNorma')!.value;
     cuerposColegiados.nombreNorma =
-      this.formCuerposColegiados.get('codigo')!.value;
+      this.formCuerposColegiados.get('nombreNorma')!.value;
     cuerposColegiados.fechaNorma =
-      this.formCuerposColegiados.get('codigo')!.value;
+      this.formCuerposColegiados.get('fechaNorma')!.value;
     cuerposColegiados.fechaCreacion =
-      this.formCuerposColegiados.get('codigo')!.value;
+      this.formCuerposColegiados.get('fechaCreacion')!.value;
+    let funciones: Funciones = new Funciones();
+    funciones.codigo = this.formCuerposColegiados.get('funciones')!.value;
+    cuerposColegiados.funciones = funciones;
     cuerposColegiados.cantidadMiembros =
-      this.formCuerposColegiados.get('codigo')!.value;
+      this.formCuerposColegiados.get('cantidadMiembros')!.value;
     cuerposColegiados.estado = 0;
     this.actualizarCuerpoColegiado(cuerposColegiados);
   }
@@ -258,27 +279,16 @@ export class CuerposColegiadosComponent {
 
 //// MODAL
 
-/* @Component({
-  selector: 'modal-institucion',
-  templateUrl: '../institucion/modal-institucion.html',
-  styleUrls: ['./sede.component.css'],
+@Component({
+  selector: 'modal-cuerpo-colegiado',
+  templateUrl: 'modal-cuerpo-colegiado.html',
+  styleUrls: ['./cuerpos-colegiados.component.css'],
 })
-export class ModalInstitucion implements OnInit {
-  paises: Pais[] = [];
-  departamentos: Departamento[] = [];
-  municipios: Municipio[] = [];
-  paisLocal: Pais[] = [];
-  listadoCaracterAcademico: CaracterAcademico[] = [];
-  listadoNaturalezaJuridica: NaturalezaJuridica[] = [];
-  listadoSector: Sector[] = [];
-  listadoCcp: CabecerasCentrosPoblados[] = [];
-
+export class ModalCuerpoColegiado implements OnInit {
   constructor(
-    public dialogRef: MatDialogRef<ModalInstitucion>,
+    public dialogRef: MatDialogRef<ModalCuerpoColegiado>,
     public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    public ubicacionService: UbicacionService,
-    public institucionService: InstitucionService
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
   ngOnInit() {}
@@ -286,64 +296,4 @@ export class ModalInstitucion implements OnInit {
   onNoClick(): void {
     this.dialogRef.close();
   }
-
-  obtenerListadoCaracterAcademico() {
-    this.institucionService
-      .obtenerListadoCaracterAcademico()
-      .subscribe((data) => {
-        this.listadoCaracterAcademico = data;
-      });
-  }
-
-  obtenerListadoNaturalezaJuridica() {
-    this.institucionService
-      .obtenerListadoNaturalezaJuridica()
-      .subscribe((data) => {
-        this.listadoNaturalezaJuridica = data;
-      });
-  }
-
-  obtenerListadoSector() {
-    this.institucionService.obtenerListadoSector().subscribe((data) => {
-      this.listadoSector = data;
-    });
-  }
-
-  obtenerPaises() {
-    this.ubicacionService.obtenerPaises().subscribe((data) => {
-      this.paises = data;
-    });
-  }
-
-  obtenerPaisLocal() {
-    this.ubicacionService.obtenerPaisLocal().subscribe((data) => {
-      this.paisLocal = data;
-    });
-  }
-
-  obtenerDepartamentosPorPais(codigo: number) {
-    this.municipios = [];
-    this.ubicacionService
-      .obtenerDepartamentosPorPais(codigo)
-      .subscribe((data) => {
-        this.departamentos = data;
-      });
-  }
-
-  obtenerMunicipiosPorDepartamento(codigo: string) {
-    this.listadoCcp = [];
-    this.ubicacionService
-      .obtenerMunicipiosPorDepartamento(codigo)
-      .subscribe((data) => {
-        this.municipios = data;
-      });
-  }
-
-  obtenerCcpPorMunicipio(codigo: string) {
-    this.ubicacionService.obtenerCcpPorMunicipio(codigo).subscribe((data) => {
-      this.listadoCcp = data;
-    });
-  }
-
 }
- */

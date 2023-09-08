@@ -1,0 +1,164 @@
+<div mat-dialog-title class="bg-corhuila-p-as-2">
+  <div class="row mb-4">
+    <div class="col">
+      <h5 class="text-white">
+        <i class="fa-solid fa-circle-info"></i> Información complementaria
+      </h5>
+    </div>
+    <div class="col text-right text-white">
+      <i class="fa-solid fa-xmark" mat-dialog-close></i>
+    </div>
+  </div>
+</div>
+<mat-dialog-content>
+  <div class="container">
+    <form>
+      <div class="row mt-5">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Nombre del Cuerpo Colegiado</mat-label>
+              <input
+                matInput
+                type="text"
+                [value]="data.cuerpoColegiado.nombre"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="form-group">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Acrónimo</mat-label>
+              <input
+                matInput
+                type="text"
+                [value]="data.cuerpoColegiado.nombreCorto"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Número de miembros</mat-label>
+              <input
+                matInput
+                type="number"
+                [value]="data.cuerpoColegiado.cantidadMiembros"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Número de norma</mat-label>
+              <input
+                matInput
+                type="number"
+                [value]="data.cuerpoColegiado.numeroNorma"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Nombre de la norma</mat-label>
+              <input
+                matInput
+                type="text"
+                [value]="data.cuerpoColegiado.nombreNorma"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Fecha de la norma</mat-label>
+              <input
+                matInput
+                type="text"
+                [value]="data.cuerpoColegiado.fechaNorma | date: 'dd/MM/yyyy'"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Funciones</mat-label>
+              <input
+                matInput
+                type="text"
+                [value]="data.cuerpoColegiado.funciones.nombre"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="row mb-3">
+        <div class="col" style="color: black;"><h6>Integrantes:</h6></div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <table class="table" style="font-size: 12px">
+            <thead class="table-striped table-hover bg-corhuila-p-as-1 text-white">
+              <tr>
+                <th scope="col">N°</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Fecha vinculación</th>
+                <th scope="col">Tipo Miembro</th>
+                <th scope="col">Cargo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>@mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+                <td>@mdo</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Larry</td>
+                <td>the Bird</td>
+                <td>@twitter</td>
+                <td>@mdo</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </form>
+  </div>
+</mat-dialog-content>
+<!-- <hr />
+<div mat-dialog-actions align="center">
+  <div class="row text-right p-2">
+    <div class="col"></div>
+  </div>
+</div>
+ -->

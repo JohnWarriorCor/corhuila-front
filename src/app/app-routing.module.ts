@@ -12,6 +12,7 @@ import { FacultadComponent } from './components/facultad/facultad.component';
 import { OrganizacionInternaComponent } from './components/inicio/organizacion-interna/organizacion-interna.component';
 import { CuerposColegiadosComponent } from './components/cuerpos-colegiados/cuerpos-colegiados.component';
 import { RepresentanteLegalComponent } from './components/representante-legal/representante-legal.component';
+import { IntegranteCuerpoColegiadoComponent } from './components/integrante-cuerpo-colegiado/integrante-cuerpo-colegiado.component';
 
 const routes: Routes = [
   //COMPONENTES DEL SISTEMA
@@ -27,6 +28,8 @@ const routes: Routes = [
   { path: 'facultad', component: FacultadComponent },
 
   { path: 'cuerpos-colegiados', component: CuerposColegiadosComponent },
+  { path: 'integrantes-cuerpos-colegiados', component: IntegranteCuerpoColegiadoComponent },
+
   { path: 'representante-legal', component: RepresentanteLegalComponent },
 
   { path: 'persona', component: PersonaComponent },
