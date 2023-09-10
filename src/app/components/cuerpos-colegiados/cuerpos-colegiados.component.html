@@ -19,7 +19,7 @@
                       class="example-full-width"
                       appearance="outline"
                     >
-                      <mat-label>Nombre del Cuerpo Colegiado</mat-label>
+                      <mat-label>Nombre del cuerpo colegiado</mat-label>
                       <input
                         matInput
                         type="text"
@@ -62,7 +62,7 @@
                   </div>
                 </div>
               </div>
-              <div class="row">
+              <div class="row mt-3">
                 <div class="col">
                   <div class="form-group">
                     <mat-form-field
@@ -117,7 +117,8 @@
                   </div>
                 </div>
               </div>
-              <div class="row">
+
+              <!--  <div class="row">
                 <div class="col">
                   <div class="form-group">
                     <mat-form-field
@@ -135,35 +136,153 @@
                     </mat-form-field>
                   </div>
                 </div>
-              </div>
-              <hr />
-              <div class="row">
-                <div class="col text-center">
-                  <button
-                    type="button"
-                    class="btn btn-success mr-2"
-                    [disabled]="!formCuerposColegiados.valid"
-                    (click)="generarCuerpoColegiado()"
-                  >
-                    <i class="far fa-save"></i> Guardar
-                  </button>
-                  <button
-                    *ngIf="editar"
-                    class="btn btn-danger mr-2"
-                    (click)="eliminarCuerpoColegiado()"
-                  >
-                    <i class="fa-solid fa-trash"></i> Borrar
-                  </button>
-                  <button
-                    *ngIf="editar"
-                    class="btn btn-warning"
-                    (click)="cancelar()"
-                  >
-                    <i class="fa-solid fa-xmark"></i> Cancelar
-                  </button>
-                </div>
-              </div>
+              </div> -->
             </form>
+            <div class="row">
+              <div class="col">
+                <form [formGroup]="formFunciones">
+                  <table class="table table-bordered">
+                    <thead
+                      class="table-dark text-justify"
+                      style="background-color: #3e6c83"
+                    >
+                      <tr class="white">
+                        <th class="w-75">Funciones del cuerpo colegiado</th>
+                        <th>Opciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="
+                          let funciones of listadoFuncionesCuerpoColegiado;
+                          let i = index
+                        "
+                      >
+                        <td class="align-middle">
+                          <div class="form-group mt-3">
+                            <mat-form-field
+                              class="example-full-width"
+                              appearance="outline"
+                            >
+                              <mat-label>Función</mat-label>
+                              <input
+                                matInput
+                                type="text"
+                                [value]="funciones.nombre"
+                                readonly
+                              />
+                            </mat-form-field>
+                          </div>
+                        </td>
+                        <!-- (click)="deleteFieldValue(i)" -->
+                        <td class="align-middle">
+                          <button
+                            class="btn btn-primary mr-2"
+                            type="button"
+                            (click)="editarFunciones(funciones)"
+                          >
+                            <i class="fa-solid fa-pencil fa-xs"></i> Editar
+                          </button>
+                          <!-- (click)="deleteFieldValue(i)" -->
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="align-middle">
+                          <div
+                            class="form-group mt-3"
+                            *ngIf="!formCuerposColegiados.valid"
+                          >
+                            <mat-form-field
+                              class="example-full-width"
+                              appearance="outline"
+                            >
+                              <mat-label>Función</mat-label>
+                              <input
+                                matInput
+                                type="text"
+                                formControlName="nombre"
+                                readonly
+                              />
+                            </mat-form-field>
+                          </div>
+                          <div
+                            class="form-group mt-3"
+                            *ngIf="formCuerposColegiados.valid"
+                          >
+                            <mat-form-field
+                              class="example-full-width"
+                              appearance="outline"
+                            >
+                              <mat-label>Función</mat-label>
+                              <input
+                                matInput
+                                type="text"
+                                formControlName="nombre"
+                                required
+                              />
+                            </mat-form-field>
+                          </div>
+                        </td>
+                        <!-- (click)="addFieldValue()" -->
+                        <td class="align-middle">
+                          <button
+                            class="btn btn-success"
+                            type="button"
+                            [disabled]="!formCuerposColegiados.valid"
+                            (click)="generarFunciones()"
+                          >
+                            <i class="fas fa-plus-circle"></i>
+                          </button>
+                          <button
+                            *ngIf="editarFuncion"
+                            class="btn btn-danger ml-2"
+                            (click)="eliminarFunciones()"
+                            type="button"
+                          >
+                            <i class="far fa-trash-alt"></i>
+                          </button>
+                          <button
+                            *ngIf="editarFuncion"
+                            class="btn btn-warning ml-2"
+                            (click)="cancelarFunciones()"
+                            type="button"
+                          >
+                            <i class="fa-solid fa-xmark"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </form>
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col text-center">
+                <button
+                  type="button"
+                  class="btn btn-success mr-2"
+                  [disabled]="(listadoFuncionesCuerpoColegiado | json) == '[]'"
+                  (click)="generarCuerpoColegiado()"
+                >
+                  <i class="far fa-save"></i> Guardar
+                </button>
+                <button
+                  *ngIf="editar"
+                  class="btn btn-danger mr-2"
+                  (click)="eliminarCuerpoColegiado()"
+                >
+                  <i class="fa-solid fa-trash"></i> Borrar
+                </button>
+                <button
+                  *ngIf="editar"
+                  class="btn btn-warning"
+                  (click)="cancelar()"
+                >
+                  <i class="fa-solid fa-xmark"></i> Cancelar
+                </button>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row mt-5">
@@ -203,12 +322,6 @@
                   {{ element.fechaNorma | date : "dd/MM/yyyy" }}
                 </td>
               </ng-container>
-              <ng-container matColumnDef="funciones">
-                <th mat-header-cell *matHeaderCellDef>Función</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.funciones.nombre }}
-                </td>
-              </ng-container>
               <ng-container matColumnDef="opciones">
                 <th mat-header-cell *matHeaderCellDef>Opciones</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
@@ -226,7 +339,11 @@
                   >
                     <i class="fa-solid fa-square-minus fa-xs"></i>
                   </button>
-                  <button class="btn btn-info btn-sm mr-2" title="Informacion" (click)="openDialog(element)">
+                  <button
+                    class="btn btn-info btn-sm mr-2"
+                    title="Informacion"
+                    (click)="openDialog(element)"
+                  >
                     <i class="fa-solid fa-circle-info fa-xs"></i>
                   </button>
                   <button
@@ -235,6 +352,13 @@
                     title="Editar"
                   >
                     <i class="fa-solid fa-pencil fa-xs"></i>
+                  </button>
+                  <button
+                    class="btn btn-secondary btn-sm ml-2"
+                    routerLink="/integrantes-cuerpos-colegiados"
+                    title="Aagregar integrante"
+                  >
+                    <i class="fa-solid fa-user-plus"></i>
                   </button>
                 </td>
               </ng-container>

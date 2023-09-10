@@ -6,13 +6,13 @@ import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
 import { CuerposColegiados } from '../models/cuerpos-colegiados';
-import { Funciones } from '../models/funciones';
+import { FuncionesCuerpoColegiado } from '../models/funciones-cuerpo-colegiado';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CuerposColegiadosService {
-  private url: string = `${environment.URL_BACKEND}/cuerposcolegiados`;
+  private url: string = `${environment.URL_BACKEND}/cuerpocolegiado`;
   private httpHeaders = new HttpHeaders({ 'Content-type': 'application/json' });
 
   userLogeado: String = this.authservice.user.username;
@@ -60,11 +60,16 @@ export class CuerposColegiadosService {
       );
   }
 
-  obtenerListadoFunciones(): Observable<Funciones[]> {
+  obtenerListadoFuncionesCuerpoColegiado(
+    codigo: number
+  ): Observable<FuncionesCuerpoColegiado[]> {
     return this.http
-      .get<Funciones[]>(`${this.url}/obtener-listado-funciones`, {
-        headers: this.aggAutorizacionHeader(),
-      })
+      .get<FuncionesCuerpoColegiado[]>(
+        `${this.url}/obtener-listado-funciones/${codigo}`,
+        {
+          headers: this.aggAutorizacionHeader(),
+        }
+      )
       .pipe(
         catchError((e) => {
           if (this.isNoAutorizado(e)) {
@@ -92,6 +97,30 @@ export class CuerposColegiadosService {
   ): Observable<number> {
     return this.http.put<number>(
       `${this.url}/actualizar-cuerpos-colegiados`,
+      cuerposColegiados,
+      {
+        headers: this.aggAutorizacionHeader(),
+      }
+    );
+  }
+
+  registrarFuncionesCuerpoColegiado(
+    cuerposColegiados: FuncionesCuerpoColegiado
+  ): Observable<number> {
+    return this.http.post<number>(
+      `${this.url}/registrar-funciones-cuerpo-colegiado`,
+      cuerposColegiados,
+      {
+        headers: this.aggAutorizacionHeader(),
+      }
+    );
+  }
+
+  actualizarFuncionesCuerpoColegiado(
+    cuerposColegiados: FuncionesCuerpoColegiado
+  ): Observable<number> {
+    return this.http.put<number>(
+      `${this.url}/actualizar-funciones-cuerpo-colegiado`,
       cuerposColegiados,
       {
         headers: this.aggAutorizacionHeader(),

@@ -97,27 +97,37 @@
       </div>
       <div class="row">
         <div class="col">
-          <div class="form-group">
-            <mat-form-field class="example-full-width" appearance="outline">
-              <mat-label>Funciones</mat-label>
-              <input
-                matInput
-                type="text"
-                [value]="data.cuerpoColegiado.funciones.nombre"
-                readonly
-              />
-            </mat-form-field>
-          </div>
+          <table class="table" style="font-size: 12px">
+            <thead
+              class="table-striped table-hover text-white"
+              style="background-color: #3e6c83"
+            >
+              <tr>
+                <th>N°</th>
+                <th>Funciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let funcion of listadoFuncionesCuerpoColegiado; let i = index"
+              >
+                <th scope="row">{{i+1}}</th>
+                <td>{{funcion.nombre}}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
       <hr />
       <div class="row mb-3">
-        <div class="col" style="color: black;"><h6>Integrantes:</h6></div>
+        <div class="col" style="color: black"><h6>Integrantes:</h6></div>
       </div>
       <div class="row">
         <div class="col">
           <table class="table" style="font-size: 12px">
-            <thead class="table-striped table-hover bg-corhuila-p-as-1 text-white">
+            <thead
+              class="table-striped table-hover bg-corhuila-p-as-1 text-white"
+            >
               <tr>
                 <th scope="col">N°</th>
                 <th scope="col">Nombre</th>

@@ -24,20 +24,40 @@ import { AuthService } from 'src/app/services/auth.service';
 import { DatePipe } from '@angular/common';
 import { CuerposColegiados } from 'src/app/models/cuerpos-colegiados';
 import { CuerposColegiadosService } from '../../services/cuerpos-colegiados.service';
-import { Funciones } from 'src/app/models/funciones';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { FuncionesCuerpoColegiado } from 'src/app/models/funciones-cuerpo-colegiado';
+
+export interface Libros {
+  fieldArray: Array<any>;
+  key$?: string;
+}
 
 @Component({
   selector: 'app-cuerpos-colegiados',
   templateUrl: './cuerpos-colegiados.component.html',
   styleUrls: ['./cuerpos-colegiados.component.css'],
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { subscriptSizing: 'dynamic' },
+    },
+  ],
 })
 export class CuerposColegiadosComponent {
   editar: boolean = false;
+  editarFuncion: boolean = false;
+  war: any;
 
   listadoCuerposColegiados: CuerposColegiados[] = [];
-  listadoFunciones: Funciones[] = [];
+  listadoFuncionesCuerpoColegiado: FuncionesCuerpoColegiado[] = [];
 
   formCuerposColegiados!: FormGroup;
+  formFunciones!: FormGroup;
+
+  newAttribute: any = {};
+  libro: Libros = {
+    fieldArray: [],
+  };
 
   dataSource = new MatTableDataSource<CuerposColegiados>([]);
   displayedColumns: string[] = [
@@ -45,7 +65,6 @@ export class CuerposColegiadosComponent {
     'nombre',
     'norma',
     'fecha',
-    'funciones',
     'opciones',
   ];
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
@@ -63,7 +82,7 @@ export class CuerposColegiadosComponent {
     if (this.authService.validacionToken()) {
       this.obtenerCuerposColegiados();
       this.crearCuerposColegiados();
-      this.obtenerListadoFunciones();
+      this.crearFormularioFunciones();
     }
   }
 
@@ -75,11 +94,60 @@ export class CuerposColegiadosComponent {
       numeroNorma: new FormControl('', Validators.required),
       nombreNorma: new FormControl('', Validators.required),
       fechaNorma: new FormControl('', Validators.required),
-      funciones: new FormControl('', Validators.required),
       fechaCreacion: new FormControl(''),
       cantidadMiembros: new FormControl('', Validators.required),
       estado: new FormControl(''),
     });
+  }
+
+  private crearFormularioFunciones(): void {
+    this.formFunciones = this.formBuilder.group({
+      codigo: new FormControl(''),
+      cuerpoColegiado: new FormControl(''),
+      nombre: new FormControl('', Validators.required),
+      estado: new FormControl(''),
+    });
+  }
+
+  addFieldValue() {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer);
+        toast.addEventListener('mouseleave', Swal.resumeTimer);
+      },
+    });
+
+    Toast.fire({
+      icon: 'success',
+      title: 'Función agregada.',
+    });
+    this.libro.fieldArray.push(this.newAttribute);
+    this.newAttribute = {};
+  }
+
+  deleteFieldValue(index: any) {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer);
+        toast.addEventListener('mouseleave', Swal.resumeTimer);
+      },
+    });
+
+    Toast.fire({
+      icon: 'warning',
+      title: 'Función borrada.',
+    });
+    this.libro.fieldArray.splice(index, 1);
   }
 
   // Función para desplazarse a una seccion
@@ -94,11 +162,11 @@ export class CuerposColegiadosComponent {
     });
   }
 
-  obtenerListadoFunciones() {
+  obtenerListadoFunciones(codigo: number) {
     this.cuerposColegiadosService
-      .obtenerListadoFunciones()
+      .obtenerListadoFuncionesCuerpoColegiado(codigo)
       .subscribe((data) => {
-        this.listadoFunciones = data;
+        this.listadoFuncionesCuerpoColegiado = data;
       });
   }
 
@@ -125,9 +193,6 @@ export class CuerposColegiadosComponent {
       this.formCuerposColegiados.get('nombreNorma')!.value;
     cuerpoColegiado.fechaNorma =
       this.formCuerposColegiados.get('fechaNorma')!.value;
-    let funciones: Funciones = new Funciones();
-    funciones.codigo = this.formCuerposColegiados.get('funciones')!.value;
-    cuerpoColegiado.funciones = funciones;
     cuerpoColegiado.fechaCreacion =
       this.formCuerposColegiados.get('fechaCreacion')!.value;
     cuerpoColegiado.cantidadMiembros =
@@ -155,7 +220,10 @@ export class CuerposColegiadosComponent {
             });
             this.obtenerCuerposColegiados();
             this.cancelar();
+            this.cancelarFunciones();
             this.crearCuerposColegiados();
+            this.crearFormularioFunciones();
+            this.listadoFuncionesCuerpoColegiado = [];
           } else {
             this.mensajeError();
           }
@@ -189,6 +257,7 @@ export class CuerposColegiadosComponent {
   editarCuerpoColegiado(element: CuerposColegiados) {
     this.showAndScrollToHiddenDiv();
     this.editar = true;
+    this.obtenerListadoFunciones(element.codigo);
     this.formCuerposColegiados.get('codigo')!.setValue(element.codigo);
     this.formCuerposColegiados.get('nombre')!.setValue(element.nombre);
     this.formCuerposColegiados
@@ -202,9 +271,6 @@ export class CuerposColegiadosComponent {
       .setValue(element.nombreNorma);
     let fechaNorma = new Date(element.fechaNorma + ' 0:00:00');
     this.formCuerposColegiados.get('fechaNorma')!.setValue(fechaNorma);
-    this.formCuerposColegiados
-      .get('funciones')!
-      .setValue(element.funciones.codigo);
     this.formCuerposColegiados
       .get('fechaCreacion')!
       .setValue(element.fechaCreacion);
@@ -228,9 +294,6 @@ export class CuerposColegiadosComponent {
       this.formCuerposColegiados.get('fechaNorma')!.value;
     cuerposColegiados.fechaCreacion =
       this.formCuerposColegiados.get('fechaCreacion')!.value;
-    let funciones: Funciones = new Funciones();
-    funciones.codigo = this.formCuerposColegiados.get('funciones')!.value;
-    cuerposColegiados.funciones = funciones;
     cuerposColegiados.cantidadMiembros =
       this.formCuerposColegiados.get('cantidadMiembros')!.value;
     cuerposColegiados.estado = 0;
@@ -239,9 +302,130 @@ export class CuerposColegiadosComponent {
 
   cancelar() {
     this.formCuerposColegiados.reset();
+    this.formFunciones.reset();
+    this.listadoFuncionesCuerpoColegiado = [];
     this.crearCuerposColegiados();
+    this.crearFormularioFunciones();
     this.obtenerCuerposColegiados();
     this.editar = false;
+  }
+
+  generarFunciones(): void {
+    let funcionesCuerpoColegiado: FuncionesCuerpoColegiado =
+      new FuncionesCuerpoColegiado();
+    funcionesCuerpoColegiado.codigo = this.formFunciones.get('codigo')!.value;
+    let cuerpoColegiado: CuerposColegiados = new CuerposColegiados();
+    funcionesCuerpoColegiado.cuerpoColegiado = cuerpoColegiado;
+    funcionesCuerpoColegiado.nombre = this.formFunciones.get('nombre')!.value;
+    if (this.editar) {
+      cuerpoColegiado.codigo = this.formCuerposColegiados.get('codigo')!.value;
+    } else {
+      cuerpoColegiado.codigo = this.listadoCuerposColegiados.length + 1;
+    }
+    if (this.editarFuncion) {
+      this.actualizarFunciones(funcionesCuerpoColegiado);
+    } else {
+      this.registrarFunciones(funcionesCuerpoColegiado);
+    }
+  }
+
+  registrarFunciones(funcionesCuerpoColegiado: FuncionesCuerpoColegiado) {
+    this.cuerposColegiadosService
+      .registrarFuncionesCuerpoColegiado(funcionesCuerpoColegiado)
+      .subscribe(
+        (data) => {
+          if (data > 0) {
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+              },
+            });
+
+            Toast.fire({
+              icon: 'success',
+              title: 'Operación exitosa.',
+            });
+            let codigo: number = 0;
+            if (this.editar) {
+              codigo = this.formCuerposColegiados.get('codigo')!.value;
+            } else {
+              codigo = this.listadoCuerposColegiados.length + 1;
+            }
+            this.obtenerListadoFunciones(codigo);
+            this.cancelarFunciones();
+            this.crearFormularioFunciones();
+          } else {
+            this.mensajeError();
+          }
+        },
+        (err) => this.fError(err)
+      );
+  }
+
+  actualizarFunciones(funcionesCuerpoColegiado: FuncionesCuerpoColegiado) {
+    this.cuerposColegiadosService
+      .actualizarFuncionesCuerpoColegiado(funcionesCuerpoColegiado)
+      .subscribe(
+        (data) => {
+          if (data > 0) {
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+              },
+            });
+
+            Toast.fire({
+              icon: 'success',
+              title: 'Operación exitosa.',
+            });
+            this.cancelarFunciones();
+            this.obtenerCuerposColegiados();
+          } else {
+            this.mensajeError();
+          }
+        },
+        (err) => this.fError(err)
+      );
+  }
+
+  editarFunciones(element: FuncionesCuerpoColegiado) {
+    this.showAndScrollToHiddenDiv();
+    this.editarFuncion = true;
+    this.formFunciones.get('codigo')!.setValue(element.codigo);
+    this.formFunciones.get('nombre')!.setValue(element.nombre);
+    this.formFunciones
+      .get('cuerpoColegiado')!
+      .setValue(element.cuerpoColegiado.codigo);
+    this.formFunciones.get('estado')!.setValue(element.estado);
+  }
+
+  eliminarFunciones() {
+    let funcionesCuerpoColegiado: FuncionesCuerpoColegiado =
+      new FuncionesCuerpoColegiado();
+    funcionesCuerpoColegiado.codigo = this.formFunciones.get('codigo')!.value;
+    let cuerpoColegiado: CuerposColegiados = new CuerposColegiados();
+    cuerpoColegiado.codigo = this.formFunciones.get('cuerpoColegiado')!.value;
+    funcionesCuerpoColegiado.cuerpoColegiado = cuerpoColegiado;
+    funcionesCuerpoColegiado.nombre = this.formFunciones.get('nombre')!.value;
+    funcionesCuerpoColegiado.estado = 0;
+    this.actualizarFunciones(funcionesCuerpoColegiado);
+  }
+
+  cancelarFunciones() {
+    this.formFunciones.reset();
+    this.editarFuncion = false;
   }
 
   mensajeSuccses() {
@@ -285,11 +469,20 @@ export class CuerposColegiadosComponent {
   styleUrls: ['./cuerpos-colegiados.component.css'],
 })
 export class ModalCuerpoColegiado implements OnInit {
+  listadoFuncionesCuerpoColegiado: FuncionesCuerpoColegiado[] = [];
+
   constructor(
     public dialogRef: MatDialogRef<ModalCuerpoColegiado>,
     public dialog: MatDialog,
+    public cuerposColegiadosService: CuerposColegiadosService,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) {
+    this.cuerposColegiadosService
+      .obtenerListadoFuncionesCuerpoColegiado(data.cuerpoColegiado.codigo)
+      .subscribe((data) => {
+        this.listadoFuncionesCuerpoColegiado = data;
+      });
+  }
 
   ngOnInit() {}
 
