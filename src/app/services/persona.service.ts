@@ -67,6 +67,21 @@ export class PersonaService {
       );
   }
 
+  obtenerPersonaIdentificacion(id: string): Observable<Persona[]> {
+    return this.http
+      .get<Persona[]>(`${this.url}/obtener-persona-identificacion/${id}`, {
+        headers: this.aggAutorizacionHeader(),
+      })
+      .pipe(
+        catchError((e) => {
+          if (this.isNoAutorizado(e)) {
+            return throwError(e);
+          }
+          return throwError(e);
+        })
+      );
+  }
+
   obtenerTipoId(): Observable<TipoIdentificacion[]> {
     return this.http
       .get<TipoIdentificacion[]>(`${this.url}/obtener-tipo-id`, {

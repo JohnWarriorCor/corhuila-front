@@ -26,6 +26,7 @@ import { CuerposColegiados } from 'src/app/models/cuerpos-colegiados';
 import { CuerposColegiadosService } from '../../services/cuerpos-colegiados.service';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { FuncionesCuerpoColegiado } from 'src/app/models/funciones-cuerpo-colegiado';
+import { IntegranteCuerpoColegiado } from 'src/app/models/integrante-cuerpo-colegiado';
 
 export interface Libros {
   fieldArray: Array<any>;
@@ -470,6 +471,7 @@ export class CuerposColegiadosComponent {
 })
 export class ModalCuerpoColegiado implements OnInit {
   listadoFuncionesCuerpoColegiado: FuncionesCuerpoColegiado[] = [];
+  listadoIntegrantes: IntegranteCuerpoColegiado[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<ModalCuerpoColegiado>,
@@ -481,6 +483,12 @@ export class ModalCuerpoColegiado implements OnInit {
       .obtenerListadoFuncionesCuerpoColegiado(data.cuerpoColegiado.codigo)
       .subscribe((data) => {
         this.listadoFuncionesCuerpoColegiado = data;
+      });
+    this.cuerposColegiadosService
+      .obtenerListadoIntegrantesCuerpoColegiadoCodigo(data.cuerpoColegiado.codigo)
+      .subscribe((data) => {
+        this.listadoIntegrantes = data;
+        console.log(this.listadoIntegrantes);
       });
   }
 

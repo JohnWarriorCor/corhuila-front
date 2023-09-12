@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
 import { CuerposColegiados } from '../models/cuerpos-colegiados';
 import { FuncionesCuerpoColegiado } from '../models/funciones-cuerpo-colegiado';
+import { IntegranteCuerpoColegiado } from '../models/integrante-cuerpo-colegiado';
 
 @Injectable({
   providedIn: 'root',
@@ -80,6 +81,46 @@ export class CuerposColegiadosService {
       );
   }
 
+  obtenerListadoIntegrantesCuerpoColegiado(): Observable<
+    IntegranteCuerpoColegiado[]
+  > {
+    return this.http
+      .get<IntegranteCuerpoColegiado[]>(
+        `${this.url}/obtener-listado-integrantes-cuerpo-colegiado`,
+        {
+          headers: this.aggAutorizacionHeader(),
+        }
+      )
+      .pipe(
+        catchError((e) => {
+          if (this.isNoAutorizado(e)) {
+            return throwError(e);
+          }
+          return throwError(e);
+        })
+      );
+  }
+
+  obtenerListadoIntegrantesCuerpoColegiadoCodigo(
+    codigo: number
+  ): Observable<IntegranteCuerpoColegiado[]> {
+    return this.http
+      .get<IntegranteCuerpoColegiado[]>(
+        `${this.url}/obtener-listado-integrantes/${codigo}`,
+        {
+          headers: this.aggAutorizacionHeader(),
+        }
+      )
+      .pipe(
+        catchError((e) => {
+          if (this.isNoAutorizado(e)) {
+            return throwError(e);
+          }
+          return throwError(e);
+        })
+      );
+  }
+
   registrarCuerposColegiados(
     cuerposColegiados: CuerposColegiados
   ): Observable<number> {
@@ -122,6 +163,30 @@ export class CuerposColegiadosService {
     return this.http.put<number>(
       `${this.url}/actualizar-funciones-cuerpo-colegiado`,
       cuerposColegiados,
+      {
+        headers: this.aggAutorizacionHeader(),
+      }
+    );
+  }
+
+  registrarIntegrante(
+    integranteCuerpoColegiado: IntegranteCuerpoColegiado
+  ): Observable<number> {
+    return this.http.post<number>(
+      `${this.url}/registrar-integrante`,
+      integranteCuerpoColegiado,
+      {
+        headers: this.aggAutorizacionHeader(),
+      }
+    );
+  }
+
+  actualizarIntegrante(
+    integranteCuerpoColegiado: IntegranteCuerpoColegiado
+  ): Observable<number> {
+    return this.http.put<number>(
+      `${this.url}/actualizar-integrante`,
+      integranteCuerpoColegiado,
       {
         headers: this.aggAutorizacionHeader(),
       }

@@ -97,7 +97,7 @@
       </div>
       <div class="row">
         <div class="col">
-          <table class="table" style="font-size: 12px">
+          <table class="table table-striped" style="font-size: 12px">
             <thead
               class="table-striped table-hover text-white"
               style="background-color: #3e6c83"
@@ -124,39 +124,43 @@
       </div>
       <div class="row">
         <div class="col">
-          <table class="table" style="font-size: 12px">
+          <table class="table table-striped" style="font-size: 12px">
             <thead
               class="table-striped table-hover bg-corhuila-p-as-1 text-white"
             >
               <tr>
                 <th scope="col">N°</th>
                 <th scope="col">Nombre</th>
-                <th scope="col">Fecha vinculación</th>
-                <th scope="col">Tipo Miembro</th>
-                <th scope="col">Cargo</th>
+                <th scope="col">Fecha inicio</th>
+                <th scope="col">Fecha fin</th>
+                <th scope="col">Tipo miembro</th>
+                <th scope="col">Estado</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
-                <td>@mdo</td>
+              <tr *ngFor="let integrante of listadoIntegrantes; let i = index">
+                <th scope="row">{{i+1}}</th>
+                <td>
+                  {{integrante.personaIdentificacion}} -
+                  {{integrante.personaNombre}} {{integrante.personaApellido}}
+                </td>
+                <td>{{integrante.fechaInicio}}</td>
+                <td>{{integrante.fechaFin}}</td>
+                <td>{{integrante.miembroTipo.nombre}}</td>
+                <td>
+                  <button
+                    *ngIf="integrante.estado == 1"
+                    class="btn btn-success"
+                  >
+                    Vinculado
+                  </button>
+                  <button
+                    *ngIf="integrante.estado == 0"
+                    class="btn btn-secondary"
+                  >
+                    Desvinculado
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
