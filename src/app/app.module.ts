@@ -25,6 +25,7 @@ import { RepresentanteLegalComponent } from './components/representante-legal/re
 import { AreaAcademiAdmiComponent } from './components/area-academi-admi/area-academi-admi.component';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { IntegranteCuerpoColegiadoComponent } from './components/integrante-cuerpo-colegiado/integrante-cuerpo-colegiado.component';
+import { NgxPrintModule } from 'ngx-print';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { IntegranteCuerpoColegiadoComponent } from './components/integrante-cuer
     MaterialModules,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxPrintModule
   ],
   entryComponents: [
     ModalInstitucion,

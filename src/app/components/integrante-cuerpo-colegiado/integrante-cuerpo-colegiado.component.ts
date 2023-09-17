@@ -235,6 +235,7 @@ export class IntegranteCuerpoColegiadoComponent {
   }
 
   editarIntegrante(element: IntegranteCuerpoColegiado) {
+    this.activarTipoMiembro(element.cuerpoColegiado.nombre);
     this.showAndScrollToHiddenDiv();
     this.editar = true;
     this.formIntegrante.get('codigo')!.setValue(element.codigo);

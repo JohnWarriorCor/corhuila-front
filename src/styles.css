@@ -9,6 +9,8 @@ body {
   margin: 0;
   font-family: "Poppins", sans-serif;
   background-color: #fafafa;
+  -webkit-print-color-adjust:exact !important;
+  print-color-adjust:exact !important;
 }
 
 h1,

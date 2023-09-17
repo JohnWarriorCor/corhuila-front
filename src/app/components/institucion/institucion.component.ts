@@ -33,6 +33,7 @@ import { NaturalezaJuridica } from 'src/app/models/naturaleza-juridica';
 import { Sector } from 'src/app/models/sector';
 import { Institucion } from 'src/app/models/institucion';
 import { CabecerasCentrosPoblados } from 'src/app/models/cabeceras-centros-poblados';
+import { NgxPrintDirective } from 'ngx-print';
 
 @Component({
   selector: 'app-institucion',
@@ -134,7 +135,7 @@ export class InstitucionComponent {
 
   openDialog(element: any): void {
     const dialogRef = this.dialog.open(ModalInstitucion, {
-      width: '60%',
+      width: '70%',
       data: { institucion: element },
     });
   }
@@ -380,6 +381,10 @@ export class ModalInstitucion implements OnInit {
   listadoSector: Sector[] = [];
   listadoCcp: CabecerasCentrosPoblados[] = [];
 
+  @ViewChild('printSection', { static: false }) printSection!: ElementRef;
+  @ViewChild(NgxPrintDirective, { static: false })
+  printDirective!: NgxPrintDirective;
+
   constructor(
     public dialogRef: MatDialogRef<ModalInstitucion>,
     public dialog: MatDialog,
@@ -387,6 +392,18 @@ export class ModalInstitucion implements OnInit {
     public ubicacionService: UbicacionService,
     public institucionService: InstitucionService
   ) {}
+
+  printTable() {
+    // Aplica el estilo de color a la columna deseada antes de imprimir.
+    const coloredColumn =
+      this.printSection.nativeElement.querySelector('.colored-column');
+    if (coloredColumn) {
+      coloredColumn.style.backgroundColor = 'yellow'; // Cambia el color según tus preferencias.
+    }
+
+    // Llama al método de impresión de ngx-print.
+    this.printDirective.print();
+  }
 
   ngOnInit() {}
 
