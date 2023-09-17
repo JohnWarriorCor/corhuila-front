@@ -133,7 +133,7 @@
                 <th scope="col">Nombre</th>
                 <th scope="col">Fecha inicio</th>
                 <th scope="col">Fecha fin</th>
-                <th scope="col">Tipo miembro</th>
+                <th scope="col">Estamento</th>
                 <th scope="col">Estado</th>
               </tr>
             </thead>
@@ -146,7 +146,7 @@
                 </td>
                 <td>{{integrante.fechaInicio}}</td>
                 <td>{{integrante.fechaFin}}</td>
-                <td>{{integrante.miembroTipo.nombre}}</td>
+                <td>{{integrante.usuarioTipo.nombre}}</td>
                 <td>
                   <button
                     *ngIf="integrante.estado == 1"

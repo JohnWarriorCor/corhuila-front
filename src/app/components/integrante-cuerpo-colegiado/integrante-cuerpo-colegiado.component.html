@@ -24,6 +24,7 @@
                       <mat-label>Cuerpo Colegiado</mat-label>
                       <mat-select formControlName="cuerpoColegiado">
                         <mat-option
+                          (click)="activarTipoMiembro(cuerpoColegiado.nombre)"
                           *ngFor="
                             let cuerpoColegiado of listadoCuerposColegiados
                           "
@@ -99,7 +100,7 @@
                     </mat-form-field>
                   </div>
                 </div>
-                <div class="col">
+                <div class="col" *ngIf="tipo">
                   <div class="form-group">
                     <mat-form-field
                       class="example-full-width"

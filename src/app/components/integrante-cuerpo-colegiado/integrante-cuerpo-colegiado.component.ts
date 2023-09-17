@@ -38,6 +38,7 @@ import { MiembroTipo } from 'src/app/models/miembro-tipo';
 export class IntegranteCuerpoColegiadoComponent {
   editar: boolean = false;
   editarFuncion: boolean = false;
+  tipo: boolean = false;
   war: any;
 
   listadoCuerposColegiados: CuerposColegiados[] = [];
@@ -88,12 +89,20 @@ export class IntegranteCuerpoColegiadoComponent {
       personaNombre: new FormControl('', Validators.required),
       codigoNorma: new FormControl('', Validators.required),
       usuarioTipo: new FormControl('', Validators.required),
-      miembroTipo: new FormControl('', Validators.required),
+      miembroTipo: new FormControl(''),
       fechaInicio: new FormControl('', Validators.required),
       fechaFin: new FormControl('', Validators.required),
       observacion: new FormControl(''),
       estado: new FormControl(''),
     });
+  }
+
+  activarTipoMiembro(element: string) {
+    if (element.toUpperCase() === 'ASAMBLEA GENERAL') {
+      this.tipo = true;
+    } else {
+      this.tipo = false;
+    }
   }
 
   // Función para desplazarse a una seccion

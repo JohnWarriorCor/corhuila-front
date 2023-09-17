@@ -147,8 +147,8 @@
                       style="background-color: #3e6c83"
                     >
                       <tr class="white">
-                        <th class="w-75">Funciones del cuerpo colegiado</th>
-                        <th>Opciones</th>
+                        <th class="w-100">Funciones del cuerpo colegiado</th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -181,7 +181,7 @@
                             type="button"
                             (click)="editarFunciones(funciones)"
                           >
-                            <i class="fa-solid fa-pencil fa-xs"></i> Editar
+                            <i class="fa-solid fa-pencil fa-xs"></i>
                           </button>
                           <!-- (click)="deleteFieldValue(i)" -->
                         </td>
@@ -226,7 +226,8 @@
                         <!-- (click)="addFieldValue()" -->
                         <td class="align-middle">
                           <button
-                            class="btn btn-success"
+                            *ngIf="!editarFuncion"
+                            class="btn btn-success mb-2"
                             type="button"
                             [disabled]="!formCuerposColegiados.valid"
                             (click)="generarFunciones()"
@@ -235,7 +236,16 @@
                           </button>
                           <button
                             *ngIf="editarFuncion"
-                            class="btn btn-danger ml-2"
+                            class="btn btn-success mb-2"
+                            type="button"
+                            [disabled]="!formCuerposColegiados.valid"
+                            (click)="generarFunciones()"
+                          >
+                          <i class="far fa-save"></i>
+                          </button>
+                          <button
+                            *ngIf="editarFuncion"
+                            class="btn btn-danger mb-2"
                             (click)="eliminarFunciones()"
                             type="button"
                           >
@@ -243,7 +253,7 @@
                           </button>
                           <button
                             *ngIf="editarFuncion"
-                            class="btn btn-warning ml-2"
+                            class="btn btn-warning"
                             (click)="cancelarFunciones()"
                             type="button"
                           >
