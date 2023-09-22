@@ -4,28 +4,49 @@
       class="card-header bg-corhuila-v header-usco-card"
       [ngClass]="selectedColor"
     >
-      <div class="row">
+      <div class="row text-center">
         <div class="col">
           <img
             title="USCO"
             mat-card-image
             src="assets/logo-horizontal-blanco.png"
             class="img-fluid"
+            style="width: 90%"
           />
         </div>
       </div>
       <hr class="punteada" />
-      <div class="row">
-        <div class="col p-2">
+      <div class="row text-center">
+        <div class="col">
           <h6 class="font-weight-bold text-white">INICIO DE SESIÓN</h6>
         </div>
       </div>
     </div>
-    <div class="card-body text-center font-usco-gr">
+    <div class="card-body font-usco-gr">
       <div class="container">
         <form [formGroup]="formLogin">
-          <div class="row mt-3">
+          <div class="row">
             <div class="col">
+              <div class="form-group">
+                <label for="exampleInputEmail1"
+                  >Usuario <span class="requerido">*</span></label
+                >
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="fa-solid fa-user"></i>
+                    </div>
+                  </div>
+                  <input
+                    type="text"
+                    formControlName="usuario"
+                    class="form-control"
+                    placeholder="Documento de indentidad"
+                  />
+                </div>
+              </div>
+            </div>
+            <!--  <div class="col">
               <mat-form-field class="example-full-width" appearance="outline">
                 <span matPrefix class="p-3"
                   ><i class="fa-solid fa-user"></i
@@ -38,9 +59,32 @@
                   autocomplete="off"
                 />
               </mat-form-field>
+            </div> -->
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label for="exampleInputEmail1"
+                  >Cantraseña <span class="requerido">*</span></label
+                >
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="fa-solid fa-lock"></i>
+                    </div>
+                  </div>
+                  <input
+                    class="form-control"
+                    formControlName="contrasenia"
+                    type="password"
+                    placeholder="Digite la clave"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
             </div>
           </div>
-          <div class="row mt-2">
+          <!--  <div class="row mt-2">
             <div class="col">
               <mat-form-field class="example-full-width" appearance="outline">
                 <span matPrefix class="p-3"
@@ -69,8 +113,8 @@
                 </button>
               </mat-form-field>
             </div>
-          </div>
-          <div class="row mt-2 mb-4">
+          </div> -->
+          <div class="row mt-2 mb-4 text-center">
             <div class="col">
               <button
                 (click)="login()"
@@ -88,7 +132,7 @@
               </button>
             </div>
           </div>
-          <div class="row mb-4">
+          <div class="row mb-2 text-center">
             <div class="col">
               <a href="https://www.usco.edu.co/cambio_clave/" target="_blank"
                 ><small class="font-corhuila-p-as-2 font-weight-bold"
@@ -97,20 +141,21 @@
               >
             </div>
           </div>
-          <div>
-            <small
-              ><b class="version"
-                >© {{ today | date : "yyyy" }} Oficina de Tecnologías de la
-                Información <br />
-                y las Comunicaciones - Versión 1</b
-              ></small
-            >
+          <div class="row text-center">
+            <div class="col" style="width: 100px">
+              <small style="font-size: 12px"
+                ><b class="version"
+                  >© {{ today | date : "yyyy" }} Oficina de Tecnologías de la
+                  Información y las Comunicaciones - Versión 1</b
+                ></small
+              >
+            </div>
           </div>
         </form>
       </div>
     </div>
   </div>
-  <div class="row mt-4">
+  <!--   <div class="row mt-4">
     <div class="col text-center">
       <button
         class="btn btn-corhuila-v mr-2"
@@ -131,5 +176,5 @@
         Principal 2
       </button>
     </div>
-  </div>
+  </div> -->
 </div>

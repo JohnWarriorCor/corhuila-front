@@ -1,7 +1,7 @@
 <mat-sidenav-container class="sidenav-container" id="page-container">
   <mat-sidenav
     #drawer
-    style="width: 300px"
+    style="width: 200px"
     *ngIf="navbarHiddenService.visibleSideBar"
     class="sidenav"
     fixedInViewport
@@ -12,17 +12,14 @@
   >
     <mat-toolbar>
       <span class="logo-lg"
-        ><b
-          ><img
-            class="img-fluid p-3"
-            src="assets/logo-horizontal-blanco.png" /></b
+        ><b><img class="img-fluid" src="assets/logo-horizontal-blanco.png" /></b
       ></span>
     </mat-toolbar>
-    <mat-nav-list style="padding-bottom: 0" class="mt-2">
+    <mat-nav-list style="padding-bottom: 0">
       <a class="list" mat-list-item [routerLink]="['/inicio']">
-        <h6 class="pl-2 item-principal text-white">
+        <small class="pl-2 item-principal text-white">
           <i class="fas fa-home"></i> Inicio
-        </h6>
+        </small>
       </a>
     </mat-nav-list>
     <mat-accordion>
@@ -34,9 +31,9 @@
       >
         <mat-expansion-panel-header class="disable_ripple specific-class">
           <mat-panel-title>
-            <h6 class="text-white mt-2">
-              <i class="fa-solid fa-school"></i> Estructura universitaria
-            </h6>
+            <small class="text-white mt-2">
+              <i class="fa-solid fa-school"></i> Estructura interna
+            </small>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
@@ -47,9 +44,9 @@
             [routerLink]="['/institucion']"
             routerLinkActive="router-link-active"
           >
-            <h6 class="text-white">
+            <small class="text-white">
               <i class="fa-solid fa-building-columns"></i> Institución
-            </h6>
+            </small>
           </a>
           <a
             class="pl-5 sidenav-accordion"
@@ -58,9 +55,9 @@
             [routerLink]="['/sede']"
             routerLinkActive="router-link-active"
           >
-            <h6 class="text-white">
+            <small class="text-white">
               <i class="fa-solid fa-landmark-flag"></i> Sede
-            </h6>
+            </small>
           </a>
           <a
             class="pl-5 sidenav-accordion"
@@ -69,9 +66,9 @@
             [routerLink]="['/facultad']"
             routerLinkActive="router-link-active"
           >
-            <h6 class="text-white">
+            <small class="text-white">
               <i class="fa-solid fa-building-flag"></i> Facultad
-            </h6>
+            </small>
           </a>
         </mat-nav-list>
       </mat-expansion-panel>
@@ -85,9 +82,9 @@
       >
         <mat-expansion-panel-header class="disable_ripple specific-class">
           <mat-panel-title>
-            <h6 class="text-white mt-2">
+            <small class="text-white mt-2">
               <i class="fa-solid fa-people-group"></i> Cuerpos colegiados
-            </h6>
+            </small>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
@@ -98,9 +95,9 @@
             [routerLink]="['/cuerpos-colegiados']"
             routerLinkActive="router-link-active"
           >
-            <h6 class="text-white">
+            <small class="text-white">
               <i class="fa-solid fa-circle-plus"></i> Crear
-            </h6>
+            </small>
           </a>
           <a
             class="pl-5 sidenav-accordion"
@@ -109,9 +106,9 @@
             [routerLink]="['/integrantes-cuerpos-colegiados']"
             routerLinkActive="router-link-active"
           >
-            <h6 class="text-white">
+            <small class="text-white">
               <i class="fa-solid fa-user-gear"></i> Integrantes
-            </h6>
+            </small>
           </a>
         </mat-nav-list>
       </mat-expansion-panel>
@@ -125,9 +122,49 @@
       >
         <mat-expansion-panel-header class="disable_ripple specific-class">
           <mat-panel-title>
-            <h6 class="text-white mt-2">
-              <i class="fa-solid fa-building-user"></i> Organización interna
-            </h6>
+            <small class="text-white mt-2">
+              <i class="fa-solid fa-scale-balanced"></i> Marco normativo
+            </small>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a
+            class="pl-5 sidenav-accordion"
+            mat-list-item
+            style="width: 300px"
+            [routerLink]="['/norma']"
+            routerLinkActive="router-link-active"
+          >
+            <small class="text-white">
+              <i class="fa-solid fa-file-circle-plus"></i> Norma
+            </small>
+          </a>
+          <a
+            class="pl-5 sidenav-accordion"
+            mat-list-item
+            style="width: 300px"
+            [routerLink]="['/norma-grupo']"
+            routerLinkActive="router-link-active"
+          >
+            <small class="text-white">
+              <i class="fa-solid fa-folder-tree"></i> Grupos
+            </small>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion>
+      <mat-expansion-panel
+        class="sidenav"
+        style="width: 100%"
+        (opened)="panelOpenState = true"
+        (closed)="panelOpenState = false"
+      >
+        <mat-expansion-panel-header class="disable_ripple specific-class">
+          <mat-panel-title>
+            <small class="text-white mt-2">
+              <i class="fa-solid fa-building-user"></i> Organización
+            </small>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
@@ -138,20 +175,20 @@
             [routerLink]="['/representante-legal']"
             routerLinkActive="router-link-active"
           >
-            <h6 class="text-white">
+            <small class="text-white">
               <i class="fa-solid fa-street-view"></i> Representante legal
-            </h6>
+            </small>
           </a>
-          <a
+          <!--  <a
             class="pl-5 sidenav-accordion"
             mat-list-item
             style="width: 300px"
             [routerLink]="['/institucion']"
             routerLinkActive="router-link-active"
           >
-            <h6 class="text-white">
+            <small class="text-white">
               <i class="fa-solid fa-sitemap"></i> Áreas A.A.
-            </h6>
+            </small>
           </a>
           <a
             class="pl-5 sidenav-accordion"
@@ -160,9 +197,9 @@
             [routerLink]="['/sede']"
             routerLinkActive="router-link-active"
           >
-            <h6 class="text-white">
+            <small class="text-white">
               <i class="fa-regular fa-address-card"></i> Cargo
-            </h6>
+            </small>
           </a>
           <a
             class="pl-5 sidenav-accordion"
@@ -171,10 +208,10 @@
             [routerLink]="['/sede']"
             routerLinkActive="router-link-active"
           >
-            <h6 class="text-white">
+            <small class="text-white">
               <i class="fa-solid fa-id-badge"></i> A.A.A. personal
-            </h6>
-          </a>
+            </small>
+          </a> -->
         </mat-nav-list>
       </mat-expansion-panel>
     </mat-accordion>
@@ -187,9 +224,9 @@
       >
         <mat-expansion-panel-header class="disable_ripple specific-class">
           <mat-panel-title>
-            <h6 class="text-white mt-2">
+            <small class="text-white mt-2">
               <i class="fa-solid fa-users"></i> Personal y usuarios
-            </h6>
+            </small>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
@@ -200,9 +237,9 @@
             [routerLink]="['/persona']"
             routerLinkActive="router-link-active"
           >
-            <h6 class="text-white">
+            <small class="text-white">
               <i class="fa-solid fa-user-pen"></i> Registrar Persona
-            </h6>
+            </small>
           </a>
           <a
             class="pl-5 sidenav-accordion"
@@ -211,9 +248,9 @@
             [routerLink]="['/desarrollo']"
             routerLinkActive="router-link-active"
           >
-            <h6 class="text-white">
+            <small class="text-white">
               <i class="fa-solid fa-user-plus"></i> Crear Usuario
-            </h6>
+            </small>
           </a>
           <a
             class="pl-5 sidenav-accordion"
@@ -222,33 +259,33 @@
             [routerLink]="['/desarrollo']"
             routerLinkActive="router-link-active"
           >
-            <h6 class="text-white">
+            <small class="text-white">
               <i class="fa-solid fa-lock"></i> Contraseñas
-            </h6>
+            </small>
           </a>
         </mat-nav-list>
       </mat-expansion-panel>
     </mat-accordion>
     <mat-nav-list>
-      <a
+      <!--  <a
         class="list"
         mat-list-item
         [routerLink]="['/desarrollo']"
         routerLinkActive="router-link-active"
       >
-        <h6 class="pl-2 item-principal text-white">
+        <small class="pl-2 item-principal text-white">
           <i class="fa-solid fa-earth-americas"></i> División política
-        </h6>
-      </a>
+        </small>
+      </a> -->
       <a
         class="list"
         mat-list-item
         [routerLink]="['/desarrollo']"
         routerLinkActive="router-link-active"
       >
-        <h6 class="pl-2 item-principal text-white">
+        <small class="pl-2 item-principal text-white">
           <i class="fa-solid fa-chart-simple"></i> Reportes
-        </h6>
+        </small>
       </a>
     </mat-nav-list>
   </mat-sidenav>

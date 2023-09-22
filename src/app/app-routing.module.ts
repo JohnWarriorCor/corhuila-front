@@ -13,6 +13,8 @@ import { OrganizacionInternaComponent } from './components/inicio/organizacion-i
 import { CuerposColegiadosComponent } from './components/cuerpos-colegiados/cuerpos-colegiados.component';
 import { RepresentanteLegalComponent } from './components/representante-legal/representante-legal.component';
 import { IntegranteCuerpoColegiadoComponent } from './components/integrante-cuerpo-colegiado/integrante-cuerpo-colegiado.component';
+import { NormaComponent } from './components/marco-normativo/norma/norma.component';
+import { NormaGrupoComponent } from './components/marco-normativo/norma-grupo/norma-grupo.component';
 
 const routes: Routes = [
   //COMPONENTES DEL SISTEMA
@@ -29,6 +31,9 @@ const routes: Routes = [
 
   { path: 'cuerpos-colegiados', component: CuerposColegiadosComponent },
   { path: 'integrantes-cuerpos-colegiados', component: IntegranteCuerpoColegiadoComponent },
+
+  { path: 'norma', component: NormaComponent },
+  { path: 'norma-grupo', component: NormaGrupoComponent },
 
   { path: 'representante-legal', component: RepresentanteLegalComponent },
 

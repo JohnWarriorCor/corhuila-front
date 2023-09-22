@@ -1,0 +1,347 @@
+<app-navbar>
+  <div id="content-wrap" class="mt-3 text-center">
+    <div class="card rounded-2 p-0 shadow-sm mt-5">
+      <div
+        class="card-header text-center ml-4 mr-4 cursor-select"
+        [routerLink]="['/inicio']"
+        routerLinkActive="router-link-active"
+      >
+        <h4 #hiddenDiv class="font-usco-default">Norma</h4>
+      </div>
+      <div class="card-body ls">
+        <div class="row pl-5 pr-5">
+          <div class="col">
+            <form [formGroup]="formIntegrante">
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Entidad</mat-label>
+                      <mat-select formControlName="cuerpoColegiado">
+                        <mat-option value="1" (click)="entidadExterna()"
+                          >EXTERNA</mat-option
+                        >
+                        <mat-option value="2" (click)="entidadInterna()"
+                          >INTERNA</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div *ngIf="interna" class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Cuerpo Colegiado</mat-label>
+                      <mat-select formControlName="cuerpoColegiado">
+                        <mat-option
+                          (click)="activarTipoMiembro(cuerpoColegiado.nombre)"
+                          *ngFor="
+                            let cuerpoColegiado of listadoCuerposColegiados
+                          "
+                          [value]="cuerpoColegiado.codigo"
+                          >{{ cuerpoColegiado.nombreCorto }} -
+                          {{ cuerpoColegiado.nombre }}</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div *ngIf="externa" class="col">
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-group">
+                        <mat-form-field
+                          class="example-full-width"
+                          appearance="outline"
+                        >
+                          <mat-label>Entidad externa</mat-label>
+                          <mat-select formControlName="cuerpoColegiado">
+                            <mat-option value="3"
+                              >Entidad externa uno</mat-option
+                            >
+                            <mat-option value="4"
+                              >Entidad externa dos</mat-option
+                            >
+                            <mat-option value="5"
+                              >Entidad externa tres</mat-option
+                            >
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-sm-2 mt-2">
+                      <button class="btn btn-success" (click)="openDialog()">
+                        <i class="fas fa-plus-circle"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Número de la norma</mat-label>
+                      <input
+                        matInput
+                        type="number"
+                        formControlName="personaIdentificacion"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Nombre de la norma</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        formControlName="personaIdentificacion"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Enlace (URL) de la norma</mat-label>
+                      <input
+                        matInput
+                        type="text"
+                        formControlName="personaIdentificacion"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Tipo de norma</mat-label>
+                      <mat-select formControlName="codigoNorma">
+                        <mat-option value="1">LEY</mat-option>
+                        <mat-option value="2">DECRETO</mat-option>
+                        <mat-option value="3">RESOLUCION</mat-option>
+                        <mat-option value="3">DIRECTRIZ</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Medio en el que se encuentra</mat-label>
+                      <mat-select formControlName="codigoNorma">
+                        <mat-option value="1">FÍSICO</mat-option>
+                        <mat-option value="2">DIGITLA</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Fecha de expedición</mat-label>
+                      <input
+                        matInput
+                        [matDatepicker]="picker1"
+                        [min]="fechaLimiteMinima"
+                        (dateChange)="limiteVigencia()"
+                        formControlName="fechaInicio"
+                      />
+                      <mat-hint>Día/Mes/Año</mat-hint>
+                      <mat-datepicker-toggle
+                        matIconSuffix
+                        [for]="picker1"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Fecha de vigencia</mat-label>
+                      <input
+                        matInput
+                        [matDatepicker]="picker2"
+                        [min]="fechaLimiteMinimaVigencia"
+                        formControlName="fechaFin"
+                      />
+                      <mat-hint>Día/Mes/Año</mat-hint>
+                      <mat-datepicker-toggle
+                        matIconSuffix
+                        [for]="picker2"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #picker2></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-label>Justificación u observación</mat-label>
+                      <textarea
+                        matInput
+                        type="text"
+                        rows="5"
+                        formControlName="observacion"
+                      ></textarea>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col text-center">
+            <button
+              type="button"
+              class="btn btn-success mr-2"
+              [disabled]="!formIntegrante.valid"
+              (click)="generarIntegrante()"
+            >
+              <i class="far fa-save"></i> Guardar
+            </button>
+            <button
+              *ngIf="editar"
+              class="btn btn-secondary mr-2"
+              (click)="desvincularIntegrante()"
+            >
+              <i class="fa-solid fa-ban"></i> Desvincular
+            </button>
+            <button *ngIf="editar" class="btn btn-warning" (click)="cancelar()">
+              <i class="fa-solid fa-xmark"></i> Cancelar
+            </button>
+          </div>
+        </div>
+        <div class="row mt-5">
+          <div class="col">
+            <table
+              mat-table
+              [dataSource]="dataSource"
+              class="table table-hover shadow"
+            >
+              <ng-container matColumnDef="index">
+                <th mat-header-cell *matHeaderCellDef>N°</th>
+                <td
+                  mat-cell
+                  *matCellDef="let element; let i = index"
+                  class="font-sm-usco"
+                >
+                  {{ dataSource.filteredData.indexOf(element) + 1 }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef>Entidad</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                  {{ element.personaIdentificacion }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef>Nombre Entidad</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                  {{ element.personaNombre }} {{ element.personaApellido }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="cc">
+                <th mat-header-cell *matHeaderCellDef>Número</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                  {{ element.cuerpoColegiado.nombre }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="fechaInicio">
+                <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                  {{ element.fechaInicio | date : "dd/MM/yyyy" }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="fechaFin">
+                <th mat-header-cell *matHeaderCellDef>Fecha Expedición</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                  {{ element.fechaFin | date : "dd/MM/yyyy" }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="opciones">
+                <th mat-header-cell *matHeaderCellDef>Enlace</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                  <button
+                    *ngIf="element.estado === 1"
+                    class="btn btn-success btn-sm mr-2"
+                    title="Activo"
+                  >
+                    <i class="fas fa-check-square fa-xs"></i>
+                  </button>
+                  <button
+                    *ngIf="element.estado !== 1"
+                    class="btn btn-secondary btn-sm mr-2"
+                    title="Inactivo"
+                  >
+                    <i class="fa-solid fa-square-minus fa-xs"></i>
+                  </button>
+                  <button class="btn btn-info btn-sm mr-2" title="Informacion">
+                    <i class="fa-solid fa-circle-info fa-xs"></i>
+                  </button>
+                  <button
+                    class="btn btn-primary btn-sm"
+                    (click)="editarIntegrante(element)"
+                    title="Editar"
+                  >
+                    <i class="fa-solid fa-pencil fa-xs"></i>
+                  </button>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+            <mat-paginator
+              [pageSizeOptions]="[10, 20, 30]"
+              showFirstLastButtons
+            ></mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-navbar>

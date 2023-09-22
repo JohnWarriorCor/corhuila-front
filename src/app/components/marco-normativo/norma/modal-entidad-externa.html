@@ -1,0 +1,37 @@
+<div mat-dialog-title class="bg-corhuila-p-as-2">
+  <div class="row mb-4">
+    <div class="col">
+      <h5 class="text-white">
+        <i class="fa-solid fa-circle-info"></i> Agregar entidad externa
+      </h5>
+    </div>
+    <div class="col text-right text-white">
+      <i class="fa-solid fa-xmark" mat-dialog-close></i>
+    </div>
+  </div>
+</div>
+<mat-dialog-content>
+  <div class="container">
+    <form>
+      <div class="row mt-5">
+        <div class="col">
+          <div class="form-group">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-label>Nombre entidad externa</mat-label>
+              <input matInput #input maxlength="150" type="text" />
+              <mat-hint align="end">{{ input.value.length }}/150</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</mat-dialog-content>
+<hr />
+<div mat-dialog-actions align="center">
+  <div class="row p-2">
+    <div class="col">
+      <button class="btn btn-success" (click)="onNoClick()">Guardar</button>
+    </div>
+  </div>
+</div>

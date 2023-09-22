@@ -26,6 +26,8 @@ import { AreaAcademiAdmiComponent } from './components/area-academi-admi/area-ac
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { IntegranteCuerpoColegiadoComponent } from './components/integrante-cuerpo-colegiado/integrante-cuerpo-colegiado.component';
 import { NgxPrintModule } from 'ngx-print';
+import { NormaGrupoComponent } from './components/marco-normativo/norma-grupo/norma-grupo.component';
+import { NormaComponent, ModalEntidadExterna } from './components/marco-normativo/norma/norma.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,7 @@ import { NgxPrintModule } from 'ngx-print';
     PersonaComponent,
     ModalInstitucion,
     ModalCuerpoColegiado,
+    ModalEntidadExterna,
     EstructuraComponent,
     ConfiguracionComponent,
     SedeComponent,
@@ -46,7 +49,9 @@ import { NgxPrintModule } from 'ngx-print';
     CuerposColegiadosComponent,
     RepresentanteLegalComponent,
     AreaAcademiAdmiComponent,
-    IntegranteCuerpoColegiadoComponent
+    IntegranteCuerpoColegiadoComponent,
+    NormaGrupoComponent,
+    NormaComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +65,8 @@ import { NgxPrintModule } from 'ngx-print';
   ],
   entryComponents: [
     ModalInstitucion,
-    ModalCuerpoColegiado
+    ModalCuerpoColegiado,
+    ModalEntidadExterna
   ],
   providers: [DatePipe, {provide: MAT_DATE_LOCALE, useValue: 'es-ES'}],
   bootstrap: [AppComponent]
