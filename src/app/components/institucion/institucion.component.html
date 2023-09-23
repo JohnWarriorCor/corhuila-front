@@ -6,15 +6,21 @@
         [routerLink]="['/estructura']"
         routerLinkActive="router-link-active"
       >
-        <h4 #hiddenDiv class="font-usco-default">
-          <strong>Institución</strong>
+        <h4 class="font-usco-default">
+          <strong>FORMULARIO INSTITUCIÓN</strong>
         </h4>
       </div>
       <div class="card-body ls">
         <div class="row text-right">
           <div class="col">
-            <button class="btn btn-info">
-              <i class="fa-solid fa-plus"></i> Registrar
+            <button class="btn btn-info" (click)="openFormulario()">
+              <i class="fa-solid fa-plus"></i> Registrar Modal
+            </button>
+            <button
+              class="btn btn-info ml-2"
+              (click)="showAndScrollToHiddenDiv()"
+            >
+              <i class="fa-solid fa-plus"></i> Registrar Oculto
             </button>
           </div>
         </div>
@@ -137,354 +143,310 @@
             ></mat-paginator>
           </div>
         </div>
-        <hr />
-        <div class="row pt-5">
-          <div class="col">
-            <h6>Formulario institución</h6>
-          </div>
-        </div>
-        <div class="row pl-5 pr-5 text-left">
-          <div class="col">
-            <form [formGroup]="formInstitucion">
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <label>Nit <span class="requerido">*</span></label>
-                    <input
-                      type="text"
-                      formControlName="nit"
-                      class="form-control"
-                    />
-                  </div>
-                </div>
-                <!--  <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Nit</mat-label>
+        <div #hiddenDiv></div>
+        <fieldset class="scheduler-border" *ngIf="formularioOculto">
+          <legend class="scheduler-border">Formulario</legend>
+          <div class="row pl-5 pr-5 text-left">
+            <div class="col">
+              <form [formGroup]="formInstitucion">
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label class="ml-1"
+                        >Nit <span class="requerido">*</span></label
+                      >
                       <input
-                        matInput
                         type="text"
                         formControlName="nit"
-                        class="form_control"
+                        class="form-control"
+                        placeholder="Digite el Nit"
                         required
                       />
-                    </mat-form-field>
-                  </div>
-                </div> -->
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Código SNIES</mat-label>
-                      <input
-                        matInput
-                        type="number"
-                        formControlName="ies"
-                        class="form_control"
-                        required
-                      />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Código SNIES Padre</mat-label>
-                      <input
-                        formControlName="iesPadre"
-                        matInput
-                        type="number"
-                        class="form_control"
-                        required
-                      />
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Naturaleza Jurídica</mat-label>
-                      <mat-select formControlName="naturaleza">
-                        <mat-option
-                          *ngFor="let listado of listadoNaturalezaJuridica"
-                          [value]="listado.codigo"
-                          >{{ listado.nombre }}</mat-option
-                        >
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Sector</mat-label>
-                      <mat-select formControlName="sector">
-                        <mat-option
-                          *ngFor="let listado of listadoSector"
-                          [value]="listado.codigo"
-                          >{{ listado.nombre }}</mat-option
-                        >
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Carácter Académico</mat-label>
-                      <mat-select formControlName="caracter">
-                        <mat-option
-                          *ngFor="let listado of listadoCaracterAcademico"
-                          [value]="listado.codigo"
-                          >{{ listado.nombre }}</mat-option
-                        >
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Nombre de la Institución</mat-label>
-                      <input
-                        matInput
-                        class="form_control"
-                        formControlName="nombre"
-                        type="text"
-                        required
-                      />
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>País</mat-label>
-                      <mat-select formControlName="pais">
-                        <mat-option
-                          *ngFor="let pais of paisLocal"
-                          [value]="pais.codigo"
-                          (click)="obtenerDepartamentosPorPais(pais.codigo)"
-                          >{{ pais.nombre }}</mat-option
-                        >
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Departamento</mat-label>
-                      <mat-select formControlName="departamento">
-                        <mat-option
-                          *ngFor="let dep of departamentos"
-                          [value]="dep.divipola"
-                          (click)="
-                            obtenerMunicipiosPorDepartamento(dep.divipola)
-                          "
-                          >{{ dep.nombre }}</mat-option
-                        >
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Municipio</mat-label>
-                      <mat-select formControlName="municipio">
-                        <mat-option
-                          *ngFor="let mun of municipios"
-                          (click)="obtenerCcpPorMunicipio(mun.divipola)"
-                          [value]="mun.divipola"
-                          >{{ mun.nombre }}</mat-option
-                        >
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label
-                        >Cabecera Municipale o Centro Poblado</mat-label
-                      >
-                      <mat-select formControlName="ccp">
-                        <mat-option
-                          *ngFor="let ccp of listadoCcp"
-                          [value]="ccp.divipola"
-                          >{{ ccp.nombre }}</mat-option
-                        >
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Dirección</mat-label>
-                      <input
-                        matInput
-                        class="form_control"
-                        formControlName="direccion"
-                        required
-                      />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Teléfonos</mat-label>
-                      <input
-                        matInput
-                        class="form_control"
-                        type="number"
-                        formControlName="telefono"
-                        required
-                      />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Página Web</mat-label>
-                      <input
-                        matInput
-                        class="form_control"
-                        formControlName="url"
-                        required
-                      />
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Norma de creación</mat-label>
-                      <input
-                        matInput
-                        formControlName="norma"
-                        class="form_control"
-                        required
-                      />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Fecha de la norma de creación</mat-label>
-                      <input
-                        matInput
-                        [matDatepicker]="picker"
-                        formControlName="fechaNorma"
-                      />
-                      <mat-hint>Día/Mes/Año</mat-hint>
-                      <mat-datepicker-toggle
-                        matIconSuffix
-                        [for]="picker"
-                      ></mat-datepicker-toggle>
-                      <mat-datepicker #picker></mat-datepicker>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <!--   <div class="col">
-                  <div class="form-group mt-2">
-                    <div>
-                      <label class="file example-full-width">
-                        <input
-                          type="file"
-                          accept="application/pdf"
-                          aria-label="file browser example"
-                        />
-                        <span class="file-custom text-left">{{nameFile}}</span>
-                      </label>
                     </div>
                   </div>
-                </div> -->
-              </div>
-              <hr />
-              <div class="row">
-                <div class="col text-center">
-                  <button
-                    type="button"
-                    class="btn btn-success mr-2"
-                    [disabled]="!formInstitucion.valid"
-                    (click)="generarInstitucion()"
-                  >
-                    <i class="far fa-save"></i> Guardar
-                  </button>
-                  <button
-                    *ngIf="editar"
-                    class="btn btn-warning"
-                    (click)="cancelar()"
-                  >
-                    <i class="fa-solid fa-xmark"></i> Cancelar
-                  </button>
+                  <div class="col">
+                    <div class="form-group">
+                      <label class="ml-1"
+                        >Código SNIES <span class="requerido">*</span></label
+                      >
+                      <input
+                        type="number"
+                        formControlName="ies"
+                        class="form-control"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label class="ml-1"
+                        >Código SNIES Padre
+                        <span class="requerido">*</span></label
+                      >
+                      <input
+                        type="number"
+                        formControlName="iesPadre"
+                        class="form-control"
+                        required
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </form>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label class="ml-1"
+                        >Naturaleza Jurídica
+                        <span class="requerido">*</span></label
+                      >
+                      <select class="form-control" formControlName="naturaleza">
+                        <option
+                          *ngFor="let listado of listadoNaturalezaJuridica"
+                          [value]="listado.codigo"
+                        >
+                          {{ listado.nombre }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label class="ml-1"
+                        >Sector <span class="requerido">*</span></label
+                      >
+                      <select class="form-control" formControlName="sector">
+                        <option
+                          *ngFor="let listado of listadoSector"
+                          [value]="listado.codigo"
+                        >
+                          {{ listado.nombre }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label class="ml-1"
+                        >Carácter Académico
+                        <span class="requerido">*</span></label
+                      >
+                      <select class="form-control" formControlName="caracter">
+                        <option
+                          *ngFor="let listado of listadoCaracterAcademico"
+                          [value]="listado.codigo"
+                        >
+                          {{ listado.nombre }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label class="ml-1"
+                        >Nombre de la Institución
+                        <span class="requerido">*</span></label
+                      >
+                      <input
+                        type="text"
+                        formControlName="nombre"
+                        class="form-control"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label class="ml-1"
+                        >País <span class="requerido">*</span></label
+                      >
+                      <select
+                        class="form-control"
+                        formControlName="pais"
+                        (ngModelChange)="obtenerDepartamentosPorPais($event)"
+                      >
+                        <option
+                          *ngFor="let pais of paisLocal"
+                          [value]="pais.codigo"
+                        >
+                          {{ pais.nombre }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label class="ml-1"
+                        >Departamento <span class="requerido">*</span></label
+                      >
+                      <select
+                        class="form-control example-full-width"
+                        formControlName="departamento"
+                        (ngModelChange)="
+                          obtenerMunicipiosPorDepartamento($event)
+                        "
+                      >
+                        <option
+                          *ngFor="let departamento of departamentos"
+                          [value]="departamento.divipola"
+                        >
+                          {{ departamento.nombre }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label class="ml-1"
+                        >Municipio <span class="requerido">*</span></label
+                      >
+                      <select
+                        class="form-control example-full-width"
+                        formControlName="municipio"
+                        (ngModelChange)="obtenerCcpPorMunicipio($event)"
+                      >
+                        <option
+                          *ngFor="let mun of municipios"
+                          [value]="mun.divipola"
+                        >
+                          {{ mun.nombre }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label class="ml-1"
+                        >Cabecera Municipale o Centro Poblado
+                        <span class="requerido">*</span></label
+                      >
+                      <select
+                        class="form-control example-full-width"
+                        formControlName="ccp"
+                      >
+                        <option
+                          *ngFor="let ccp of listadoCcp"
+                          [value]="ccp.divipola"
+                        >
+                          {{ ccp.nombre }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label class="ml-1"
+                        >Dirección <span class="requerido">*</span></label
+                      >
+                      <input
+                        type="text"
+                        formControlName="direccion"
+                        class="form-control"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label class="ml-1"
+                        >Teléfonos <span class="requerido">*</span></label
+                      >
+                      <input
+                        type="number"
+                        formControlName="telefono"
+                        class="form-control"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label class="ml-1"
+                        >Página Web <span class="requerido">*</span></label
+                      >
+                      <input
+                        type="text"
+                        formControlName="url"
+                        class="form-control"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label class="ml-1"
+                        >Norma de creación
+                        <span class="requerido">*</span></label
+                      >
+                      <input
+                        type="text"
+                        formControlName="norma"
+                        class="form-control"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label class="ml-1"
+                        >Fecha de la norma de creación
+                        <span class="requerido">*</span></label
+                      >
+                      <input
+                        type="date"
+                        formControlName="fechaNorma"
+                        class="form-control"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <!--   <div class="col">
+                    <div class="form-group mt-2">
+                      <div>
+                        <label class="file example-full-width">
+                          <input
+                            type="file"
+                            accept="application/pdf"
+                            aria-label="file browser example"
+                          />
+                          <span class="file-custom text-left">{{nameFile}}</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div> -->
+                </div>
+                <hr />
+                <div class="row">
+                  <div class="col text-center">
+                    <button
+                      type="button"
+                      class="btn btn-success mr-2"
+                      [disabled]="!formInstitucion.valid"
+                      (click)="generarInstitucion()"
+                    >
+                      <i class="far fa-save"></i> Guardar
+                    </button>
+                    <button
+                      class="btn btn-warning"
+                      (click)="cancelar()"
+                    >
+                      <i class="fa-solid fa-xmark"></i> Cancelar
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
+        </fieldset>
       </div>
     </div>
   </div>

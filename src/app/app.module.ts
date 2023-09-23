@@ -13,7 +13,7 @@ import { LoginComponent } from './components/login/login.component';
 import { InicioComponent } from './components/inicio/inicio.component';
 import { NavbarComponent } from './components/shared/navbar/navbar.component';
 import { DesarrolloComponent } from './components/desarrollo/desarrollo.component';
-import { InstitucionComponent, ModalInstitucion } from './components/institucion/institucion.component';
+import { InstitucionComponent, ModalInstitucion, ModalFormulario } from './components/institucion/institucion.component';
 import { PersonaComponent } from './components/configuracion/persona/persona.component';
 import { EstructuraComponent } from './components/inicio/estructura/estructura.component';
 import { ConfiguracionComponent } from './components/inicio/configuracion/configuracion.component';
@@ -41,6 +41,7 @@ import { NormaComponent, ModalEntidadExterna } from './components/marco-normativ
     ModalInstitucion,
     ModalCuerpoColegiado,
     ModalEntidadExterna,
+    ModalFormulario,
     EstructuraComponent,
     ConfiguracionComponent,
     SedeComponent,
@@ -66,7 +67,8 @@ import { NormaComponent, ModalEntidadExterna } from './components/marco-normativ
   entryComponents: [
     ModalInstitucion,
     ModalCuerpoColegiado,
-    ModalEntidadExterna
+    ModalEntidadExterna,
+    ModalFormulario
   ],
   providers: [DatePipe, {provide: MAT_DATE_LOCALE, useValue: 'es-ES'}],
   bootstrap: [AppComponent]

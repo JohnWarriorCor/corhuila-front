@@ -52,6 +52,7 @@ export class InstitucionComponent {
   listadoSector: Sector[] = [];
   listadoCcp: CabecerasCentrosPoblados[] = [];
   listadoInstitucion: Institucion[] = [];
+  formularioOculto: boolean = false;
 
   formInstitucion!: FormGroup;
 
@@ -131,12 +132,19 @@ export class InstitucionComponent {
   // Función para mostrar el div oculto y desplazarse hacia él
   showAndScrollToHiddenDiv() {
     this.hiddenDiv.nativeElement.scrollIntoView({ behavior: 'smooth' });
+    this.formularioOculto = true;
   }
 
   openDialog(element: any): void {
     const dialogRef = this.dialog.open(ModalInstitucion, {
       width: '70%',
       data: { institucion: element },
+    });
+  }
+
+  openFormulario(): void {
+    const dialogRef = this.dialog.open(ModalFormulario, {
+      width: '70%',
     });
   }
 
@@ -262,6 +270,7 @@ export class InstitucionComponent {
   }
 
   cancelar() {
+    this.formularioOculto = false;
     this.formInstitucion.reset();
     this.obtenerPaises();
     this.obtenerPaisLocal();
@@ -308,6 +317,7 @@ export class InstitucionComponent {
   }
 
   obtenerDepartamentosPorPais(codigo: number) {
+    console.log('entra');
     this.municipios = [];
     this.ubicacionService
       .obtenerDepartamentosPorPais(codigo)
@@ -451,6 +461,113 @@ export class ModalInstitucion implements OnInit {
       .obtenerDepartamentosPorPais(codigo)
       .subscribe((data) => {
         this.departamentos = data;
+        console.log(this.departamentos);
+      });
+  }
+
+  obtenerMunicipiosPorDepartamento(codigo: string) {
+    this.listadoCcp = [];
+    this.ubicacionService
+      .obtenerMunicipiosPorDepartamento(codigo)
+      .subscribe((data) => {
+        this.municipios = data;
+      });
+  }
+
+  obtenerCcpPorMunicipio(codigo: string) {
+    this.ubicacionService.obtenerCcpPorMunicipio(codigo).subscribe((data) => {
+      this.listadoCcp = data;
+    });
+  }
+}
+
+
+@Component({
+  selector: 'modal-formulario',
+  templateUrl: 'modal-formulario.html',
+  styleUrls: ['./institucion.component.css'],
+})
+export class ModalFormulario implements OnInit {
+  paises: Pais[] = [];
+  departamentos: Departamento[] = [];
+  municipios: Municipio[] = [];
+  paisLocal: Pais[] = [];
+  listadoCaracterAcademico: CaracterAcademico[] = [];
+  listadoNaturalezaJuridica: NaturalezaJuridica[] = [];
+  listadoSector: Sector[] = [];
+  listadoCcp: CabecerasCentrosPoblados[] = [];
+
+  @ViewChild('printSection', { static: false }) printSection!: ElementRef;
+  @ViewChild(NgxPrintDirective, { static: false })
+  printDirective!: NgxPrintDirective;
+
+  constructor(
+    public dialogRef: MatDialogRef<ModalInstitucion>,
+    public dialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public ubicacionService: UbicacionService,
+    public institucionService: InstitucionService
+  ) {}
+
+  printTable() {
+    // Aplica el estilo de color a la columna deseada antes de imprimir.
+    const coloredColumn =
+      this.printSection.nativeElement.querySelector('.colored-column');
+    if (coloredColumn) {
+      coloredColumn.style.backgroundColor = 'yellow'; // Cambia el color según tus preferencias.
+    }
+
+    // Llama al método de impresión de ngx-print.
+    this.printDirective.print();
+  }
+
+  ngOnInit() {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  obtenerListadoCaracterAcademico() {
+    this.institucionService
+      .obtenerListadoCaracterAcademico()
+      .subscribe((data) => {
+        this.listadoCaracterAcademico = data;
+      });
+  }
+
+  obtenerListadoNaturalezaJuridica() {
+    this.institucionService
+      .obtenerListadoNaturalezaJuridica()
+      .subscribe((data) => {
+        this.listadoNaturalezaJuridica = data;
+      });
+  }
+
+  obtenerListadoSector() {
+    this.institucionService.obtenerListadoSector().subscribe((data) => {
+      this.listadoSector = data;
+    });
+  }
+
+  obtenerPaises() {
+    this.ubicacionService.obtenerPaises().subscribe((data) => {
+      this.paises = data;
+    });
+  }
+
+  obtenerPaisLocal() {
+    this.ubicacionService.obtenerPaisLocal().subscribe((data) => {
+      this.paisLocal = data;
+    });
+  }
+
+  obtenerDepartamentosPorPais(codigo: number) {
+    this.municipios = [];
+    this.ubicacionService
+      .obtenerDepartamentosPorPais(codigo)
+      .subscribe((data) => {
+        this.departamentos = data;
+        console.log(this.departamentos);
       });
   }
 
