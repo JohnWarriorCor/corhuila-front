@@ -14,23 +14,13 @@
         <div class="row text-right">
           <div class="col">
             <button class="btn btn-info" (click)="openFormulario()">
-              <i class="fa-solid fa-plus"></i> Registrar Modal
-            </button>
-            <button
-              class="btn btn-info ml-2"
-              (click)="showAndScrollToHiddenDiv()"
-            >
-              <i class="fa-solid fa-plus"></i> Registrar Oculto
+              <i class="fa-solid fa-plus"></i> Registrar
             </button>
           </div>
         </div>
         <div class="row mt-2">
           <div class="col">
-            <table
-              mat-table
-              [dataSource]="dataSource"
-              class="table table-hover shadow"
-            >
+            <table mat-table [dataSource]="dataSource" class="table shadow">
               <ng-container matColumnDef="index">
                 <th mat-header-cell *matHeaderCellDef>N°</th>
                 <td
@@ -62,37 +52,37 @@
               <ng-container matColumnDef="nombre">
                 <th mat-header-cell *matHeaderCellDef>Nombre</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.nombre }}
+                  {{ element.nombre | uppercase }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="ccp">
                 <th mat-header-cell *matHeaderCellDef>Ubicación</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.municipio.nombre }}
+                  {{ element.municipio.nombre | uppercase }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="naturaleza">
                 <th mat-header-cell *matHeaderCellDef>Naturaleza</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.naturaleza.nombre }}
+                  {{ element.naturaleza.nombre | uppercase }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="sector">
                 <th mat-header-cell *matHeaderCellDef>Sector</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.sector.nombre }}
+                  {{ element.sector.nombre | uppercase }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="caracter">
                 <th mat-header-cell *matHeaderCellDef>Caracter</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.caracter.nombre }}
+                  {{ element.caracter.nombre | uppercase }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="norma">
                 <th mat-header-cell *matHeaderCellDef>Norma</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.norma }}
+                  {{ element.norma | uppercase }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="fechanorma">
@@ -109,28 +99,28 @@
                     class="btn btn-success btn-sm mr-2"
                     title="Activo"
                   >
-                    <i class="fas fa-check-square fa-xs"></i>
+                    <i class="fa-solid fa-check"></i>
                   </button>
                   <button
                     *ngIf="dataSource.filteredData.indexOf(element) + 1 !== 1"
                     class="btn btn-secondary btn-sm mr-2"
                     title="Inactivo"
                   >
-                    <i class="fa-solid fa-square-minus fa-xs"></i>
+                    <i class="fa-solid fa-minus"></i>
                   </button>
                   <button
-                    class="btn btn-info btn-sm mr-2"
+                    class="btn btn-corhuila-info btn-sm mr-2"
                     title="Informacion"
                     (click)="openDialog(element)"
                   >
-                    <i class="fa-solid fa-circle-info fa-xs"></i>
+                    <i class="fa-solid fa-eye"></i>
                   </button>
                   <button
-                    class="btn btn-primary btn-sm"
+                    class="btn btn-corhuila-p-2 btn-sm"
                     *ngIf="dataSource.filteredData.indexOf(element) + 1 === 1"
                     (click)="editarInstitucion(element)"
                   >
-                    <i class="fa-solid fa-pencil fa-xs"></i>
+                    <i class="fa-solid fa-pencil"></i>
                   </button>
                 </td>
               </ng-container>
@@ -435,10 +425,7 @@
                     >
                       <i class="far fa-save"></i> Guardar
                     </button>
-                    <button
-                      class="btn btn-warning"
-                      (click)="cancelar()"
-                    >
+                    <button class="btn btn-warning" (click)="cancelar()">
                       <i class="fa-solid fa-xmark"></i> Cancelar
                     </button>
                   </div>
