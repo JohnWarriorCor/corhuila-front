@@ -6,14 +6,12 @@
         [routerLink]="['/estructura']"
         routerLinkActive="router-link-active"
       >
-        <h4 class="font-usco-default">
-          <strong>FORMULARIO INSTITUCIÓN</strong>
-        </h4>
+        <h4 class="mt-2">Formulario institución</h4>
       </div>
-      <div class="card-body ls">
+      <div class="card-body">
         <div class="row text-right">
           <div class="col">
-            <button class="btn btn-info" (click)="openFormulario()">
+            <button class="btn btn-info" (click)="registrarFormulario()">
               <i class="fa-solid fa-plus"></i> Registrar
             </button>
           </div>
@@ -26,74 +24,74 @@
                 <td
                   mat-cell
                   *matCellDef="let element; let i = index"
-                  class="font-sm-usco"
+                  class="font-sm-corhuila"
                 >
                   {{ dataSource.filteredData.indexOf(element) + 1 }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="nit">
-                <th mat-header-cell *matHeaderCellDef>Nit</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                <th mat-header-cell *matHeaderCellDef>NIT</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
                   {{ element.nit }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="ies">
                 <th mat-header-cell *matHeaderCellDef>SNIES</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
                   {{ element.ies }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="iespadre">
-                <th mat-header-cell *matHeaderCellDef>SNIES Padre</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                <th mat-header-cell *matHeaderCellDef>SNIES PADRE</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
                   {{ element.iesPadre }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="nombre">
-                <th mat-header-cell *matHeaderCellDef>Nombre</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                <th mat-header-cell *matHeaderCellDef>NOMBRE</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
                   {{ element.nombre | uppercase }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="ccp">
-                <th mat-header-cell *matHeaderCellDef>Ubicación</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                <th mat-header-cell *matHeaderCellDef>UBICACIÓN</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
                   {{ element.municipio.nombre | uppercase }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="naturaleza">
-                <th mat-header-cell *matHeaderCellDef>Naturaleza</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                <th mat-header-cell *matHeaderCellDef>NATURALEZA</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
                   {{ element.naturaleza.nombre | uppercase }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="sector">
-                <th mat-header-cell *matHeaderCellDef>Sector</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                <th mat-header-cell *matHeaderCellDef>SECTOR</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
                   {{ element.sector.nombre | uppercase }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="caracter">
-                <th mat-header-cell *matHeaderCellDef>Caracter</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                <th mat-header-cell *matHeaderCellDef>CARACTER</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
                   {{ element.caracter.nombre | uppercase }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="norma">
-                <th mat-header-cell *matHeaderCellDef>Norma</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                <th mat-header-cell *matHeaderCellDef>NORMA</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
                   {{ element.norma | uppercase }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="fechanorma">
-                <th mat-header-cell *matHeaderCellDef>Fecha Norma</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                <th mat-header-cell *matHeaderCellDef>FECHA NORMA</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
                   {{ element.fechaNorma | date : "dd/MM/yyyy" }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="estado">
-                <th mat-header-cell *matHeaderCellDef>Opciones</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                <th mat-header-cell *matHeaderCellDef>OPCIONES</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
                   <button
                     *ngIf="dataSource.filteredData.indexOf(element) + 1 === 1"
                     class="btn btn-success btn-sm mr-2"
@@ -116,7 +114,7 @@
                     <i class="fa-solid fa-eye"></i>
                   </button>
                   <button
-                    class="btn btn-corhuila-p-2 btn-sm"
+                    class="btn btn-corhuila-editar btn-sm"
                     *ngIf="dataSource.filteredData.indexOf(element) + 1 === 1"
                     (click)="editarInstitucion(element)"
                   >
@@ -133,307 +131,6 @@
             ></mat-paginator>
           </div>
         </div>
-        <div #hiddenDiv></div>
-        <fieldset class="scheduler-border" *ngIf="formularioOculto">
-          <legend class="scheduler-border">Formulario</legend>
-          <div class="row pl-5 pr-5 text-left">
-            <div class="col">
-              <form [formGroup]="formInstitucion">
-                <div class="row">
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="ml-1"
-                        >Nit <span class="requerido">*</span></label
-                      >
-                      <input
-                        type="text"
-                        formControlName="nit"
-                        class="form-control"
-                        placeholder="Digite el Nit"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="ml-1"
-                        >Código SNIES <span class="requerido">*</span></label
-                      >
-                      <input
-                        type="number"
-                        formControlName="ies"
-                        class="form-control"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="ml-1"
-                        >Código SNIES Padre
-                        <span class="requerido">*</span></label
-                      >
-                      <input
-                        type="number"
-                        formControlName="iesPadre"
-                        class="form-control"
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="ml-1"
-                        >Naturaleza Jurídica
-                        <span class="requerido">*</span></label
-                      >
-                      <select class="form-control" formControlName="naturaleza">
-                        <option
-                          *ngFor="let listado of listadoNaturalezaJuridica"
-                          [value]="listado.codigo"
-                        >
-                          {{ listado.nombre }}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="ml-1"
-                        >Sector <span class="requerido">*</span></label
-                      >
-                      <select class="form-control" formControlName="sector">
-                        <option
-                          *ngFor="let listado of listadoSector"
-                          [value]="listado.codigo"
-                        >
-                          {{ listado.nombre }}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="ml-1"
-                        >Carácter Académico
-                        <span class="requerido">*</span></label
-                      >
-                      <select class="form-control" formControlName="caracter">
-                        <option
-                          *ngFor="let listado of listadoCaracterAcademico"
-                          [value]="listado.codigo"
-                        >
-                          {{ listado.nombre }}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="ml-1"
-                        >Nombre de la Institución
-                        <span class="requerido">*</span></label
-                      >
-                      <input
-                        type="text"
-                        formControlName="nombre"
-                        class="form-control"
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="ml-1"
-                        >País <span class="requerido">*</span></label
-                      >
-                      <select
-                        class="form-control"
-                        formControlName="pais"
-                        (ngModelChange)="obtenerDepartamentosPorPais($event)"
-                      >
-                        <option
-                          *ngFor="let pais of paisLocal"
-                          [value]="pais.codigo"
-                        >
-                          {{ pais.nombre }}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="ml-1"
-                        >Departamento <span class="requerido">*</span></label
-                      >
-                      <select
-                        class="form-control example-full-width"
-                        formControlName="departamento"
-                        (ngModelChange)="
-                          obtenerMunicipiosPorDepartamento($event)
-                        "
-                      >
-                        <option
-                          *ngFor="let departamento of departamentos"
-                          [value]="departamento.divipola"
-                        >
-                          {{ departamento.nombre }}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="ml-1"
-                        >Municipio <span class="requerido">*</span></label
-                      >
-                      <select
-                        class="form-control example-full-width"
-                        formControlName="municipio"
-                        (ngModelChange)="obtenerCcpPorMunicipio($event)"
-                      >
-                        <option
-                          *ngFor="let mun of municipios"
-                          [value]="mun.divipola"
-                        >
-                          {{ mun.nombre }}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="ml-1"
-                        >Cabecera Municipale o Centro Poblado
-                        <span class="requerido">*</span></label
-                      >
-                      <select
-                        class="form-control example-full-width"
-                        formControlName="ccp"
-                      >
-                        <option
-                          *ngFor="let ccp of listadoCcp"
-                          [value]="ccp.divipola"
-                        >
-                          {{ ccp.nombre }}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="ml-1"
-                        >Dirección <span class="requerido">*</span></label
-                      >
-                      <input
-                        type="text"
-                        formControlName="direccion"
-                        class="form-control"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="ml-1"
-                        >Teléfonos <span class="requerido">*</span></label
-                      >
-                      <input
-                        type="number"
-                        formControlName="telefono"
-                        class="form-control"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="ml-1"
-                        >Página Web <span class="requerido">*</span></label
-                      >
-                      <input
-                        type="text"
-                        formControlName="url"
-                        class="form-control"
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="ml-1"
-                        >Norma de creación
-                        <span class="requerido">*</span></label
-                      >
-                      <input
-                        type="text"
-                        formControlName="norma"
-                        class="form-control"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="form-group">
-                      <label class="ml-1"
-                        >Fecha de la norma de creación
-                        <span class="requerido">*</span></label
-                      >
-                      <input
-                        type="date"
-                        formControlName="fechaNorma"
-                        class="form-control"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <!--   <div class="col">
-                    <div class="form-group mt-2">
-                      <div>
-                        <label class="file example-full-width">
-                          <input
-                            type="file"
-                            accept="application/pdf"
-                            aria-label="file browser example"
-                          />
-                          <span class="file-custom text-left">{{nameFile}}</span>
-                        </label>
-                      </div>
-                    </div>
-                  </div> -->
-                </div>
-                <hr />
-                <div class="row">
-                  <div class="col text-center">
-                    <button
-                      type="button"
-                      class="btn btn-success mr-2"
-                      [disabled]="!formInstitucion.valid"
-                      (click)="generarInstitucion()"
-                    >
-                      <i class="far fa-save"></i> Guardar
-                    </button>
-                    <button class="btn btn-warning" (click)="cancelar()">
-                      <i class="fa-solid fa-xmark"></i> Cancelar
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-        </fieldset>
       </div>
     </div>
   </div>

@@ -1,7 +1,7 @@
 <mat-sidenav-container class="sidenav-container" id="page-container">
   <mat-sidenav
     #drawer
-    style="width: 200px"
+    style="width: 220px"
     *ngIf="navbarHiddenService.visibleSideBar"
     class="sidenav"
     fixedInViewport
@@ -163,7 +163,7 @@
         <mat-expansion-panel-header class="disable_ripple specific-class">
           <mat-panel-title>
             <small class="text-white mt-2">
-              <i class="fa-solid fa-building-user"></i> Organización
+              <i class="fa-solid fa-building-user"></i> Representante legal
             </small>
           </mat-panel-title>
         </mat-expansion-panel-header>
@@ -171,12 +171,11 @@
           <a
             class="pl-5 sidenav-accordion"
             mat-list-item
-            style="width: 300px"
             [routerLink]="['/representante-legal']"
             routerLinkActive="router-link-active"
           >
             <small class="text-white">
-              <i class="fa-solid fa-street-view"></i> Representante legal
+              <i class="fa-solid fa-street-view"></i> Designar
             </small>
           </a>
           <!--  <a
@@ -238,7 +237,7 @@
             routerLinkActive="router-link-active"
           >
             <small class="text-white">
-              <i class="fa-solid fa-user-pen"></i> Registrar Persona
+              <i class="fa-solid fa-user-pen"></i> Persona
             </small>
           </a>
           <a
@@ -249,7 +248,7 @@
             routerLinkActive="router-link-active"
           >
             <small class="text-white">
-              <i class="fa-solid fa-user-plus"></i> Crear Usuario
+              <i class="fa-solid fa-user-plus"></i> Usuario
             </small>
           </a>
           <a
@@ -260,7 +259,7 @@
             routerLinkActive="router-link-active"
           >
             <small class="text-white">
-              <i class="fa-solid fa-lock"></i> Contraseñas
+              <i class="fa-solid fa-lock"></i> Contraseña
             </small>
           </a>
         </mat-nav-list>
@@ -301,7 +300,9 @@
       >
         <i class="fas fa-bars"></i>
       </button>
-      <h6>Administrador Corporación Universitaria del Huila</h6>
+      <h6 class="font-corhuila">
+        Administrador Corporación Universitaria del Huila
+      </h6>
       <ul class="navbar-nav ml-auto cursor-select">
         <li class="nav-item dropdown">
           <a

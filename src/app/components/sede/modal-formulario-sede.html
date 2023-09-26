@@ -1,111 +1,36 @@
 <h2 mat-dialog-title class="bg-corhuila-p-as-2 font-corhuila text-white">
-  <i class="fa-solid fa-circle-info"></i> Formulario institución
+  <i class="fa-solid fa-circle-info"></i> Formulario sede
 </h2>
 <mat-dialog-content>
   <div class="row pl-4 pr-4 mt-2 text-left">
     <div class="col">
-      <form [formGroup]="formInstitucion">
-        <div class="row">
-          <div class="col">
-            <div class="form-group">
-              <label class="ml-1">Nit <span class="requerido">*</span></label>
-              <input
-                type="text"
-                formControlName="nit"
-                id="nit"
-                class="form-control"
-                placeholder="Digite el Nit"
-                required
-              />
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
-              <label class="ml-1"
-                >Código SNIES <span class="requerido">*</span></label
-              >
-              <input
-                type="number"
-                formControlName="ies"
-                class="form-control"
-                required
-              />
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
-              <label class="ml-1"
-                >Código SNIES Padre <span class="requerido">*</span></label
-              >
-              <input
-                type="number"
-                formControlName="iesPadre"
-                class="form-control"
-                required
-              />
-            </div>
-          </div>
-        </div>
+      <form [formGroup]="formSede">
         <div class="row">
           <div class="col">
             <div class="form-group">
               <label class="ml-1"
-                >Naturaleza Jurídica <span class="requerido">*</span></label
-              >
-              <select class="form-control" formControlName="naturaleza">
-                <option
-                  *ngFor="let listado of listadoNaturalezaJuridica"
-                  [value]="listado.codigo"
-                >
-                  {{ listado.nombre }}
-                </option>
-              </select>
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
-              <label class="ml-1"
-                >Sector <span class="requerido">*</span></label
-              >
-              <select class="form-control" formControlName="sector">
-                <option
-                  *ngFor="let listado of listadoSector"
-                  [value]="listado.codigo"
-                >
-                  {{ listado.nombre }}
-                </option>
-              </select>
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
-              <label class="ml-1"
-                >Carácter Académico <span class="requerido">*</span></label
-              >
-              <select class="form-control" formControlName="caracter">
-                <option
-                  *ngFor="let listado of listadoCaracterAcademico"
-                  [value]="listado.codigo"
-                >
-                  {{ listado.nombre }}
-                </option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div class="form-group">
-              <label class="ml-1"
-                >Nombre de la Institución
-                <span class="requerido">*</span></label
+                >Nombre Sede <span class="requerido">*</span></label
               >
               <input
                 type="text"
                 formControlName="nombre"
+                id="nombre"
                 class="form-control"
+                placeholder="Digite el nombre de la sede"
                 required
               />
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label class="ml-1"
+                >Nit Institucion <span class="requerido">*</span></label
+              >
+              <select class="form-control" formControlName="nit">
+                <option *ngFor="let ins of institucion" [value]="ins.nit">
+                  {{ ins.nit }} - {{ ins.nombre }}
+                </option>
+              </select>
             </div>
           </div>
         </div>
@@ -197,7 +122,7 @@
           <div class="col">
             <div class="form-group">
               <label class="ml-1"
-                >Teléfonos <span class="requerido">*</span></label
+                >Teléfono <span class="requerido">*</span></label
               >
               <input
                 type="number"
@@ -210,43 +135,19 @@
           <div class="col">
             <div class="form-group">
               <label class="ml-1"
-                >Página Web <span class="requerido">*</span></label
+                >Tipo de sede <span class="requerido">*</span></label
               >
-              <input
-                type="text"
-                formControlName="url"
-                class="form-control"
-                required
-              />
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div class="form-group">
-              <label class="ml-1"
-                >Norma de creación <span class="requerido">*</span></label
+              <select
+                class="form-control example-full-width"
+                formControlName="tipo"
               >
-              <input
-                type="text"
-                formControlName="norma"
-                class="form-control"
-                required
-              />
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
-              <label class="ml-1"
-                >Fecha de la norma de creación
-                <span class="requerido">*</span></label
-              >
-              <input
-                type="date"
-                formControlName="fechaNorma"
-                class="form-control"
-                required
-              />
+                <option
+                  *ngFor="let tipoSede of listadoTipoSede"
+                  [value]="tipoSede.codigo"
+                >
+                  {{ tipoSede.nombre }}
+                </option>
+              </select>
             </div>
           </div>
         </div>
@@ -262,8 +163,8 @@
   <button
     type="button"
     class="btn btn-success ml-2"
-    [disabled]="!formInstitucion.valid"
-    (click)="generarInstitucion()"
+    [disabled]="!formSede.valid"
+    (click)="generarSede()"
   >
     <i class="far fa-save"></i> Guardar
   </button>

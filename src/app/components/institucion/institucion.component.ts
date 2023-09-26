@@ -18,8 +18,6 @@ import {
 } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Pais } from 'src/app/models/pais';
@@ -41,6 +39,96 @@ import { NgxPrintDirective } from 'ngx-print';
   styleUrls: ['./institucion.component.css'],
 })
 export class InstitucionComponent {
+  listadoInstitucion: Institucion[] = [];
+
+  dataSource = new MatTableDataSource<Institucion>([]);
+  displayedColumns: string[] = [
+    'index',
+    'nit',
+    'ies',
+    'iespadre',
+    'nombre',
+    'ccp',
+    'naturaleza',
+    'sector',
+    'caracter',
+    'estado',
+  ];
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+
+  dialogRef!: MatDialogRef<any>;
+
+  constructor(
+    public ubicacionService: UbicacionService,
+    public institucionService: InstitucionService,
+    public dialog: MatDialog,
+    private authService: AuthService
+  ) {
+    if (this.authService.validacionToken()) {
+      this.obtenerListadoInstitucion();
+    }
+  }
+
+  registrarFormulario(): void {
+    this.dialogRef = this.dialog.open(ModalFormulario, {
+      width: '70%',
+      disableClose: true,
+    });
+    this.dialogRef.afterClosed().subscribe(() => {
+      this.onModalClosed();
+    });
+  }
+
+  editarFormulario(element: any): void {
+    this.dialogRef = this.dialog.open(ModalFormulario, {
+      width: '70%',
+      disableClose: true,
+      data: { institucion: element },
+    });
+    this.dialogRef.afterClosed().subscribe(() => {
+      this.onModalClosed();
+    });
+  }
+
+  onModalClosed() {
+    this.obtenerListadoInstitucion();
+  }
+
+  openDialog(element: any): void {
+    const dialogRef = this.dialog.open(ModalInstitucion, {
+      width: '70%',
+      data: { institucion: element },
+    });
+  }
+
+  /*   openFormulario(): void {
+    const dialogRef = this.dialog.open(ModalFormulario, {
+      width: '70%',
+    });
+  }
+ */
+  obtenerListadoInstitucion() {
+    this.institucionService.obtenerListadoInstitucion().subscribe((data) => {
+      this.listadoInstitucion = data;
+      this.dataSource = new MatTableDataSource<Institucion>(data);
+      this.paginator.firstPage();
+      this.dataSource.paginator = this.paginator;
+    });
+  }
+
+  editarInstitucion(element: Institucion) {
+    this.editarFormulario(element);
+  }
+}
+
+//// MODAL FORMULARIO
+
+@Component({
+  selector: 'modal-formulario',
+  templateUrl: 'modal-formulario.html',
+  styleUrls: ['./institucion.component.css'],
+})
+export class ModalFormulario {
   editar: boolean = false;
   nameFile: string = 'Archivo: pdf';
   paises: Pais[] = [];
@@ -56,44 +144,15 @@ export class InstitucionComponent {
 
   formInstitucion!: FormGroup;
 
-  dataSource = new MatTableDataSource<Institucion>([]);
-  displayedColumns: string[] = [
-    'index',
-    'nit',
-    'ies',
-    'iespadre',
-    'nombre',
-    'ccp',
-    'naturaleza',
-    'sector',
-    'caracter',
-    'estado',
-  ];
-  /* displayedColumns: string[] = [
-    'index',
-    'nit',
-    'ies',
-    'iespadre',
-    'nombre',
-    'ccp',
-    'naturaleza',
-    'sector',
-    'caracter',
-    'norma',
-    'fechanorma',
-    'estado',
-  ]; */
-  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  // Referencia al elemento div oculto
-  @ViewChild('hiddenDiv') hiddenDiv!: ElementRef;
-
   constructor(
+    public dialogRef: MatDialogRef<ModalFormulario>,
     private formBuilder: FormBuilder,
     public ubicacionService: UbicacionService,
     public institucionService: InstitucionService,
     public dialog: MatDialog,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     if (this.authService.validacionToken()) {
       this.obtenerPaises();
@@ -102,7 +161,12 @@ export class InstitucionComponent {
       this.obtenerListadoNaturalezaJuridica();
       this.obtenerListadoSector();
       this.crearFormInstitucion();
-      this.obtenerListadoInstitucion();
+      if (JSON.stringify(data) !== 'null') {
+        this.editarInstitucion(data.institucion);
+        console.log('Entra');
+      } else {
+        console.log('No entra');
+      }
     }
   }
 
@@ -129,32 +193,8 @@ export class InstitucionComponent {
     });
   }
 
-  // Función para mostrar el div oculto y desplazarse hacia él
-  showAndScrollToHiddenDiv() {
-    this.hiddenDiv.nativeElement.scrollIntoView({ behavior: 'smooth' });
-    this.formularioOculto = true;
-  }
-
-  openDialog(element: any): void {
-    const dialogRef = this.dialog.open(ModalInstitucion, {
-      width: '70%',
-      data: { institucion: element },
-    });
-  }
-
-  openFormulario(): void {
-    const dialogRef = this.dialog.open(ModalFormulario, {
-      width: '70%',
-    });
-  }
-
-  obtenerListadoInstitucion() {
-    this.institucionService.obtenerListadoInstitucion().subscribe((data) => {
-      this.listadoInstitucion = data;
-      this.dataSource = new MatTableDataSource<Institucion>(data);
-      this.paginator.firstPage();
-      this.dataSource.paginator = this.paginator;
-    });
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 
   generarInstitucion(): void {
@@ -172,15 +212,6 @@ export class InstitucionComponent {
     caracterAcademico.codigo = this.formInstitucion.get('caracter')!.value;
     institucion.caracter = caracterAcademico;
     institucion.nombre = this.formInstitucion.get('nombre')!.value;
-    /* let pais: Pais = new Pais();
-    pais.codigo = this.formInstitucion.get('pais')!.value;
-    institucion.pais = pais;
-    let departamento: Departamento = new Departamento();
-    departamento.divipola = this.formInstitucion.get('departamento')!.value;
-    institucion.departamento = departamento;
-    let municipio: Municipio = new Municipio();
-    municipio.divipola = this.formInstitucion.get('municipio')!.value;
-    institucion.municipio = municipio; */
     let ccp: CabecerasCentrosPoblados = new CabecerasCentrosPoblados();
     ccp.divipola = this.formInstitucion.get('ccp')!.value;
     institucion.ccp = ccp;
@@ -190,10 +221,6 @@ export class InstitucionComponent {
     institucion.norma = this.formInstitucion.get('norma')!.value;
     institucion.fechaNorma = this.formInstitucion.get('fechaNorma')!.value;
     this.registrarInstitucio(institucion);
-    /* if (this.editar) {
-      this.actualizarInstitucion(institucion);
-    } else {
-    } */
   }
 
   registrarInstitucio(institucion: Institucion) {
@@ -207,10 +234,9 @@ export class InstitucionComponent {
             showConfirmButton: false,
             timer: 2500,
           });
-          this.obtenerListadoInstitucion();
           this.cancelar();
           this.crearFormInstitucion();
-          this.obtenerListadoInstitucion();
+          this.dialogRef.close();
         } else {
           this.mensajeError();
         }
@@ -219,30 +245,7 @@ export class InstitucionComponent {
     );
   }
 
-  /* actualizarInstitucion(institucion: Institucion) {
-    this.institucionService.actualizarInstitucion(institucion).subscribe(
-      (data) => {
-        if (data > 0) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Actualizado',
-            text: '¡Operación exitosa!',
-            showConfirmButton: true,
-            confirmButtonColor: '#8f141b',
-            timer: 2500,
-          });
-          this.cancelar();
-          this.obtenerListadoInstitucion();
-        } else {
-          this.mensajeError();
-        }
-      },
-      (err) => this.fError(err)
-    );
-  } */
-
   editarInstitucion(element: Institucion) {
-    this.showAndScrollToHiddenDiv();
     this.editar = true;
     this.formInstitucion.get('codigo')!.setValue(element.codigo);
     this.formInstitucion.get('nit')!.setValue(element.nit);
@@ -272,13 +275,7 @@ export class InstitucionComponent {
   cancelar() {
     this.formularioOculto = false;
     this.formInstitucion.reset();
-    this.obtenerPaises();
-    this.obtenerPaisLocal();
-    this.obtenerListadoCaracterAcademico();
-    this.obtenerListadoNaturalezaJuridica();
-    this.obtenerListadoSector();
     this.crearFormInstitucion();
-    this.obtenerListadoInstitucion();
     this.editar = false;
   }
 
@@ -319,11 +316,13 @@ export class InstitucionComponent {
   obtenerDepartamentosPorPais(codigo: number) {
     console.log('entra');
     this.municipios = [];
-    this.ubicacionService
-      .obtenerDepartamentosPorPais(codigo)
-      .subscribe((data) => {
-        this.departamentos = data;
-      });
+    if (codigo != null) {
+      this.ubicacionService
+        .obtenerDepartamentosPorPais(codigo)
+        .subscribe((data) => {
+          this.departamentos = data;
+        });
+    }
   }
 
   obtenerMunicipiosPorDepartamento(codigo: string) {
@@ -374,7 +373,7 @@ export class InstitucionComponent {
   }
 }
 
-//// MODAL
+//// MODAL REPORTE
 
 @Component({
   selector: 'modal-institucion',
@@ -382,112 +381,6 @@ export class InstitucionComponent {
   styleUrls: ['./institucion.component.css'],
 })
 export class ModalInstitucion implements OnInit {
-  paises: Pais[] = [];
-  departamentos: Departamento[] = [];
-  municipios: Municipio[] = [];
-  paisLocal: Pais[] = [];
-  listadoCaracterAcademico: CaracterAcademico[] = [];
-  listadoNaturalezaJuridica: NaturalezaJuridica[] = [];
-  listadoSector: Sector[] = [];
-  listadoCcp: CabecerasCentrosPoblados[] = [];
-
-  @ViewChild('printSection', { static: false }) printSection!: ElementRef;
-  @ViewChild(NgxPrintDirective, { static: false })
-  printDirective!: NgxPrintDirective;
-
-  constructor(
-    public dialogRef: MatDialogRef<ModalInstitucion>,
-    public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    public ubicacionService: UbicacionService,
-    public institucionService: InstitucionService
-  ) {}
-
-  printTable() {
-    // Aplica el estilo de color a la columna deseada antes de imprimir.
-    const coloredColumn =
-      this.printSection.nativeElement.querySelector('.colored-column');
-    if (coloredColumn) {
-      coloredColumn.style.backgroundColor = 'yellow'; // Cambia el color según tus preferencias.
-    }
-
-    // Llama al método de impresión de ngx-print.
-    this.printDirective.print();
-  }
-
-  ngOnInit() {}
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
-  obtenerListadoCaracterAcademico() {
-    this.institucionService
-      .obtenerListadoCaracterAcademico()
-      .subscribe((data) => {
-        this.listadoCaracterAcademico = data;
-      });
-  }
-
-  obtenerListadoNaturalezaJuridica() {
-    this.institucionService
-      .obtenerListadoNaturalezaJuridica()
-      .subscribe((data) => {
-        this.listadoNaturalezaJuridica = data;
-      });
-  }
-
-  obtenerListadoSector() {
-    this.institucionService.obtenerListadoSector().subscribe((data) => {
-      this.listadoSector = data;
-    });
-  }
-
-  obtenerPaises() {
-    this.ubicacionService.obtenerPaises().subscribe((data) => {
-      this.paises = data;
-    });
-  }
-
-  obtenerPaisLocal() {
-    this.ubicacionService.obtenerPaisLocal().subscribe((data) => {
-      this.paisLocal = data;
-    });
-  }
-
-  obtenerDepartamentosPorPais(codigo: number) {
-    this.municipios = [];
-    this.ubicacionService
-      .obtenerDepartamentosPorPais(codigo)
-      .subscribe((data) => {
-        this.departamentos = data;
-        console.log(this.departamentos);
-      });
-  }
-
-  obtenerMunicipiosPorDepartamento(codigo: string) {
-    this.listadoCcp = [];
-    this.ubicacionService
-      .obtenerMunicipiosPorDepartamento(codigo)
-      .subscribe((data) => {
-        this.municipios = data;
-      });
-  }
-
-  obtenerCcpPorMunicipio(codigo: string) {
-    this.ubicacionService.obtenerCcpPorMunicipio(codigo).subscribe((data) => {
-      this.listadoCcp = data;
-    });
-  }
-}
-
-
-@Component({
-  selector: 'modal-formulario',
-  templateUrl: 'modal-formulario.html',
-  styleUrls: ['./institucion.component.css'],
-})
-export class ModalFormulario implements OnInit {
   paises: Pais[] = [];
   departamentos: Departamento[] = [];
   municipios: Municipio[] = [];

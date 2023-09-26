@@ -18,8 +18,6 @@ import {
 } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Pais } from 'src/app/models/pais';
@@ -57,19 +55,17 @@ export class SedeComponent {
   dataSource = new MatTableDataSource<Sede>([]);
   displayedColumns: string[] = [
     'index',
-    'nit',
     'institucion',
     'sede',
     'ubicacion',
     'dirección',
     'telefono',
-    'tipo',
     'fecha',
     'opciones',
   ];
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  // Referencia al elemento div oculto
-  @ViewChild('hiddenDiv') hiddenDiv!: ElementRef;
+
+  dialogRef!: MatDialogRef<any>;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -81,12 +77,163 @@ export class SedeComponent {
     private router: Router
   ) {
     if (this.authService.validacionToken()) {
+      this.obtenerListadoSedes();
+    }
+  }
+
+  registrarFormulario(): void {
+    this.dialogRef = this.dialog.open(ModalFormularioSede, {
+      width: '70%',
+      disableClose: true,
+    });
+    this.dialogRef.afterClosed().subscribe(() => {
+      this.onModalClosed();
+    });
+  }
+
+  editarFormulario(element: any): void {
+    this.dialogRef = this.dialog.open(ModalFormularioSede, {
+      width: '70%',
+      disableClose: true,
+      data: { sede: element },
+    });
+    this.dialogRef.afterClosed().subscribe(() => {
+      this.onModalClosed();
+    });
+  }
+
+  onModalClosed() {
+    this.obtenerListadoSedes();
+  }
+
+  obtenerListadoSedes() {
+    this.sedeService.obtenerListadoSedes().subscribe((data) => {
+      this.listadoSede = data;
+      this.dataSource = new MatTableDataSource<Sede>(data);
+      this.paginator.firstPage();
+      this.dataSource.paginator = this.paginator;
+    });
+  }
+
+  actualizarSede(sede: Sede) {
+    this.sedeService.actualizarSede(sede).subscribe(
+      (data) => {
+        if (data > 0) {
+          this.obtenerListadoSedes();
+        } else {
+          this.mensajeError();
+        }
+      },
+      (err) => this.fError(err)
+    );
+  }
+
+  editarSede(element: Sede) {
+    this.editarFormulario(element);
+  }
+
+  eliminarSede(element: Sede) {
+    Swal.fire({
+      title: '¿Está seguro de eliminar este elemento?',
+      text: 'La siguiente operación será irreversible',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#00c053',
+      cancelButtonColor: '#ffc107',
+      confirmButtonText: 'Si, estoy seguro',
+      cancelButtonText: 'Cancelar opreación',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        element.estado = 0;
+        this.actualizarSede(element);
+        Swal.fire({
+          icon: 'success',
+          title: 'Elemento borrado.',
+          confirmButtonColor: '#006983',
+          confirmButtonText: 'Listo',
+        });
+      }
+    });
+  }
+
+  mensajeSuccses() {
+    Swal.fire({
+      icon: 'success',
+      title: 'Proceso realizado',
+      text: '¡Operación exitosa!',
+      showConfirmButton: false,
+      timer: 2500,
+    });
+  }
+
+  mensajeError() {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo completar el proceso.',
+      showConfirmButton: true,
+      confirmButtonText: 'Listo',
+      confirmButtonColor: '#8f141b',
+    });
+  }
+
+  fError(er: any): void {
+    let err = er.error.error_description;
+    let arr: string[] = err.split(':');
+    if (arr[0] == 'Access token expired') {
+      this.authService.logout();
+      this.router.navigate(['login']);
+    } else {
+      this.mensajeError();
+    }
+  }
+}
+
+//// MODAL
+
+@Component({
+  selector: 'modal-formulario-sede',
+  templateUrl: './modal-formulario-sede.html',
+  styleUrls: ['./sede.component.css'],
+})
+export class ModalFormularioSede {
+  editar: boolean = false;
+  nameFile: string = 'Archivo: pdf';
+  paises: Pais[] = [];
+  departamentos: Departamento[] = [];
+  municipios: Municipio[] = [];
+  paisLocal: Pais[] = [];
+  listadoCcp: CabecerasCentrosPoblados[] = [];
+  listadoInstitucion: Institucion[] = [];
+  institucion: Institucion[] = [];
+  listadoTipoSede: SedeTipo[] = [];
+  listadoSede: Sede[] = [];
+
+  formSede!: FormGroup;
+
+  constructor(
+    public dialogRef: MatDialogRef<ModalFormularioSede>,
+    private formBuilder: FormBuilder,
+    public ubicacionService: UbicacionService,
+    public institucionService: InstitucionService,
+    public sedeService: SedeService,
+    public dialog: MatDialog,
+    private authService: AuthService,
+    private router: Router,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    if (this.authService.validacionToken()) {
       this.obtenerPaises();
       this.obtenerPaisLocal();
       this.crearFormSede();
-      this.obtenerListadoSedes();
       this.obtenerInstitucion();
       this.obtenerListadoTiposSedes();
+      if (JSON.stringify(data) !== 'null') {
+        this.editarSede(data.sede);
+        console.log('Entra');
+      } else {
+        console.log('No entra');
+      }
     }
   }
 
@@ -106,26 +253,8 @@ export class SedeComponent {
     });
   }
 
-  // Función para mostrar el div oculto y desplazarse hacia él
-  showAndScrollToHiddenDiv() {
-    this.hiddenDiv.nativeElement.scrollIntoView({ behavior: 'smooth' });
-  }
-
-  /*  openDialog(element: any): void {
-    const dialogRef = this.dialog.open(ModalInstitucion, {
-      width: '60%',
-      data: { institucion: element },
-    });
-  }
- */
-
-  obtenerListadoSedes() {
-    this.sedeService.obtenerListadoSedes().subscribe((data) => {
-      this.listadoSede = data;
-      this.dataSource = new MatTableDataSource<Sede>(data);
-      this.paginator.firstPage();
-      this.dataSource.paginator = this.paginator;
-    });
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 
   generarSede(): void {
@@ -160,10 +289,9 @@ export class SedeComponent {
             showConfirmButton: false,
             timer: 2500,
           });
-          this.obtenerListadoSedes();
           this.cancelar();
+          this.dialogRef.close();
           this.crearFormSede();
-          this.obtenerListadoSedes();
         } else {
           this.mensajeError();
         }
@@ -182,8 +310,8 @@ export class SedeComponent {
             text: '¡Operación exitosa!',
             showConfirmButton: false,
           });
+          this.dialogRef.close();
           this.cancelar();
-          this.obtenerListadoSedes();
         } else {
           this.mensajeError();
         }
@@ -193,7 +321,7 @@ export class SedeComponent {
   }
 
   editarSede(element: Sede) {
-    this.showAndScrollToHiddenDiv();
+    console.log('Element', typeof element);
     this.editar = true;
     this.formSede.get('codigo')!.setValue(element.codigo);
     this.formSede.get('nit')!.setValue(element.nit);
@@ -211,29 +339,11 @@ export class SedeComponent {
     this.formSede.get('estado')!.setValue(element.estado);
   }
 
-  eliminarSede() {
-    let sede: Sede = new Sede();
-    sede.codigo = this.formSede.get('codigo')!.value;
-    sede.nit = this.formSede.get('nit')!.value;
-    sede.nombre = this.formSede.get('nombre')!.value;
-    let ccp: CabecerasCentrosPoblados = new CabecerasCentrosPoblados();
-    ccp.divipola = this.formSede.get('ccp')!.value;
-    sede.ccp = ccp;
-    sede.direccion = this.formSede.get('direccion')!.value;
-    sede.telefono = this.formSede.get('telefono')!.value;
-    let tipo: SedeTipo = new SedeTipo();
-    tipo.codigo = this.formSede.get('tipo')!.value;
-    sede.sedeTipo = tipo;
-    sede.estado = 0;
-    this.actualizarSede(sede);
-  }
-
   cancelar() {
     this.formSede.reset();
     this.obtenerPaises();
     this.obtenerPaisLocal();
     this.crearFormSede();
-    this.obtenerListadoSedes();
     this.editar = false;
   }
 
@@ -251,11 +361,13 @@ export class SedeComponent {
 
   obtenerDepartamentosPorPais(codigo: number) {
     this.municipios = [];
-    this.ubicacionService
-      .obtenerDepartamentosPorPais(codigo)
-      .subscribe((data) => {
-        this.departamentos = data;
-      });
+    if (codigo != null) {
+      this.ubicacionService
+        .obtenerDepartamentosPorPais(codigo)
+        .subscribe((data) => {
+          this.departamentos = data;
+        });
+    }
   }
 
   obtenerMunicipiosPorDepartamento(codigo: string) {
@@ -317,95 +429,3 @@ export class SedeComponent {
     }
   }
 }
-
-//// MODAL
-
-/* @Component({
-  selector: 'modal-institucion',
-  templateUrl: '../institucion/modal-institucion.html',
-  styleUrls: ['./sede.component.css'],
-})
-export class ModalInstitucion implements OnInit {
-  paises: Pais[] = [];
-  departamentos: Departamento[] = [];
-  municipios: Municipio[] = [];
-  paisLocal: Pais[] = [];
-  listadoCaracterAcademico: CaracterAcademico[] = [];
-  listadoNaturalezaJuridica: NaturalezaJuridica[] = [];
-  listadoSector: Sector[] = [];
-  listadoCcp: CabecerasCentrosPoblados[] = [];
-
-  constructor(
-    public dialogRef: MatDialogRef<ModalInstitucion>,
-    public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    public ubicacionService: UbicacionService,
-    public institucionService: InstitucionService
-  ) {}
-
-  ngOnInit() {}
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
-  obtenerListadoCaracterAcademico() {
-    this.institucionService
-      .obtenerListadoCaracterAcademico()
-      .subscribe((data) => {
-        this.listadoCaracterAcademico = data;
-      });
-  }
-
-  obtenerListadoNaturalezaJuridica() {
-    this.institucionService
-      .obtenerListadoNaturalezaJuridica()
-      .subscribe((data) => {
-        this.listadoNaturalezaJuridica = data;
-      });
-  }
-
-  obtenerListadoSector() {
-    this.institucionService.obtenerListadoSector().subscribe((data) => {
-      this.listadoSector = data;
-    });
-  }
-
-  obtenerPaises() {
-    this.ubicacionService.obtenerPaises().subscribe((data) => {
-      this.paises = data;
-    });
-  }
-
-  obtenerPaisLocal() {
-    this.ubicacionService.obtenerPaisLocal().subscribe((data) => {
-      this.paisLocal = data;
-    });
-  }
-
-  obtenerDepartamentosPorPais(codigo: number) {
-    this.municipios = [];
-    this.ubicacionService
-      .obtenerDepartamentosPorPais(codigo)
-      .subscribe((data) => {
-        this.departamentos = data;
-      });
-  }
-
-  obtenerMunicipiosPorDepartamento(codigo: string) {
-    this.listadoCcp = [];
-    this.ubicacionService
-      .obtenerMunicipiosPorDepartamento(codigo)
-      .subscribe((data) => {
-        this.municipios = data;
-      });
-  }
-
-  obtenerCcpPorMunicipio(codigo: string) {
-    this.ubicacionService.obtenerCcpPorMunicipio(codigo).subscribe((data) => {
-      this.listadoCcp = data;
-    });
-  }
-
-}
- */

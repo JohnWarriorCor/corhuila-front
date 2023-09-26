@@ -17,7 +17,7 @@ import { InstitucionComponent, ModalInstitucion, ModalFormulario } from './compo
 import { PersonaComponent } from './components/configuracion/persona/persona.component';
 import { EstructuraComponent } from './components/inicio/estructura/estructura.component';
 import { ConfiguracionComponent } from './components/inicio/configuracion/configuracion.component';
-import { SedeComponent } from './components/sede/sede.component';
+import { SedeComponent, ModalFormularioSede } from './components/sede/sede.component';
 import { FacultadComponent } from './components/facultad/facultad.component';
 import { OrganizacionInternaComponent } from './components/inicio/organizacion-interna/organizacion-interna.component';
 import { CuerposColegiadosComponent, ModalCuerpoColegiado } from './components/cuerpos-colegiados/cuerpos-colegiados.component';
@@ -41,6 +41,7 @@ import { NormaComponent, ModalEntidadExterna } from './components/marco-normativ
     ModalInstitucion,
     ModalCuerpoColegiado,
     ModalEntidadExterna,
+    ModalFormularioSede,
     ModalFormulario,
     EstructuraComponent,
     ConfiguracionComponent,
@@ -68,7 +69,8 @@ import { NormaComponent, ModalEntidadExterna } from './components/marco-normativ
     ModalInstitucion,
     ModalCuerpoColegiado,
     ModalEntidadExterna,
-    ModalFormulario
+    ModalFormulario,
+    ModalFormularioSede
   ],
   providers: [DatePipe, {provide: MAT_DATE_LOCALE, useValue: 'es-ES'}],
   bootstrap: [AppComponent]

@@ -6,7 +6,7 @@
         [routerLink]="['/estructura']"
         routerLinkActive="router-link-active"
       >
-        <h4 #hiddenDiv class="font-usco-default">Cuerpos colegiados</h4>
+        <h4>Cuerpos colegiados</h4>
       </div>
       <div class="card-body ls">
         <div class="row pl-5 pr-5">
@@ -181,7 +181,7 @@
                             type="button"
                             (click)="editarFunciones(funciones)"
                           >
-                            <i class="fa-solid fa-pencil fa-xs"></i>
+                            <i class="fa-solid fa-pencil"></i>
                           </button>
                           <!-- (click)="deleteFieldValue(i)" -->
                         </td>
@@ -340,28 +340,28 @@
                     class="btn btn-success btn-sm mr-2"
                     title="Activo"
                   >
-                    <i class="fas fa-check-square fa-xs"></i>
+                    <i class="fa-solid fa-check"></i>
                   </button>
                   <button
                     *ngIf="element.estado !== 1"
                     class="btn btn-secondary btn-sm mr-2"
                     title="Inactivo"
                   >
-                    <i class="fa-solid fa-square-minus fa-xs"></i>
+                    <i class="fa-solid fa-square-minus"></i>
                   </button>
                   <button
                     class="btn btn-info btn-sm mr-2"
                     title="Informacion"
                     (click)="openDialog(element)"
                   >
-                    <i class="fa-solid fa-circle-info fa-xs"></i>
+                    <i class="fa-solid fa-circle-info"></i>
                   </button>
                   <button
                     class="btn btn-primary btn-sm"
                     (click)="editarCuerpoColegiado(element)"
                     title="Editar"
                   >
-                    <i class="fa-solid fa-pencil fa-xs"></i>
+                    <i class="fa-solid fa-pencil"></i>
                   </button>
                   <button
                     class="btn btn-secondary btn-sm ml-2"

@@ -66,9 +66,6 @@ export class LoginComponent implements OnInit {
           title: 'Inicio de sesión exitoso.',
           confirmButtonColor: '#006983',
           confirmButtonText: 'Listo',
-          showClass: {
-            popup: 'slide-top',
-          },
         });
 
         this.router.navigate(['/inicio']);

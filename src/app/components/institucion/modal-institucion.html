@@ -1,18 +1,10 @@
-<div mat-dialog-title class="bg-corhuila-p-as-2" style="padding-top: 0">
-  <div class="row mb-2">
-    <div class="col">
-      <h4 class="text-white">
-        <i class="fa-solid fa-circle-info"></i> Información complementaria
-      </h4>
-    </div>
-    <div class="col text-right text-white font-weight-bold">
-      <i class="fa-solid fa-xmark" mat-dialog-close></i>
-    </div>
-  </div>
-</div>
+<h2 mat-dialog-title class="bg-corhuila-p-as-2 font-corhuila text-white">
+  <i class="fa-solid fa-circle-info"></i> Información reporte institución
+  <!-- <i class="fa-solid fa-xmark" mat-dialog-close></i> -->
+</h2>
 <mat-dialog-content>
-  <br>
-  <div class="container" style="border: solid #edeff0 1px;" id="print-section">
+  <br />
+  <div class="container" style="border: solid #edeff0 1px" id="print-section">
     <div class="row">
       <div class="col">
         <img src="assets/header.jpg" alt="CORHUILA" style="width: 100%" />
@@ -135,7 +127,7 @@
           </table>
         </div>
       </div>
-      <br><br><br><br>
+      <br /><br /><br /><br />
     </form>
     <div class="row">
       <div class="col">
@@ -145,18 +137,17 @@
   </div>
 </mat-dialog-content>
 <hr />
-<div mat-dialog-actions align="center">
-  <div class="row text-right p-2">
-    <div class="col">
-      <button
-        class="btn btn-info"
-        [printStyle]="{form:{'padding-left':'20px','padding-right':'20px'},table : {'font-size':'12px','text-align': 'center!important','box-shadow':'0 .125rem .25rem rgba(0,0,0,.075)!important','border':'1px solid #dee2e6 !important','width':'100%','margin-bottom':'1rem','color':'#212529','border-collapse':'collapse'}, thead : {'width': '100%','background-color': '#edeff0','border':'1px solid #dee2e6 !important'},td:{'padding':'.75rem','color':'black','font-family':'Arial','border':'1px solid #dee2e6 !important'},th:{'padding':'.75rem','color':'black','font-family':'Arial','border':'1px solid #dee2e6 !important'}}"
-        printTitle="Institución"
-        printSectionId="print-section"
-        ngxPrint
-      >
-        <i class="fa-solid fa-print"></i> Imprimir
-      </button>
-    </div>
-  </div>
-</div>
+<mat-dialog-actions align="end">
+  <button class="btn btn-warning mr-2" mat-dialog-close>
+    <i class="fa-solid fa-xmark"></i> Cancelar
+  </button>
+  <button
+    class="btn btn-corhuila-print"
+    [printStyle]="{form:{'padding-left':'20px','padding-right':'20px'},table : {'font-size':'12px','text-align': 'center!important','box-shadow':'0 .125rem .25rem rgba(0,0,0,.075)!important','border':'1px solid #dee2e6 !important','width':'100%','margin-bottom':'1rem','color':'#212529','border-collapse':'collapse'}, thead : {'width': '100%','background-color': '#edeff0','border':'1px solid #dee2e6 !important'},td:{'padding':'.75rem','color':'black','font-family':'Arial','border':'1px solid #dee2e6 !important'},th:{'padding':'.75rem','color':'black','font-family':'Arial','border':'1px solid #dee2e6 !important'}}"
+    printTitle="Institución"
+    printSectionId="print-section"
+    ngxPrint
+  >
+    <i class="fa-solid fa-print"></i> Imprimir
+  </button>
+</mat-dialog-actions>
