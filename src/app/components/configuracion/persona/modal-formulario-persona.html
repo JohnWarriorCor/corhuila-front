@@ -1,0 +1,501 @@
+<h2 mat-dialog-title class="bg-corhuila-p-as-2 font-corhuila text-white">
+  <i class="fa-solid fa-circle-info"></i> Formulario sede
+</h2>
+<mat-dialog-content>
+  <div class="row mt-3 text-left">
+    <div class="col">
+      <form [formGroup]="formPersona">
+        <fieldset class="scheduler-border shadow-sm">
+          <legend class="scheduler-border">Datos personales</legend>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label
+                  >Número de identidad <span class="requerido">*</span></label
+                >
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <input
+                    matInput
+                    #input
+                    maxlength="16"
+                    type="number"
+                    formControlName="identificacion"
+                    required
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label
+                  >Tipo de documento <span class="requerido">*</span></label
+                >
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-select
+                    class="font-sm-corhuila"
+                    formControlName="identificacionTipo"
+                  >
+                    <mat-option
+                      class="font-sm-corhuila"
+                      *ngFor="let tipoId of tipoIndentificacion"
+                      [value]="tipoId.codigo"
+                      >{{ tipoId.nombreCorto }} - {{ tipoId.nombre
+                      }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label
+                  >Fecha de expedicion <span class="requerido">*</span></label
+                >
+                <input
+                  type="date"
+                  formControlName="fechaExpedicion"
+                  class="form-control"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label
+                  >Lugar de expedición <span class="requerido">*</span></label
+                >
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-select
+                    class="font-sm-corhuila"
+                    formControlName="lugarExpedicion"
+                  >
+                    <mat-option
+                      class="font-sm-corhuila"
+                      ca
+                      *ngFor="let municipio of listadoMunicipios"
+                      [value]="municipio.divipola"
+                      >{{ municipio.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label>Nombres <span class="requerido">*</span></label>
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <input matInput formControlName="nombre" required />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label>Apellidos <span class="requerido">*</span></label>
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <input matInput formControlName="apellido" required />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label>Sexo biológico <span class="requerido">*</span></label>
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-select class="font-sm-corhuila" formControlName="sexo">
+                    <mat-option
+                      class="font-sm-corhuila"
+                      *ngFor="let genero of generos"
+                      [value]="genero.codigo"
+                      >{{ genero.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label
+                  >Fecha de nacimiento <span class="requerido">*</span></label
+                >
+                <input
+                  type="date"
+                  formControlName="fechaNacimiento"
+                  class="form-control"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label>Grupo sanguíneo <span class="requerido">*</span></label>
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-select
+                    class="font-sm-corhuila"
+                    formControlName="grupoSanguineo"
+                  >
+                    <mat-option
+                      class="font-sm-corhuila"
+                      *ngFor="let grupo of gruposSanguineos"
+                      [value]="grupo.codigo"
+                      >{{ grupo.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label>Estado civil <span class="requerido">*</span></label>
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-select
+                    class="font-sm-corhuila"
+                    formControlName="estadoCivil"
+                  >
+                    <mat-option
+                      class="font-sm-corhuila"
+                      *ngFor="let estado of estadosCivil"
+                      [value]="estado.codigo"
+                      >{{ estado.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset class="scheduler-border shadow-sm">
+          <legend class="scheduler-border">Datos de contacto</legend>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>País residencia</mat-label>
+                  <mat-select class="font-sm-corhuila" formControlName="pais">
+                    <mat-option
+                      class="font-sm-corhuila"
+                      *ngFor="let pais of paisLocal"
+                      [value]="pais.codigo"
+                      (click)="obtenerDepartamentosPorPais(pais.codigo)"
+                      >{{ pais.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Departamento residencia</mat-label>
+                  <mat-select
+                    class="font-sm-corhuila"
+                    formControlName="departamento"
+                  >
+                    <mat-option
+                      class="font-sm-corhuila"
+                      *ngFor="let dep of departamentos"
+                      [value]="dep.divipola"
+                      (click)="
+                        obtenerMunicipiosPorDepartamento(dep.divipola)
+                      "
+                      >{{ dep.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Municipio residencia</mat-label>
+                  <mat-select
+                    class="font-sm-corhuila"
+                    formControlName="municipio"
+                  >
+                    <mat-option
+                      class="font-sm-corhuila"
+                      *ngFor="let mun of municipios"
+                      (click)="obtenerCcpPorMunicipio(mun.divipola)"
+                      [value]="mun.divipola"
+                      >{{ mun.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Cabecera Municipale o Centro Poblado</mat-label>
+                  <mat-select class="font-sm-corhuila" formControlName="ccp">
+                    <mat-option
+                      class="font-sm-corhuila"
+                      *ngFor="let ccp of listadoCcp"
+                      [value]="ccp.divipola"
+                      >{{ ccp.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Dirección</mat-label>
+                  <input matInput formControlName="direccion" required />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Barrio</mat-label>
+                  <input matInput formControlName="barrio" required />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Estrato</mat-label>
+                  <mat-select
+                    class="font-sm-corhuila"
+                    formControlName="estrato"
+                  >
+                    <mat-option
+                      class="font-sm-corhuila"
+                      *ngFor="let est of estrato"
+                      [value]="est.codigo"
+                      >{{ est.codigo }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Teléfono movil</mat-label>
+                  <input matInput formControlName="telefonoMovil" required />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Teléfono fijo</mat-label>
+                  <input matInput formControlName="telefonoFijo" required />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Correo personal</mat-label>
+                  <input matInput formControlName="correoPersonal" required />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset class="scheduler-border shadow-sm">
+          <legend class="scheduler-border">Datos de caracterización</legend>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Grupo étnico</mat-label>
+                  <mat-select
+                    class="font-sm-corhuila"
+                    formControlName="grupoEtnico"
+                  >
+                    <mat-option
+                      class="font-sm-corhuila"
+                      *ngFor="let grupo of grupoEtnico"
+                      [value]="grupo.codigo"
+                      >{{ grupo.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div
+              class="col"
+              *ngIf="formPersona.get('grupoEtnico')!.value === 1"
+            >
+              <div class="form-group">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Pueblo indigena</mat-label>
+                  <mat-select
+                    class="font-sm-corhuila"
+                    formControlName="puebloIndigena"
+                  >
+                    <mat-option
+                      class="font-sm-corhuila"
+                      *ngFor="let pueblo of puebloIndigena"
+                      [value]="pueblo.codigo"
+                      >{{ pueblo.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div
+              class="col"
+              *ngIf="formPersona.get('grupoEtnico')!.value === 2"
+            >
+              <div class="form-group">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Comunidad negra</mat-label>
+                  <mat-select
+                    class="font-sm-corhuila"
+                    formControlName="comunidadNegra"
+                  >
+                    <mat-option
+                      class="font-sm-corhuila"
+                      *ngFor="let comunidad of comunidadNegra"
+                      [value]="comunidad.codigo"
+                      >{{ comunidad.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Persona discapacidad</mat-label>
+                  <mat-select
+                    class="font-sm-corhuila"
+                    formControlName="personaDiscapacidad"
+                  >
+                    <mat-option
+                      class="font-sm-corhuila"
+                      *ngFor="let persona of personaDiscapacidad"
+                      [value]="persona.codigo"
+                      >{{ persona.condicion }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div
+              class="col"
+              *ngIf="formPersona.get('personaDiscapacidad')!.value === 1"
+            >
+              <div class="form-group">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Tipo discapacidad</mat-label>
+                  <mat-select
+                    class="font-sm-corhuila"
+                    formControlName="discapacidadTipo"
+                  >
+                    <mat-option
+                      class="font-sm-corhuila"
+                      *ngFor="let discapacidad of discapacidadTipo"
+                      [value]="discapacidad.codigo"
+                      >{{ discapacidad.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Talento excepcional</mat-label>
+                  <mat-select
+                    class="font-sm-corhuila"
+                    formControlName="talentoExepcional"
+                  >
+                    <mat-option
+                      class="font-sm-corhuila"
+                      *ngFor="let talento of talentoExepcional"
+                      [value]="talento.codigo"
+                      >{{ talento.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset class="scheduler-border shadow-sm">
+          <legend class="scheduler-border">Familiar de contacto</legend>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Nombre completo</mat-label>
+                  <input matInput formControlName="nombreFamiliar" required />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Teléfono</mat-label>
+                  <input matInput formControlName="telefonoFamiliar" required />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Lugar de residencia</mat-label>
+                  <mat-select
+                    class="font-sm-corhuila"
+                    formControlName="residenciaFamiliar"
+                  >
+                    <mat-option
+                      class="font-sm-corhuila"
+                      *ngFor="let municipio of listadoMunicipios"
+                      [value]="municipio.divipola"
+                      >{{ municipio.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-label>Dirección</mat-label>
+                  <input
+                    matInput
+                    formControlName="direccionFamiliar"
+                    required
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</mat-dialog-content>
+<hr />
+<mat-dialog-actions align="end">
+  <button class="btn btn-warning" mat-dialog-close (click)="cancelar()">
+    <i class="fa-solid fa-xmark"></i> Cancelar
+  </button>
+  <button
+    type="button"
+    class="btn btn-success ml-2"
+    [disabled]="!formPersona.valid"
+    (click)="generarPersona()"
+  >
+    <i class="far fa-save"></i> Guardar
+  </button>
+</mat-dialog-actions>

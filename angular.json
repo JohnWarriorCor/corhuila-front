@@ -5,7 +5,14 @@
   "projects": {
     "corhuila-app": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        },
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -20,6 +27,7 @@
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -78,6 +86,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
+            "inlineStyleLanguage": "scss",
             "polyfills": [
               "zone.js",
               "zone.js/testing"

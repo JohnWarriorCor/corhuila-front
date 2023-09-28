@@ -189,7 +189,7 @@ export class SedeComponent {
   }
 }
 
-//// MODAL
+//// MODAL FORMULARIO
 
 @Component({
   selector: 'modal-formulario-sede',
