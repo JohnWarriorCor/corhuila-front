@@ -64,26 +64,202 @@ export class CuerposColegiadosComponent {
   displayedColumns: string[] = [
     'index',
     'nombre',
+    'miembros',
     'norma',
     'fecha',
     'opciones',
   ];
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  // Referencia al elemento div oculto
-  @ViewChild('hiddenDiv') hiddenDiv!: ElementRef;
+
+  dialogRef!: MatDialogRef<any>;
 
   constructor(
+    public cuerposColegiadosService: CuerposColegiadosService,
+    public dialog: MatDialog,
+    private authService: AuthService,
+    private router: Router
+  ) {
+    if (this.authService.validacionToken()) {
+      this.obtenerCuerposColegiados();
+    }
+  }
+
+  registrarFormulario(): void {
+    this.dialogRef = this.dialog.open(ModalFormularioCuerpoColegiado, {
+      width: '70%',
+      disableClose: true,
+    });
+    this.dialogRef.afterClosed().subscribe(() => {
+      this.onModalClosed();
+    });
+  }
+
+  editarFormulario(element: any): void {
+    this.dialogRef = this.dialog.open(ModalFormularioCuerpoColegiado, {
+      width: '70%',
+      disableClose: true,
+      data: { sede: element },
+    });
+    this.dialogRef.afterClosed().subscribe(() => {
+      this.onModalClosed();
+    });
+  }
+
+  onModalClosed() {
+    this.obtenerCuerposColegiados();
+  }
+
+  openDialog(element: any): void {
+    const dialogRef = this.dialog.open(ModalCuerpoColegiado, {
+      width: '60%',
+      data: { cuerpoColegiado: element },
+    });
+  }
+
+  obtenerListadoFunciones(codigo: number) {
+    this.cuerposColegiadosService
+      .obtenerListadoFuncionesCuerpoColegiado(codigo)
+      .subscribe((data) => {
+        this.listadoFuncionesCuerpoColegiado = data;
+      });
+  }
+
+  obtenerCuerposColegiados() {
+    this.cuerposColegiadosService
+      .obtenerListadoCuerposColegiados()
+      .subscribe((data) => {
+        this.listadoCuerposColegiados = data;
+        this.dataSource = new MatTableDataSource<CuerposColegiados>(data);
+        this.paginator.firstPage();
+        this.dataSource.paginator = this.paginator;
+      });
+  }
+
+  actualizarCuerpoColegiado(cuerpoColegiado: CuerposColegiados) {
+    this.cuerposColegiadosService
+      .actualizarCuerposColegiados(cuerpoColegiado)
+      .subscribe(
+        (data) => {
+          if (data > 0) {
+            this.obtenerCuerposColegiados();
+          } else {
+            this.mensajeError();
+          }
+        },
+        (err) => this.fError(err)
+      );
+  }
+
+  editarCuerpoColegiado(element: CuerposColegiados) {
+    this.editarFormulario(element);
+  }
+
+  eliminarCuerpoColegiado(element: CuerposColegiados) {
+    Swal.fire({
+      title: '¿Está seguro de eliminar este elemento?',
+      text: 'La siguiente operación será irreversible',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#00c053',
+      cancelButtonColor: '#ffc107',
+      confirmButtonText: 'Si, estoy seguro',
+      cancelButtonText: 'Cancelar opreación',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        element.estado = 0;
+        this.actualizarCuerpoColegiado(element);
+        Swal.fire({
+          icon: 'success',
+          title: 'Elemento borrado.',
+          confirmButtonColor: '#006983',
+          confirmButtonText: 'Listo',
+        });
+      }
+    });
+  }
+
+  mensajeSuccses() {
+    Swal.fire({
+      icon: 'success',
+      title: 'Proceso realizado',
+      text: '¡Operación exitosa!',
+      showConfirmButton: false,
+      timer: 2500,
+    });
+  }
+
+  mensajeError() {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo completar el proceso.',
+      showConfirmButton: true,
+      confirmButtonText: 'Listo',
+      confirmButtonColor: '#8f141b',
+    });
+  }
+
+  fError(er: any): void {
+    let err = er.error.error_description;
+    let arr: string[] = err.split(':');
+    if (arr[0] == 'Access token expired') {
+      this.authService.logout();
+      this.router.navigate(['login']);
+    } else {
+      this.mensajeError();
+    }
+  }
+}
+
+//// MODAL FORMULARIO
+
+@Component({
+  selector: 'modal-formulario-cuerpo-colegiado',
+  templateUrl: 'modal-formulario-cuerpo-colegiado.html',
+  styleUrls: ['./cuerpos-colegiados.component.css'],
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { subscriptSizing: 'dynamic' },
+    },
+  ],
+})
+export class ModalFormularioCuerpoColegiado {
+  editar: boolean = false;
+  editarFuncion: boolean = false;
+  war: any;
+
+  listadoCuerposColegiados: CuerposColegiados[] = [];
+  listadoFuncionesCuerpoColegiado: FuncionesCuerpoColegiado[] = [];
+
+  formCuerposColegiados!: FormGroup;
+  formFunciones!: FormGroup;
+
+  newAttribute: any = {};
+  libro: Libros = {
+    fieldArray: [],
+  };
+
+  constructor(
+    public dialogRef: MatDialogRef<ModalFormularioCuerpoColegiado>,
     private formBuilder: FormBuilder,
     public cuerposColegiadosService: CuerposColegiadosService,
     public dialog: MatDialog,
     private authService: AuthService,
     private router: Router,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     if (this.authService.validacionToken()) {
       this.obtenerCuerposColegiados();
       this.crearCuerposColegiados();
       this.crearFormularioFunciones();
+      if (JSON.stringify(data) !== 'null') {
+        this.editarCuerpoColegiado(data.sede);
+        console.log('Entra');
+      } else {
+        console.log('No entra');
+      }
     }
   }
 
@@ -151,11 +327,6 @@ export class CuerposColegiadosComponent {
     this.libro.fieldArray.splice(index, 1);
   }
 
-  // Función para desplazarse a una seccion
-  showAndScrollToHiddenDiv() {
-    this.hiddenDiv.nativeElement.scrollIntoView({ behavior: 'smooth' });
-  }
-
   openDialog(element: any): void {
     const dialogRef = this.dialog.open(ModalCuerpoColegiado, {
       width: '60%',
@@ -176,9 +347,6 @@ export class CuerposColegiadosComponent {
       .obtenerListadoCuerposColegiados()
       .subscribe((data) => {
         this.listadoCuerposColegiados = data;
-        this.dataSource = new MatTableDataSource<CuerposColegiados>(data);
-        this.paginator.firstPage();
-        this.dataSource.paginator = this.paginator;
       });
   }
 
@@ -219,7 +387,7 @@ export class CuerposColegiadosComponent {
               showConfirmButton: false,
               timer: 2500,
             });
-            this.obtenerCuerposColegiados();
+            this.dialogRef.close();
             this.cancelar();
             this.cancelarFunciones();
             this.crearCuerposColegiados();
@@ -246,7 +414,7 @@ export class CuerposColegiadosComponent {
               showConfirmButton: false,
             });
             this.cancelar();
-            this.obtenerCuerposColegiados();
+            this.dialogRef.close();
           } else {
             this.mensajeError();
           }
@@ -256,7 +424,6 @@ export class CuerposColegiadosComponent {
   }
 
   editarCuerpoColegiado(element: CuerposColegiados) {
-    this.showAndScrollToHiddenDiv();
     this.editar = true;
     this.obtenerListadoFunciones(element.codigo);
     this.formCuerposColegiados.get('codigo')!.setValue(element.codigo);
@@ -318,6 +485,7 @@ export class CuerposColegiadosComponent {
     let cuerpoColegiado: CuerposColegiados = new CuerposColegiados();
     funcionesCuerpoColegiado.cuerpoColegiado = cuerpoColegiado;
     funcionesCuerpoColegiado.nombre = this.formFunciones.get('nombre')!.value;
+    funcionesCuerpoColegiado.estado = this.formFunciones.get('estado')!.value;
     if (this.editar) {
       cuerpoColegiado.codigo = this.formCuerposColegiados.get('codigo')!.value;
     } else {
@@ -393,6 +561,9 @@ export class CuerposColegiadosComponent {
             });
             this.cancelarFunciones();
             this.obtenerCuerposColegiados();
+            this.obtenerListadoFunciones(
+              funcionesCuerpoColegiado.cuerpoColegiado.codigo
+            );
           } else {
             this.mensajeError();
           }
@@ -402,7 +573,6 @@ export class CuerposColegiadosComponent {
   }
 
   editarFunciones(element: FuncionesCuerpoColegiado) {
-    this.showAndScrollToHiddenDiv();
     this.editarFuncion = true;
     this.formFunciones.get('codigo')!.setValue(element.codigo);
     this.formFunciones.get('nombre')!.setValue(element.nombre);
@@ -410,6 +580,7 @@ export class CuerposColegiadosComponent {
       .get('cuerpoColegiado')!
       .setValue(element.cuerpoColegiado.codigo);
     this.formFunciones.get('estado')!.setValue(element.estado);
+    console.log(element);
   }
 
   eliminarFunciones() {
@@ -462,7 +633,7 @@ export class CuerposColegiadosComponent {
   }
 }
 
-//// MODAL
+//// MODAL INFORMACION
 
 @Component({
   selector: 'modal-cuerpo-colegiado',
@@ -485,7 +656,9 @@ export class ModalCuerpoColegiado implements OnInit {
         this.listadoFuncionesCuerpoColegiado = data;
       });
     this.cuerposColegiadosService
-      .obtenerListadoIntegrantesCuerpoColegiadoCodigo(data.cuerpoColegiado.codigo)
+      .obtenerListadoIntegrantesCuerpoColegiadoCodigo(
+        data.cuerpoColegiado.codigo
+      )
       .subscribe((data) => {
         this.listadoIntegrantes = data;
         console.log(this.listadoIntegrantes);

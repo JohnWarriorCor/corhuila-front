@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  Inject,
-  ElementRef,
-} from '@angular/core';
+import { Component, ViewChild, Inject } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -19,8 +13,6 @@ import {
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSelectionList } from '@angular/material/list';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Pais } from 'src/app/models/pais';
@@ -35,6 +27,7 @@ import { SedeTipo } from 'src/app/models/sede-tipo';
 import { SedeService } from 'src/app/services/sede.service';
 import { Sede } from 'src/app/models/sede';
 import { Facultad } from 'src/app/models/facultad';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { FacultadService } from 'src/app/services/facultad.service';
 
 @Component({
@@ -61,8 +54,8 @@ export class FacultadComponent {
   dataSource = new MatTableDataSource<Facultad>([]);
   displayedColumns: string[] = [
     'index',
-    'sede',
     'nombre',
+    'sede',
     'decano',
     'correo',
     'telefono',
@@ -70,13 +63,11 @@ export class FacultadComponent {
   ];
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   @ViewChild('allSelected', { static: false }) allSelected!: MatSelectionList;
-  // Referencia al elemento div oculto
-  @ViewChild('hiddenDiv') hiddenDiv!: ElementRef;
+  dialogRef!: MatDialogRef<any>;
 
   sedes = new FormControl('');
 
   constructor(
-    private formBuilder: FormBuilder,
     public ubicacionService: UbicacionService,
     public institucionService: InstitucionService,
     public sedeService: SedeService,
@@ -86,6 +77,162 @@ export class FacultadComponent {
     private router: Router
   ) {
     if (this.authService.validacionToken()) {
+      this.obtenerListadoFacultades();
+    }
+  }
+
+  registrarFormulario(): void {
+    this.dialogRef = this.dialog.open(ModalFormularioFacultad, {
+      width: '70%',
+      disableClose: true,
+    });
+    this.dialogRef.afterClosed().subscribe(() => {
+      this.onModalClosed();
+    });
+  }
+
+  editarFormulario(element: any): void {
+    this.dialogRef = this.dialog.open(ModalFormularioFacultad, {
+      width: '70%',
+      disableClose: true,
+      data: { sede: element },
+    });
+    this.dialogRef.afterClosed().subscribe(() => {
+      this.onModalClosed();
+    });
+  }
+
+  onModalClosed() {
+    this.obtenerListadoFacultades();
+  }
+
+  obtenerListadoFacultades() {
+    this.facultadServcice.obtenerListadoFacultades().subscribe((data) => {
+      this.listadoFacultad = data;
+      this.dataSource = new MatTableDataSource<Facultad>(data);
+      this.paginator.firstPage();
+      this.dataSource.paginator = this.paginator;
+    });
+  }
+
+  actualizarFacultad(facultad: Facultad) {
+    this.facultadServcice.actualizarFacultad(facultad).subscribe(
+      (data) => {
+        if (data > 0) {
+          this.obtenerListadoFacultades();
+        } else {
+          this.mensajeError();
+        }
+      },
+      (err) => this.fError(err)
+    );
+  }
+
+  editarFacultad(element: Facultad) {
+    this.editarFormulario(element);
+  }
+
+  eliminarFacultad(element: Facultad) {
+    Swal.fire({
+      title: '¿Está seguro de eliminar este elemento?',
+      text: 'La siguiente operación será irreversible',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#00c053',
+      cancelButtonColor: '#ffc107',
+      confirmButtonText: 'Si, estoy seguro',
+      cancelButtonText: 'Cancelar opreación',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        element.estado = 0;
+        this.actualizarFacultad(element);
+        Swal.fire({
+          icon: 'success',
+          title: 'Elemento borrado.',
+          confirmButtonColor: '#006983',
+          confirmButtonText: 'Listo',
+        });
+      }
+    });
+  }
+
+  mensajeSuccses() {
+    Swal.fire({
+      icon: 'success',
+      title: 'Proceso realizado',
+      text: '¡Operación exitosa!',
+      showConfirmButton: false,
+      timer: 2500,
+    });
+  }
+
+  mensajeError() {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo completar el proceso.',
+      showConfirmButton: true,
+      confirmButtonText: 'Listo',
+      confirmButtonColor: '#006983',
+    });
+  }
+
+  fError(er: any): void {
+    let err = er.error.error_description;
+    let arr: string[] = err.split(':');
+    if (arr[0] == 'Access token expired') {
+      this.authService.logout();
+      this.router.navigate(['login']);
+    } else {
+      this.mensajeError();
+    }
+  }
+}
+
+//// MODAL
+
+@Component({
+  selector: 'modal-formulario-facultad',
+  templateUrl: '../facultad/modal-formulario-facultad.html',
+  styleUrls: ['./facultad.component.css'],
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { subscriptSizing: 'dynamic' },
+    },
+  ],
+})
+export class ModalFormularioFacultad {
+  editar: boolean = false;
+  nameFile: string = 'Archivo: pdf';
+  paises: Pais[] = [];
+  departamentos: Departamento[] = [];
+  municipios: Municipio[] = [];
+  paisLocal: Pais[] = [];
+  listadoCcp: CabecerasCentrosPoblados[] = [];
+  listadoInstitucion: Institucion[] = [];
+  institucion: Institucion[] = [];
+  listadoTipoSede: SedeTipo[] = [];
+  listadoSede: Sede[] = [];
+  listadoFacultad: Facultad[] = [];
+
+  formSede!: FormGroup;
+
+  sedes = new FormControl('');
+
+  constructor(
+    public dialogRef: MatDialogRef<ModalFormularioFacultad>,
+    private formBuilder: FormBuilder,
+    public ubicacionService: UbicacionService,
+    public institucionService: InstitucionService,
+    public sedeService: SedeService,
+    public facultadServcice: FacultadService,
+    public dialog: MatDialog,
+    private authService: AuthService,
+    private router: Router,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    if (this.authService.validacionToken()) {
       this.obtenerPaises();
       this.obtenerPaisLocal();
       this.crearFormFacultad();
@@ -93,6 +240,12 @@ export class FacultadComponent {
       this.obtenerInstitucion();
       this.obtenerListadoTiposSedes();
       this.obtenerListadoFacultades();
+      if (JSON.stringify(data) !== 'null') {
+        this.editarFacultad(data.sede);
+        console.log('Entra');
+      } else {
+        console.log('No entra');
+      }
     }
   }
 
@@ -108,25 +261,9 @@ export class FacultadComponent {
     });
   }
 
-  // Función para mostrar el div oculto y desplazarse hacia él
-  showAndScrollToHiddenDiv() {
-    this.hiddenDiv.nativeElement.scrollIntoView({ behavior: 'smooth' });
-  }
-
-  /*  openDialog(element: any): void {
-    const dialogRef = this.dialog.open(ModalInstitucion, {
-      width: '60%',
-      data: { institucion: element },
-    });
-  }
- */
-
   obtenerListadoFacultades() {
     this.facultadServcice.obtenerListadoFacultades().subscribe((data) => {
       this.listadoFacultad = data;
-      this.dataSource = new MatTableDataSource<Facultad>(data);
-      this.paginator.firstPage();
-      this.dataSource.paginator = this.paginator;
     });
   }
 
@@ -170,7 +307,7 @@ export class FacultadComponent {
           });
           this.cancelar();
           this.crearFormFacultad();
-          this.obtenerListadoFacultades();
+          this.dialogRef.close();
         } else {
           this.mensajeError();
         }
@@ -190,7 +327,7 @@ export class FacultadComponent {
             showConfirmButton: false,
           });
           this.cancelar();
-          this.obtenerListadoFacultades();
+          this.dialogRef.close();
         } else {
           this.mensajeError();
         }
@@ -200,7 +337,6 @@ export class FacultadComponent {
   }
 
   editarFacultad(element: Facultad) {
-    this.showAndScrollToHiddenDiv();
     this.editar = true;
     this.formSede.get('codigo')!.setValue(element.codigo);
     this.formSede.get('sede')!.setValue(element.sede.codigo);
@@ -314,95 +450,3 @@ export class FacultadComponent {
     }
   }
 }
-
-//// MODAL
-
-/* @Component({
-  selector: 'modal-institucion',
-  templateUrl: '../institucion/modal-institucion.html',
-  styleUrls: ['./sede.component.css'],
-})
-export class ModalInstitucion implements OnInit {
-  paises: Pais[] = [];
-  departamentos: Departamento[] = [];
-  municipios: Municipio[] = [];
-  paisLocal: Pais[] = [];
-  listadoCaracterAcademico: CaracterAcademico[] = [];
-  listadoNaturalezaJuridica: NaturalezaJuridica[] = [];
-  listadoSector: Sector[] = [];
-  listadoCcp: CabecerasCentrosPoblados[] = [];
-
-  constructor(
-    public dialogRef: MatDialogRef<ModalInstitucion>,
-    public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    public ubicacionService: UbicacionService,
-    public institucionService: InstitucionService
-  ) {}
-
-  ngOnInit() {}
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
-  obtenerListadoCaracterAcademico() {
-    this.institucionService
-      .obtenerListadoCaracterAcademico()
-      .subscribe((data) => {
-        this.listadoCaracterAcademico = data;
-      });
-  }
-
-  obtenerListadoNaturalezaJuridica() {
-    this.institucionService
-      .obtenerListadoNaturalezaJuridica()
-      .subscribe((data) => {
-        this.listadoNaturalezaJuridica = data;
-      });
-  }
-
-  obtenerListadoSector() {
-    this.institucionService.obtenerListadoSector().subscribe((data) => {
-      this.listadoSector = data;
-    });
-  }
-
-  obtenerPaises() {
-    this.ubicacionService.obtenerPaises().subscribe((data) => {
-      this.paises = data;
-    });
-  }
-
-  obtenerPaisLocal() {
-    this.ubicacionService.obtenerPaisLocal().subscribe((data) => {
-      this.paisLocal = data;
-    });
-  }
-
-  obtenerDepartamentosPorPais(codigo: number) {
-    this.municipios = [];
-    this.ubicacionService
-      .obtenerDepartamentosPorPais(codigo)
-      .subscribe((data) => {
-        this.departamentos = data;
-      });
-  }
-
-  obtenerMunicipiosPorDepartamento(codigo: string) {
-    this.listadoCcp = [];
-    this.ubicacionService
-      .obtenerMunicipiosPorDepartamento(codigo)
-      .subscribe((data) => {
-        this.municipios = data;
-      });
-  }
-
-  obtenerCcpPorMunicipio(codigo: string) {
-    this.ubicacionService.obtenerCcpPorMunicipio(codigo).subscribe((data) => {
-      this.listadoCcp = data;
-    });
-  }
-
-}
- */

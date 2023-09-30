@@ -1,0 +1,238 @@
+<h2 mat-dialog-title class="bg-corhuila-p-as-2 font-corhuila text-white">
+  <i class="fa-solid fa-circle-info"></i> Formulario cuerpos colegiados
+</h2>
+<mat-dialog-content>
+  <div class="row pl-4 pr-4 mt-2 text-left">
+    <div class="col">
+      <fieldset class="scheduler-border shadow-sm">
+        <legend class="scheduler-border">Información cuerpo colegiado</legend>
+        <form [formGroup]="formCuerposColegiados">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label
+                  >Nombre del cuerpo colegiado<span class="requerido"
+                    >*</span
+                  ></label
+                >
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="nombre"
+                    required
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                <label>Acrónimo<span class="requerido">*</span></label>
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="nombreCorto"
+                    required
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label
+                  >Máximo número de miembros<span class="requerido">*</span></label
+                >
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <input
+                    matInput
+                    type="number"
+                    formControlName="cantidadMiembros"
+                    required
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label>Número de norma<span class="requerido">*</span></label>
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <input
+                    matInput
+                    type="number"
+                    formControlName="numeroNorma"
+                    required
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label
+                  >Nombre de la norma<span class="requerido">*</span></label
+                >
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="nombreNorma"
+                    required
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label>Fecha de la norma<span class="requerido">*</span></label>
+                <input
+                  type="date"
+                  formControlName="fechaNorma"
+                  class="form-control"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+        </form>
+      </fieldset>
+      <fieldset class="scheduler-border shadow-sm">
+        <legend class="scheduler-border">Registro de funciones</legend>
+        <form [formGroup]="formFunciones">
+          <table class="table table-bordered">
+            <thead
+              class="table-dark text-justify"
+              style="background-color: #3e6c83"
+            >
+              <tr class="white">
+                <th class="w-100">Funciones del cuerpo colegiado</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let funciones of listadoFuncionesCuerpoColegiado;
+                  let i = index
+                "
+              >
+                <td class="align-middle">
+                  <div>
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <input
+                        matInput
+                        type="text"
+                        [value]="funciones.nombre"
+                        readonly
+                      />
+                    </mat-form-field>
+                  </div>
+                </td>
+                <!-- (click)="deleteFieldValue(i)" -->
+                <td>
+                  <button
+                    class="btn btn-corhuila-editar btn-sm"
+                    type="button"
+                    (click)="editarFunciones(funciones)"
+                    title="Editar"
+                  >
+                    <i class="fa-solid fa-pencil fa-xs"></i>
+                  </button>
+                  <!-- (click)="deleteFieldValue(i)" -->
+                </td>
+              </tr>
+              <tr>
+                <td class="align-middle">
+                  <div *ngIf="!formCuerposColegiados.valid">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <input
+                        matInput
+                        type="text"
+                        formControlName="nombre"
+                        readonly
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div *ngIf="formCuerposColegiados.valid">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <input
+                        matInput
+                        type="text"
+                        formControlName="nombre"
+                        required
+                      />
+                    </mat-form-field>
+                  </div>
+                </td>
+                <!-- (click)="addFieldValue()" -->
+                <td>
+                  <button
+                    *ngIf="!editarFuncion"
+                    class="btn btn-info btn-sm"
+                    type="button"
+                    [disabled]="!formCuerposColegiados.valid"
+                    (click)="generarFunciones()"
+                  >
+                    <i class="fa-solid fa-plus fa-xs"></i>
+                  </button>
+                  <button
+                    *ngIf="editarFuncion"
+                    class="btn btn-success btn-sm mb-1"
+                    type="button"
+                    [disabled]="!formCuerposColegiados.valid"
+                    (click)="generarFunciones()"
+                    title="Guardar"
+                  >
+                    <i class="far fa-save fa-xs"></i>
+                  </button>
+                  <button
+                    *ngIf="editarFuncion"
+                    class="btn btn-corhuila-delete btn-sm mb-1"
+                    (click)="eliminarFunciones()"
+                    type="button"
+                    title="Borrar"
+                  >
+                    <i class="far fa-trash-alt fa-xs"></i>
+                  </button>
+                  <button
+                    *ngIf="editarFuncion"
+                    class="btn btn-warning btn-sm"
+                    (click)="cancelarFunciones()"
+                    type="button"
+                    title="Cancelar"
+                  >
+                    <i class="fa-solid fa-xmark fa-xs"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+      </fieldset>
+    </div>
+  </div>
+</mat-dialog-content>
+<hr />
+<mat-dialog-actions align="end">
+  <button class="btn btn-warning" mat-dialog-close (click)="cancelar()">
+    <i class="fa-solid fa-xmark"></i> Cancelar
+  </button>
+  <button
+    type="button"
+    class="btn btn-success ml-2"
+    [disabled]="(listadoFuncionesCuerpoColegiado | json) == '[]'"
+    (click)="generarCuerpoColegiado()"
+  >
+    <i class="far fa-save"></i> Guardar
+  </button>
+</mat-dialog-actions>

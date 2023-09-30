@@ -30,6 +30,7 @@ import { Institucion } from 'src/app/models/institucion';
 import { CabecerasCentrosPoblados } from 'src/app/models/cabeceras-centros-poblados';
 import { SedeTipo } from 'src/app/models/sede-tipo';
 import { SedeService } from 'src/app/services/sede.service';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { Sede } from 'src/app/models/sede';
 
 @Component({
@@ -38,16 +39,6 @@ import { Sede } from 'src/app/models/sede';
   styleUrls: ['./sede.component.css'],
 })
 export class SedeComponent {
-  editar: boolean = false;
-  nameFile: string = 'Archivo: pdf';
-  paises: Pais[] = [];
-  departamentos: Departamento[] = [];
-  municipios: Municipio[] = [];
-  paisLocal: Pais[] = [];
-  listadoCcp: CabecerasCentrosPoblados[] = [];
-  listadoInstitucion: Institucion[] = [];
-  institucion: Institucion[] = [];
-  listadoTipoSede: SedeTipo[] = [];
   listadoSede: Sede[] = [];
 
   formSede!: FormGroup;
@@ -195,6 +186,12 @@ export class SedeComponent {
   selector: 'modal-formulario-sede',
   templateUrl: './modal-formulario-sede.html',
   styleUrls: ['./sede.component.css'],
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { subscriptSizing: 'dynamic' },
+    },
+  ],
 })
 export class ModalFormularioSede {
   editar: boolean = false;
@@ -321,7 +318,6 @@ export class ModalFormularioSede {
   }
 
   editarSede(element: Sede) {
-    console.log('Element', typeof element);
     this.editar = true;
     this.formSede.get('codigo')!.setValue(element.codigo);
     this.formSede.get('nit')!.setValue(element.nit);

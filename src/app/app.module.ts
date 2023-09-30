@@ -13,18 +13,18 @@ import { LoginComponent } from './components/login/login.component';
 import { InicioComponent } from './components/inicio/inicio.component';
 import { NavbarComponent } from './components/shared/navbar/navbar.component';
 import { DesarrolloComponent } from './components/desarrollo/desarrollo.component';
-import { InstitucionComponent, ModalInstitucion, ModalFormulario } from './components/institucion/institucion.component';
+import { InstitucionComponent, ModalInstitucion, ModalFormularioInstitucion } from './components/institucion/institucion.component';
 import { PersonaComponent, ModalFormularioPersona } from './components/configuracion/persona/persona.component';
 import { EstructuraComponent } from './components/inicio/estructura/estructura.component';
 import { ConfiguracionComponent } from './components/inicio/configuracion/configuracion.component';
 import { SedeComponent, ModalFormularioSede } from './components/sede/sede.component';
-import { FacultadComponent } from './components/facultad/facultad.component';
+import { FacultadComponent, ModalFormularioFacultad } from './components/facultad/facultad.component';
 import { OrganizacionInternaComponent } from './components/inicio/organizacion-interna/organizacion-interna.component';
-import { CuerposColegiadosComponent, ModalCuerpoColegiado } from './components/cuerpos-colegiados/cuerpos-colegiados.component';
-import { RepresentanteLegalComponent } from './components/representante-legal/representante-legal.component';
+import { CuerposColegiadosComponent, ModalCuerpoColegiado, ModalFormularioCuerpoColegiado } from './components/cuerpos-colegiados/cuerpos-colegiados.component';
+import { RepresentanteLegalComponent, ModalFormularioRepresentanteLegal } from './components/representante-legal/representante-legal.component';
 import { AreaAcademiAdmiComponent } from './components/area-academi-admi/area-academi-admi.component';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
-import { IntegranteCuerpoColegiadoComponent } from './components/integrante-cuerpo-colegiado/integrante-cuerpo-colegiado.component';
+import { IntegranteCuerpoColegiadoComponent, ModalFormularioIntegranteCuerpoColegiado } from './components/integrante-cuerpo-colegiado/integrante-cuerpo-colegiado.component';
 import { NgxPrintModule } from 'ngx-print';
 import { NormaGrupoComponent } from './components/marco-normativo/norma-grupo/norma-grupo.component';
 import { NormaComponent, ModalEntidadExterna } from './components/marco-normativo/norma/norma.component';
@@ -42,8 +42,12 @@ import { NormaComponent, ModalEntidadExterna } from './components/marco-normativ
     ModalCuerpoColegiado,
     ModalEntidadExterna,
     ModalFormularioSede,
-    ModalFormulario,
+    ModalFormularioInstitucion,
     ModalFormularioPersona,
+    ModalFormularioFacultad,
+    ModalFormularioCuerpoColegiado,
+    ModalFormularioIntegranteCuerpoColegiado,
+    ModalFormularioRepresentanteLegal,
     EstructuraComponent,
     ConfiguracionComponent,
     SedeComponent,
@@ -70,9 +74,13 @@ import { NormaComponent, ModalEntidadExterna } from './components/marco-normativ
     ModalInstitucion,
     ModalCuerpoColegiado,
     ModalEntidadExterna,
-    ModalFormulario,
+    ModalFormularioInstitucion,
     ModalFormularioSede,
-    ModalFormularioPersona
+    ModalFormularioPersona,
+    ModalFormularioFacultad,
+    ModalFormularioCuerpoColegiado,
+    ModalFormularioIntegranteCuerpoColegiado,
+    ModalFormularioRepresentanteLegal
   ],
   providers: [DatePipe, {provide: MAT_DATE_LOCALE, useValue: 'es-ES'}],
   bootstrap: [AppComponent]

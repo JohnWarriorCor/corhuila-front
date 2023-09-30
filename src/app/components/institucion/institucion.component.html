@@ -97,28 +97,28 @@
                     class="btn btn-success btn-sm mr-2"
                     title="Activo"
                   >
-                    <i class="fa-solid fa-check"></i>
+                    <i class="fa-solid fa-check fa-xs"></i>
                   </button>
                   <button
                     *ngIf="dataSource.filteredData.indexOf(element) + 1 !== 1"
                     class="btn btn-secondary btn-sm mr-2"
                     title="Inactivo"
                   >
-                    <i class="fa-solid fa-minus"></i>
+                    <i class="fa-solid fa-minus fa-xs"></i>
                   </button>
                   <button
                     class="btn btn-corhuila-info btn-sm mr-2"
                     title="Informacion"
                     (click)="openDialog(element)"
                   >
-                    <i class="fa-solid fa-eye"></i>
+                    <i class="fa-solid fa-eye fa-xs"></i>
                   </button>
                   <button
                     class="btn btn-corhuila-editar btn-sm"
                     *ngIf="dataSource.filteredData.indexOf(element) + 1 === 1"
                     (click)="editarInstitucion(element)"
                   >
-                    <i class="fa-solid fa-pencil"></i>
+                    <i class="fa-solid fa-pencil fa-xs"></i>
                   </button>
                 </td>
               </ng-container>
@@ -126,7 +126,7 @@
               <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
             </table>
             <mat-paginator
-              [pageSizeOptions]="[10, 20, 30]"
+              [pageSizeOptions]="[5, 10, 15]"
               showFirstLastButtons
             ></mat-paginator>
           </div>

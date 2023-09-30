@@ -29,6 +29,7 @@ import { PersonaService } from 'src/app/services/persona.service';
 import { IntegranteCuerpoColegiado } from 'src/app/models/integrante-cuerpo-colegiado';
 import { UsuarioTipo } from 'src/app/models/usuario-tipo';
 import { MiembroTipo } from 'src/app/models/miembro-tipo';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-integrante-cuerpo-colegiado',
@@ -36,19 +37,8 @@ import { MiembroTipo } from 'src/app/models/miembro-tipo';
   styleUrls: ['./integrante-cuerpo-colegiado.component.css'],
 })
 export class IntegranteCuerpoColegiadoComponent {
-  editar: boolean = false;
-  editarFuncion: boolean = false;
-  tipo: boolean = false;
-  war: any;
-
   listadoCuerposColegiados: CuerposColegiados[] = [];
   listadoIntegrantesCuerpoColegiado: IntegranteCuerpoColegiado[] = [];
-  persona: Persona[] = [];
-
-  formIntegrante!: FormGroup;
-
-  fechaLimiteMinima!: any;
-  fechaLimiteMinimaVigencia!: any;
 
   dataSource = new MatTableDataSource<IntegranteCuerpoColegiado>([]);
   displayedColumns: string[] = [
@@ -61,8 +51,8 @@ export class IntegranteCuerpoColegiadoComponent {
     'opciones',
   ];
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  // Referencia al elemento div oculto
-  @ViewChild('hiddenDiv') hiddenDiv!: ElementRef;
+
+  dialogRef!: MatDialogRef<any>;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -73,55 +63,12 @@ export class IntegranteCuerpoColegiadoComponent {
     private router: Router,
     private datePipe: DatePipe
   ) {
-    this.fechaLimiteMinima = new Date();
     if (this.authService.validacionToken()) {
       this.obtenerCuerposColegiados();
       this.obtenerIntegrantesCuerpoColegiado();
-      this.crearFormularioIntegrante();
-    }
-  }
-  private crearFormularioIntegrante(): void {
-    this.formIntegrante = this.formBuilder.group({
-      codigo: new FormControl(''),
-      cuerpoColegiado: new FormControl('', Validators.required),
-      personaCodigo: new FormControl(''),
-      personaIdentificacion: new FormControl('', Validators.required),
-      personaNombre: new FormControl('', Validators.required),
-      codigoNorma: new FormControl('', Validators.required),
-      usuarioTipo: new FormControl('', Validators.required),
-      miembroTipo: new FormControl(''),
-      fechaInicio: new FormControl('', Validators.required),
-      fechaFin: new FormControl('', Validators.required),
-      observacion: new FormControl(''),
-      estado: new FormControl(''),
-    });
-  }
-
-  activarTipoMiembro(element: string) {
-    if (element.toUpperCase() === 'ASAMBLEA GENERAL') {
-      this.tipo = true;
-    } else {
-      this.tipo = false;
     }
   }
 
-  // Función para desplazarse a una seccion
-  showAndScrollToHiddenDiv() {
-    this.hiddenDiv.nativeElement.scrollIntoView({ behavior: 'smooth' });
-  }
-
-  /* openDialog(element: any): void {
-    const dialogRef = this.dialog.open(ModalCuerpoColegiado, {
-      width: '60%',
-      data: { cuerpoColegiado: element },
-    });
-  } */
-
-  limiteVigencia() {
-    this.fechaLimiteMinimaVigencia = new Date(
-      this.formIntegrante.get('fechaInicio')!.value
-    );
-  }
   obtenerIntegrantesCuerpoColegiado() {
     this.cuerposColegiadosService
       .obtenerListadoIntegrantesCuerpoColegiado()
@@ -141,6 +88,225 @@ export class IntegranteCuerpoColegiadoComponent {
       .obtenerListadoCuerposColegiados()
       .subscribe((data) => {
         this.listadoCuerposColegiados = data;
+      });
+  }
+
+  registrarFormulario(): void {
+    this.dialogRef = this.dialog.open(
+      ModalFormularioIntegranteCuerpoColegiado,
+      {
+        width: '70%',
+        disableClose: true,
+      }
+    );
+    this.dialogRef.afterClosed().subscribe(() => {
+      this.onModalClosed();
+    });
+  }
+
+  editarFormulario(element: any): void {
+    this.dialogRef = this.dialog.open(
+      ModalFormularioIntegranteCuerpoColegiado,
+      {
+        width: '70%',
+        disableClose: true,
+        data: { sede: element },
+      }
+    );
+    this.dialogRef.afterClosed().subscribe(() => {
+      this.onModalClosed();
+    });
+  }
+
+  onModalClosed() {
+    this.obtenerIntegrantesCuerpoColegiado();
+  }
+
+  actualizarIntegrante(integrante: IntegranteCuerpoColegiado) {
+    this.cuerposColegiadosService.actualizarIntegrante(integrante).subscribe(
+      (data) => {
+        if (data > 0) {
+          this.obtenerIntegrantesCuerpoColegiado();
+        } else {
+          this.mensajeError();
+        }
+      },
+      (err) => this.fError(err)
+    );
+  }
+
+  editarIntegrante(element: IntegranteCuerpoColegiado) {
+    this.editarFormulario(element);
+  }
+
+  desvincularIntegrante(element: IntegranteCuerpoColegiado) {
+    Swal.fire({
+      title: '¿Está seguro de desvincular este integrante?',
+      text: 'La siguiente operación será irreversible',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#00c053',
+      cancelButtonColor: '#ffc107',
+      confirmButtonText: 'Si, estoy seguro',
+      cancelButtonText: 'Cancelar opreación',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        element.estado = 0;
+        (element.fechaFin = new Date()), this.actualizarIntegrante(element);
+        Swal.fire({
+          icon: 'success',
+          title: 'Integrante desvinculado.',
+          confirmButtonColor: '#006983',
+          confirmButtonText: 'Listo',
+        });
+      }
+    });
+  }
+
+  mensajeSuccses() {
+    Swal.fire({
+      icon: 'success',
+      title: 'Proceso realizado',
+      text: '¡Operación exitosa!',
+      showConfirmButton: false,
+      timer: 2500,
+    });
+  }
+
+  mensajeError() {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo completar el proceso.',
+      showConfirmButton: true,
+      confirmButtonText: 'Listo',
+      confirmButtonColor: '#8f141b',
+    });
+  }
+
+  fError(er: any): void {
+    let err = er.error.error_description;
+    let arr: string[] = err.split(':');
+    if (arr[0] == 'Access token expired') {
+      this.authService.logout();
+      this.router.navigate(['login']);
+    } else {
+      this.mensajeError();
+    }
+  }
+}
+
+//// MODAL FORMULARIO
+
+@Component({
+  selector: 'modal-formulario-integrante-cuerpo-colegiado',
+  templateUrl: 'modal-formulario-integrante-cuerpo-colegiado.html',
+  styleUrls: ['./integrante-cuerpo-colegiado.component.css'],
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { subscriptSizing: 'dynamic' },
+    },
+  ],
+})
+export class ModalFormularioIntegranteCuerpoColegiado {
+  editar: boolean = false;
+  editarFuncion: boolean = false;
+  tipo: boolean = false;
+  war: any;
+
+  listadoCuerposColegiados: CuerposColegiados[] = [];
+  listadoIntegrantesCuerpoColegiado: IntegranteCuerpoColegiado[] = [];
+  persona: Persona[] = [];
+
+  formIntegrante!: FormGroup;
+
+  fechaLimiteMinima!: any;
+  fechaLimiteMinimaVigencia!: any;
+
+  constructor(
+    public dialogRef: MatDialogRef<ModalFormularioIntegranteCuerpoColegiado>,
+    private formBuilder: FormBuilder,
+    public cuerposColegiadosService: CuerposColegiadosService,
+    public personaService: PersonaService,
+    public dialog: MatDialog,
+    private authService: AuthService,
+    private router: Router,
+    private datePipe: DatePipe,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    this.fechaLimiteMinima = new Date().toISOString().split('T')[0];
+    if (this.authService.validacionToken()) {
+      this.obtenerCuerposColegiados();
+      this.obtenerCuerposColegiadosDisponibilidad();
+      this.obtenerIntegrantesCuerpoColegiado();
+      this.crearFormularioIntegrante();
+      if (JSON.stringify(data) !== 'null') {
+        this.editarIntegrante(data.sede);
+        console.log('Entra');
+      } else {
+        console.log('No entra');
+      }
+    }
+  }
+  private crearFormularioIntegrante(): void {
+    this.formIntegrante = this.formBuilder.group({
+      codigo: new FormControl(''),
+      cuerpoColegiado: new FormControl('', Validators.required),
+      personaCodigo: new FormControl(''),
+      personaIdentificacion: new FormControl('', Validators.required),
+      personaNombre: new FormControl('', Validators.required),
+      codigoNorma: new FormControl('', Validators.required),
+      usuarioTipo: new FormControl('', Validators.required),
+      miembroTipo: new FormControl(''),
+      fechaInicio: new FormControl('', Validators.required),
+      fechaFin: new FormControl('', Validators.required),
+      observacion: new FormControl(''),
+      estado: new FormControl(''),
+    });
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  activarTipoMiembro(element: string) {
+    if (element.toUpperCase() === 'ASAMBLEA GENERAL') {
+      this.tipo = true;
+    } else {
+      this.tipo = false;
+    }
+  }
+
+  limiteVigencia() {
+    this.fechaLimiteMinimaVigencia = new Date(
+      this.formIntegrante.get('fechaInicio')!.value
+    )
+      .toISOString()
+      .split('T')[0];
+  }
+  obtenerIntegrantesCuerpoColegiado() {
+    this.cuerposColegiadosService
+      .obtenerListadoIntegrantesCuerpoColegiado()
+      .subscribe((data) => {
+        this.listadoIntegrantesCuerpoColegiado = data;
+      });
+  }
+
+  obtenerCuerposColegiados() {
+    this.cuerposColegiadosService
+      .obtenerListadoCuerposColegiados()
+      .subscribe((data) => {
+        //this.listadoCuerposColegiados = data;
+      });
+  }
+
+  obtenerCuerposColegiadosDisponibilidad() {
+    this.cuerposColegiadosService
+      .obtenerCuerpoColegiadoCodigoDisponibilidad()
+      .subscribe((data) => {
+        this.listadoCuerposColegiados = data;
+        console.log(data);
       });
   }
 
@@ -186,6 +352,7 @@ export class IntegranteCuerpoColegiadoComponent {
     integrante.fechaInicio = this.formIntegrante.get('fechaInicio')!.value;
     integrante.fechaFin = this.formIntegrante.get('fechaFin')!.value;
     integrante.observacion = this.formIntegrante.get('observacion')!.value;
+    integrante.estado = this.formIntegrante.get('estado')!.value;
     if (this.editar) {
       this.actualizarIntegrante(integrante);
     } else {
@@ -204,7 +371,7 @@ export class IntegranteCuerpoColegiadoComponent {
             showConfirmButton: false,
             timer: 2500,
           });
-          this.obtenerIntegrantesCuerpoColegiado();
+          this.dialogRef.close();
           this.cancelar();
         } else {
           this.mensajeError();
@@ -225,7 +392,7 @@ export class IntegranteCuerpoColegiadoComponent {
             showConfirmButton: false,
           });
           this.cancelar();
-          this.obtenerIntegrantesCuerpoColegiado();
+          this.dialogRef.close();
         } else {
           this.mensajeError();
         }
@@ -236,7 +403,6 @@ export class IntegranteCuerpoColegiadoComponent {
 
   editarIntegrante(element: IntegranteCuerpoColegiado) {
     this.activarTipoMiembro(element.cuerpoColegiado.nombre);
-    this.showAndScrollToHiddenDiv();
     this.editar = true;
     this.formIntegrante.get('codigo')!.setValue(element.codigo);
     this.formIntegrante
@@ -256,10 +422,8 @@ export class IntegranteCuerpoColegiadoComponent {
     this.formIntegrante
       .get('miembroTipo')!
       .setValue('' + element.miembroTipo.codigo);
-    let fechaInicio = new Date(element.fechaInicio + ' 0:00:00');
-    this.formIntegrante.get('fechaInicio')!.setValue(fechaInicio);
-    let fechaFin = new Date(element.fechaFin + ' 0:00:00');
-    this.formIntegrante.get('fechaFin')!.setValue(fechaFin);
+    this.formIntegrante.get('fechaInicio')!.setValue(element.fechaInicio);
+    this.formIntegrante.get('fechaFin')!.setValue(element.fechaFin);
     this.formIntegrante.get('observacion')!.setValue(element.observacion);
     this.formIntegrante.get('estado')!.setValue(element.estado);
   }
@@ -324,34 +488,3 @@ export class IntegranteCuerpoColegiadoComponent {
     }
   }
 }
-
-//// MODAL
-
-/* @Component({
-  selector: 'modal-cuerpo-colegiado',
-  templateUrl: 'modal-cuerpo-colegiado.html',
-  styleUrls: ['./cuerpos-colegiados.component.css'],
-})
-export class ModalCuerpoColegiado implements OnInit {
-  listadoFuncionesCuerpoColegiado: FuncionesCuerpoColegiado[] = [];
-
-  constructor(
-    public dialogRef: MatDialogRef<ModalCuerpoColegiado>,
-    public dialog: MatDialog,
-    public cuerposColegiadosService: CuerposColegiadosService,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
-    this.cuerposColegiadosService
-      .obtenerListadoFuncionesCuerpoColegiado(data.cuerpoColegiado.codigo)
-      .subscribe((data) => {
-        this.listadoFuncionesCuerpoColegiado = data;
-      });
-  }
-
-  ngOnInit() {}
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-}
- */

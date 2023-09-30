@@ -1,0 +1,121 @@
+<h2 mat-dialog-title class="bg-corhuila-p-as-2 font-corhuila text-white">
+  <i class="fa-solid fa-circle-info"></i> Formulario sede
+</h2>
+<mat-dialog-content>
+  <div class="row pl-4 pr-4 mt-2 text-left">
+    <div class="col">
+      <form [formGroup]="formRepresentanteLegal">
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Persona<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" formControlName="persona">
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let persona of listadoPersona"
+                    [value]="persona.codigo"
+                    (click)="precargaCorreo(persona)"
+                    >{{ persona.identificacion }} - {{ persona.nombre }} {{
+                    persona.apellido }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Correo<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input matInput type="text" [value]="correo" required />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Norma<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" formControlName="norma">
+                  <mat-option class="font-sm-corhuila" value="1"
+                    >Norma Uno</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="2"
+                    >Norma Dos</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label
+                >Fecha inicio nombramiento<span class="requerido"
+                  >*</span
+                ></label
+              >
+              <input
+                type="date"
+                [min]="fechaLimiteMinima"
+                (change)="limiteVigencia()"
+                formControlName="fechaInicio"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label
+                >Fecha fin nombramiento<span class="requerido">*</span></label
+              >
+              <input
+                type="date"
+                [min]="fechaLimiteMinimaVigencia"
+                formControlName="fechaFin"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label
+                >Justificación u observación<span class="requerido"
+                  >*</span
+                ></label
+              >
+              <mat-form-field class="example-full-width" appearance="outline">
+                <textarea
+                  class="font-sm-corhuila"
+                  matInput
+                  type="text"
+                  formControlName="justificacion"
+                  required
+                  rows="5"
+                ></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</mat-dialog-content>
+<hr />
+<mat-dialog-actions align="end">
+  <button class="btn btn-warning" mat-dialog-close (click)="cancelar()">
+    <i class="fa-solid fa-xmark"></i> Cancelar
+  </button>
+  <button
+    type="button"
+    class="btn btn-success ml-2"
+    [disabled]="!formRepresentanteLegal.valid"
+    (click)="generarRepresentantLegal()"
+  >
+    <i class="far fa-save"></i> Guardar
+  </button>
+</mat-dialog-actions>

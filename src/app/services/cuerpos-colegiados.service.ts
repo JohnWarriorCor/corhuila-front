@@ -61,6 +61,24 @@ export class CuerposColegiadosService {
       );
   }
 
+  obtenerCuerpoColegiadoCodigoDisponibilidad(): Observable<CuerposColegiados[]> {
+    return this.http
+      .get<CuerposColegiados[]>(
+        `${this.url}/obtener-cuerpos-colegiados-disponibilidad`,
+        {
+          headers: this.aggAutorizacionHeader(),
+        }
+      )
+      .pipe(
+        catchError((e) => {
+          if (this.isNoAutorizado(e)) {
+            return throwError(e);
+          }
+          return throwError(e);
+        })
+      );
+  }
+
   obtenerListadoFuncionesCuerpoColegiado(
     codigo: number
   ): Observable<FuncionesCuerpoColegiado[]> {

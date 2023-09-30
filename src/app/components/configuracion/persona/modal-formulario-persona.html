@@ -1,7 +1,7 @@
 <h2 mat-dialog-title class="bg-corhuila-p-as-2 font-corhuila text-white">
   <i class="fa-solid fa-circle-info"></i> Formulario sede
 </h2>
-<mat-dialog-content>
+<mat-dialog-content style="background-color: #fafafa16">
   <div class="row mt-3 text-left">
     <div class="col">
       <form [formGroup]="formPersona">
@@ -102,21 +102,6 @@
           <div class="row">
             <div class="col">
               <div class="form-group">
-                <label>Sexo biológico <span class="requerido">*</span></label>
-                <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-select class="font-sm-corhuila" formControlName="sexo">
-                    <mat-option
-                      class="font-sm-corhuila"
-                      *ngFor="let genero of generos"
-                      [value]="genero.codigo"
-                      >{{ genero.nombre }}</mat-option
-                    >
-                  </mat-select>
-                </mat-form-field>
-              </div>
-            </div>
-            <div class="col">
-              <div class="form-group">
                 <label
                   >Fecha de nacimiento <span class="requerido">*</span></label
                 >
@@ -130,17 +115,14 @@
             </div>
             <div class="col">
               <div class="form-group">
-                <label>Grupo sanguíneo <span class="requerido">*</span></label>
+                <label>Sexo biológico <span class="requerido">*</span></label>
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-select
-                    class="font-sm-corhuila"
-                    formControlName="grupoSanguineo"
-                  >
+                  <mat-select class="font-sm-corhuila" formControlName="sexo">
                     <mat-option
                       class="font-sm-corhuila"
-                      *ngFor="let grupo of gruposSanguineos"
-                      [value]="grupo.codigo"
-                      >{{ grupo.nombre }}</mat-option
+                      *ngFor="let genero of generos"
+                      [value]="genero.codigo"
+                      >{{ genero.nombre }}</mat-option
                     >
                   </mat-select>
                 </mat-form-field>
@@ -164,6 +146,24 @@
                 </mat-form-field>
               </div>
             </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                <label>Gru. sanguíneo <span class="requerido">*</span></label>
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-select
+                    class="font-sm-corhuila"
+                    formControlName="grupoSanguineo"
+                  >
+                    <mat-option
+                      class="font-sm-corhuila"
+                      *ngFor="let grupo of gruposSanguineos"
+                      [value]="grupo.codigo"
+                      >{{ grupo.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
           </div>
         </fieldset>
         <fieldset class="scheduler-border shadow-sm">
@@ -171,8 +171,8 @@
           <div class="row">
             <div class="col">
               <div class="form-group">
+                <label>País residencia <span class="requerido">*</span></label>
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>País residencia</mat-label>
                   <mat-select class="font-sm-corhuila" formControlName="pais">
                     <mat-option
                       class="font-sm-corhuila"
@@ -187,8 +187,12 @@
             </div>
             <div class="col">
               <div class="form-group">
+                <label
+                  >Departamento residencia<span class="requerido"
+                    >*</span
+                  ></label
+                >
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Departamento residencia</mat-label>
                   <mat-select
                     class="font-sm-corhuila"
                     formControlName="departamento"
@@ -206,10 +210,14 @@
                 </mat-form-field>
               </div>
             </div>
+          </div>
+          <div class="row">
             <div class="col">
               <div class="form-group">
+                <label
+                  >Municipio residencia<span class="requerido">*</span></label
+                >
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Municipio residencia</mat-label>
                   <mat-select
                     class="font-sm-corhuila"
                     formControlName="municipio"
@@ -227,8 +235,12 @@
             </div>
             <div class="col">
               <div class="form-group">
+                <label
+                  >Cabecera municipale o centro poblado<span class="requerido"
+                    >*</span
+                  ></label
+                >
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Cabecera Municipale o Centro Poblado</mat-label>
                   <mat-select class="font-sm-corhuila" formControlName="ccp">
                     <mat-option
                       class="font-sm-corhuila"
@@ -244,24 +256,24 @@
           <div class="row">
             <div class="col">
               <div class="form-group">
+                <label>Dirección<span class="requerido">*</span></label>
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Dirección</mat-label>
                   <input matInput formControlName="direccion" required />
                 </mat-form-field>
               </div>
             </div>
             <div class="col">
               <div class="form-group">
+                <label>Barrio<span class="requerido">*</span></label>
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Barrio</mat-label>
                   <input matInput formControlName="barrio" required />
                 </mat-form-field>
               </div>
             </div>
             <div class="col">
               <div class="form-group">
+                <label>Estrato<span class="requerido">*</span></label>
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Estrato</mat-label>
                   <mat-select
                     class="font-sm-corhuila"
                     formControlName="estrato"
@@ -280,24 +292,24 @@
           <div class="row">
             <div class="col">
               <div class="form-group">
+                <label>Teléfono movil<span class="requerido">*</span></label>
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Teléfono movil</mat-label>
                   <input matInput formControlName="telefonoMovil" required />
                 </mat-form-field>
               </div>
             </div>
             <div class="col">
               <div class="form-group">
+                <label>Teléfono fijo</label>
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Teléfono fijo</mat-label>
                   <input matInput formControlName="telefonoFijo" required />
                 </mat-form-field>
               </div>
             </div>
             <div class="col">
               <div class="form-group">
+                <label>Correo personal<span class="requerido">*</span></label>
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Correo personal</mat-label>
                   <input matInput formControlName="correoPersonal" required />
                 </mat-form-field>
               </div>
@@ -309,8 +321,8 @@
           <div class="row">
             <div class="col">
               <div class="form-group">
+                <label>Grupo étnico<span class="requerido">*</span></label>
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Grupo étnico</mat-label>
                   <mat-select
                     class="font-sm-corhuila"
                     formControlName="grupoEtnico"
@@ -330,8 +342,8 @@
               *ngIf="formPersona.get('grupoEtnico')!.value === 1"
             >
               <div class="form-group">
+                <label>Pueblo indigena<span class="requerido">*</span></label>
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Pueblo indigena</mat-label>
                   <mat-select
                     class="font-sm-corhuila"
                     formControlName="puebloIndigena"
@@ -351,8 +363,8 @@
               *ngIf="formPersona.get('grupoEtnico')!.value === 2"
             >
               <div class="form-group">
+                <label>Comunidad negra<span class="requerido">*</span></label>
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Comunidad negra</mat-label>
                   <mat-select
                     class="font-sm-corhuila"
                     formControlName="comunidadNegra"
@@ -371,8 +383,10 @@
           <div class="row">
             <div class="col">
               <div class="form-group">
+                <label
+                  >Persona discapacidad<span class="requerido">*</span></label
+                >
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Persona discapacidad</mat-label>
                   <mat-select
                     class="font-sm-corhuila"
                     formControlName="personaDiscapacidad"
@@ -392,8 +406,8 @@
               *ngIf="formPersona.get('personaDiscapacidad')!.value === 1"
             >
               <div class="form-group">
+                <label>Tipo discapacidad<span class="requerido">*</span></label>
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Tipo discapacidad</mat-label>
                   <mat-select
                     class="font-sm-corhuila"
                     formControlName="discapacidadTipo"
@@ -410,8 +424,10 @@
             </div>
             <div class="col">
               <div class="form-group">
+                <label
+                  >Talento excepcional<span class="requerido">*</span></label
+                >
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Talento excepcional</mat-label>
                   <mat-select
                     class="font-sm-corhuila"
                     formControlName="talentoExepcional"
@@ -433,16 +449,16 @@
           <div class="row">
             <div class="col">
               <div class="form-group">
+                <label>Nombres completos<span class="requerido">*</span></label>
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Nombre completo</mat-label>
                   <input matInput formControlName="nombreFamiliar" required />
                 </mat-form-field>
               </div>
             </div>
             <div class="col">
               <div class="form-group">
+                <label>Teléfono</label>
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Teléfono</mat-label>
                   <input matInput formControlName="telefonoFamiliar" required />
                 </mat-form-field>
               </div>
@@ -451,8 +467,10 @@
           <div class="row">
             <div class="col">
               <div class="form-group">
+                <label
+                  >Lugar de residencia<span class="requerido">*</span></label
+                >
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Lugar de residencia</mat-label>
                   <mat-select
                     class="font-sm-corhuila"
                     formControlName="residenciaFamiliar"
@@ -469,8 +487,8 @@
             </div>
             <div class="col">
               <div class="form-group">
+                <label>Dirección<span class="requerido">*</span></label>
                 <mat-form-field class="example-full-width" appearance="outline">
-                  <mat-label>Dirección</mat-label>
                   <input
                     matInput
                     formControlName="direccionFamiliar"

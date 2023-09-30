@@ -1,0 +1,120 @@
+<h2 mat-dialog-title class="bg-corhuila-p-as-2 font-corhuila text-white">
+  <i class="fa-solid fa-circle-info"></i> Formulario facultad
+</h2>
+<mat-dialog-content style="background-color: #fafafa16">
+  <div class="row mt-3 text-left">
+    <div class="col">
+      <form [formGroup]="formSede">
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label
+                >Nombre de la facultad <span class="requerido">*</span></label
+              >
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input matInput type="text" formControlName="nombre" required />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label *ngIf="editar"
+                >Sede <span class="requerido">*</span></label
+              >
+              <mat-form-field
+                class="example-full-width"
+                appearance="outline"
+                *ngIf="editar"
+              >
+                <mat-select class="font-sm-corhuila" formControlName="sede">
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let sede of listadoSede"
+                    [value]="sede.codigo"
+                    >{{ sede.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+              <label *ngIf="!editar"
+                >Sede(s) <span class="requerido">*</span></label
+              >
+              <mat-form-field
+                class="example-full-width"
+                appearance="outline"
+                *ngIf="!editar"
+              >
+                <mat-select
+                  class="font-sm-corhuila"
+                  [formControl]="sedes"
+                  multiple
+                >
+                  <mat-select-trigger class="font-sm-corhuila">
+                    Una sede elegida
+                    <span
+                      *ngIf="(sedes.value?.length || 0) > 1"
+                      class="example-additional-selection font-sm-corhuila"
+                    >
+                      (+{{ (sedes.value?.length || 0) - 1 }} {{
+                      sedes.value?.length === 2 ? "Otra" : "Otras" }})
+                    </span>
+                  </mat-select-trigger>
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let sede of listadoSede"
+                    [value]="sede.codigo"
+                    >{{ sede.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Decano <span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input matInput formControlName="decano" required />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Correo <span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input matInput formControlName="correo" required />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Teléfono facultad <span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  formControlName="telefono"
+                  type="number"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</mat-dialog-content>
+<hr />
+<mat-dialog-actions align="end">
+  <button class="btn btn-warning" mat-dialog-close (click)="cancelar()">
+    <i class="fa-solid fa-xmark"></i> Cancelar
+  </button>
+  <button
+    type="button"
+    class="btn btn-success ml-2"
+    [disabled]="!formSede.valid"
+    (click)="generarFacultad()"
+  >
+    <i class="far fa-save"></i> Guardar
+  </button>
+</mat-dialog-actions>

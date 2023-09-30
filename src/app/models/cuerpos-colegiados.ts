@@ -7,5 +7,6 @@ export class CuerposColegiados {
   fechaNorma!: Date;
   fechaCreacion!: Date;
   cantidadMiembros!: number;
+  disponibilidadMiembros!: number;
   estado!: number;
 }

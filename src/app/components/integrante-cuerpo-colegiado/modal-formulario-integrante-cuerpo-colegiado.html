@@ -1,0 +1,199 @@
+<h2 mat-dialog-title class="bg-corhuila-p-as-2 font-corhuila text-white">
+  <i class="fa-solid fa-circle-info"></i> Formulario integrantes cuerpos
+  colegiados
+</h2>
+<mat-dialog-content>
+  <div class="row pl-4 pr-4 mt-2 text-left">
+    <div class="col">
+      <form [formGroup]="formIntegrante">
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Cuerpo Colegiado<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  formControlName="cuerpoColegiado"
+                >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    (click)="activarTipoMiembro(cuerpoColegiado.nombre)"
+                    *ngFor="
+                      let cuerpoColegiado of listadoCuerposColegiados
+                    "
+                    [value]="cuerpoColegiado.codigo"
+                    [disabled]="cuerpoColegiado.disponibilidadMiembros >= cuerpoColegiado.cantidadMiembros"
+                    >{{ cuerpoColegiado.disponibilidadMiembros }}/{{ cuerpoColegiado.cantidadMiembros }} | {{ cuerpoColegiado.nombreCorto }} - {{
+                    cuerpoColegiado.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Norma vinculación<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  formControlName="codigoNorma"
+                >
+                  <mat-option class="font-sm-corhuila" value="1"
+                    >NORMA UNO</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="2"
+                    >NORMA DOS</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="3"
+                    >NORMA TRES</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Número de identidad<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  (keyup.enter)="buscarPersona()"
+                  type="number"
+                  formControlName="personaIdentificacion"
+                  required
+                />
+                <button
+                  matSuffix
+                  (click)="buscarPersona()"
+                  style="text-decoration: none; background: none; border: none"
+                >
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Nombres completos<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  type="text"
+                  formControlName="personaNombre"
+                  readonly
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col" *ngIf="tipo">
+            <div class="form-group">
+              <label>Tipo de miembro<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  formControlName="miembroTipo"
+                >
+                  <mat-option class="font-sm-corhuila" value="1"
+                    >FUNDADOR</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="2"
+                    >ADHERENTE</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Estamento<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  formControlName="usuarioTipo"
+                >
+                  <mat-option class="font-sm-corhuila" value="1"
+                    >ADMINISTRATIVO</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="2"
+                    >ESTUDIANTE</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="3"
+                    >PROFESOR</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="4"
+                    >GRADUADO</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Fecha de inicio<span class="requerido">*</span></label>
+              <input
+                type="date"
+                [min]="fechaLimiteMinima"
+                (change)="limiteVigencia()"
+                formControlName="fechaInicio"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Fecha fin<span class="requerido">*</span></label>
+              <input
+                type="date"
+                [min]="fechaLimiteMinimaVigencia"
+                formControlName="fechaFin"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label
+                >Justificación u observación<span class="requerido"
+                  >*</span
+                ></label
+              >
+              <mat-form-field class="example-full-width" appearance="outline">
+                <textarea
+                  class="font-sm-corhuila"
+                  matInput
+                  type="text"
+                  rows="5"
+                  formControlName="observacion"
+                ></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</mat-dialog-content>
+<hr />
+<mat-dialog-actions align="end">
+  <button class="btn btn-warning" mat-dialog-close (click)="cancelar()">
+    <i class="fa-solid fa-xmark"></i> Cancelar
+  </button>
+  <button
+    type="button"
+    class="btn btn-success ml-2"
+    [disabled]="!formIntegrante.valid"
+    (click)="generarIntegrante()"
+  >
+    <i class="far fa-save"></i> Guardar
+  </button>
+</mat-dialog-actions>

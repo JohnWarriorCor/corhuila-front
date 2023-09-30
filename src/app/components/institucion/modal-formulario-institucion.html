@@ -1,0 +1,288 @@
+<h2 mat-dialog-title class="bg-corhuila-p-as-2 font-corhuila text-white">
+  <i class="fa-solid fa-circle-info"></i> Formulario institución
+</h2>
+<mat-dialog-content>
+  <div class="row pl-4 pr-4 mt-2 text-left">
+    <div class="col">
+      <form [formGroup]="formInstitucion">
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Nit<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  type="text"
+                  formControlName="nit"
+                  class="form_control"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Código SNIES<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  type="number"
+                  formControlName="ies"
+                  class="form_control"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Código SNIES Padre<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  formControlName="iesPadre"
+                  matInput
+                  type="number"
+                  class="form_control"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Naturaleza Jurídica<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  formControlName="naturaleza"
+                >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let listado of listadoNaturalezaJuridica"
+                    [value]="listado.codigo"
+                    >{{ listado.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Sector<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" formControlName="sector">
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let listado of listadoSector"
+                    [value]="listado.codigo"
+                    >{{ listado.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Carácter Académico<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" formControlName="caracter">
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let listado of listadoCaracterAcademico"
+                    [value]="listado.codigo"
+                    >{{ listado.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label
+                >Nombre de la Institución<span class="requerido">*</span></label
+              >
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  class="form_control"
+                  formControlName="nombre"
+                  type="text"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>País<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" formControlName="pais">
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let pais of paisLocal"
+                    [value]="pais.codigo"
+                    (click)="obtenerDepartamentosPorPais(pais.codigo)"
+                    >{{ pais.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Departamento<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  formControlName="departamento"
+                >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let dep of departamentos"
+                    [value]="dep.divipola"
+                    (click)="
+                      obtenerMunicipiosPorDepartamento(dep.divipola)
+                    "
+                    >{{ dep.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Municipio<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  formControlName="municipio"
+                >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let mun of municipios"
+                    (click)="obtenerCcpPorMunicipio(mun.divipola)"
+                    [value]="mun.divipola"
+                    >{{ mun.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label
+                >Cabecera municipale o centro poblado<span class="requerido"
+                  >*</span
+                ></label
+              >
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" formControlName="ccp">
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let ccp of listadoCcp"
+                    [value]="ccp.divipola"
+                    >{{ ccp.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Dirección<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  class="form_control"
+                  formControlName="direccion"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Teléfono<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  class="form_control"
+                  type="number"
+                  formControlName="telefono"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Página Web<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  class="form_control"
+                  formControlName="url"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Norma de creación<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  formControlName="norma"
+                  class="form_control"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label
+                >Fecha de la norma de creación<span class="requerido"
+                  >*</span
+                ></label
+              >
+              <input
+                type="date"
+                formControlName="fechaNorma"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</mat-dialog-content>
+<hr />
+<mat-dialog-actions align="end">
+  <button class="btn btn-warning" mat-dialog-close (click)="cancelar()">
+    <i class="fa-solid fa-xmark"></i> Cancelar
+  </button>
+  <button
+    type="button"
+    class="btn btn-success ml-2"
+    [disabled]="!formInstitucion.valid"
+    (click)="generarInstitucion()"
+  >
+    <i class="far fa-save"></i> Guardar
+  </button>
+</mat-dialog-actions>

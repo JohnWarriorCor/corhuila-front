@@ -1,228 +1,22 @@
 <app-navbar>
-  <div id="content-wrap" class="mt-3 text-center">
-    <div class="card rounded-2 p-0 shadow-sm mt-5">
+  <div class="mb-4 text-center">
+    <div class="card shadow-sm mt-3">
       <div
-        class="card-header text-center ml-4 mr-4 cursor-select"
+        class="card-header text-left cursor-select"
         [routerLink]="['/inicio']"
         routerLinkActive="router-link-active"
       >
-        <h4 #hiddenDiv class="font-usco-default">
-          Integrantes Cuerpos Colegiados
-        </h4>
+        <h4 class="mt-2">Formulario integrantes cuerpos colegiados</h4>
       </div>
-      <div class="card-body ls">
-        <div class="row pl-5 pr-5">
+      <div class="card-body">
+        <div class="row text-right">
           <div class="col">
-            <form [formGroup]="formIntegrante">
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Cuerpo Colegiado</mat-label>
-                      <mat-select formControlName="cuerpoColegiado">
-                        <mat-option
-                          (click)="activarTipoMiembro(cuerpoColegiado.nombre)"
-                          *ngFor="
-                            let cuerpoColegiado of listadoCuerposColegiados
-                          "
-                          [value]="cuerpoColegiado.codigo"
-                          >{{ cuerpoColegiado.nombreCorto }} -
-                          {{ cuerpoColegiado.nombre }}</mat-option
-                        >
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Norma vinculación</mat-label>
-                      <mat-select formControlName="codigoNorma">
-                        <mat-option value="1">NORMA UNO</mat-option>
-                        <mat-option value="2">NORMA DOS</mat-option>
-                        <mat-option value="3">NORMA TRES</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Número de identidad</mat-label>
-                      <input
-                        matInput
-                        #input
-                        maxlength="16"
-                        (keyup.enter)="buscarPersona()"
-                        type="number"
-                        formControlName="personaIdentificacion"
-                        required
-                      />
-                      <button
-                        matSuffix
-                        mat-icon-button
-                        (click)="buscarPersona()"
-                      >
-                        <mat-icon>search</mat-icon>
-                      </button>
-                      <mat-hint align="end"
-                        >{{ input.value.length }}/16</mat-hint
-                      >
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Nombres completos</mat-label>
-                      <input
-                        matInput
-                        type="text"
-                        formControlName="personaNombre"
-                        readonly
-                      />
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col" *ngIf="tipo">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Tipo de miembro</mat-label>
-                      <mat-select formControlName="miembroTipo">
-                        <mat-option value="1">FUNDADOR</mat-option>
-                        <mat-option value="2">ADHERENTE</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Estamento</mat-label>
-                      <mat-select formControlName="usuarioTipo">
-                        <mat-option value="1">ADMINISTRATIVO</mat-option>
-                        <mat-option value="2">ESTUDIANTE</mat-option>
-                        <mat-option value="3">PROFESOR</mat-option>
-                        <mat-option value="4">GRADUADO</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Fecha de inicio</mat-label>
-                      <input
-                        matInput
-                        [matDatepicker]="picker1"
-                        [min]="fechaLimiteMinima"
-                        (dateChange)="limiteVigencia()"
-                        formControlName="fechaInicio"
-                      />
-                      <mat-hint>Día/Mes/Año</mat-hint>
-                      <mat-datepicker-toggle
-                        matIconSuffix
-                        [for]="picker1"
-                      ></mat-datepicker-toggle>
-                      <mat-datepicker #picker1></mat-datepicker>
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Fecha fin</mat-label>
-                      <input
-                        matInput
-                        [matDatepicker]="picker2"
-                        [min]="fechaLimiteMinimaVigencia"
-                        formControlName="fechaFin"
-                      />
-                      <mat-hint>Día/Mes/Año</mat-hint>
-                      <mat-datepicker-toggle
-                        matIconSuffix
-                        [for]="picker2"
-                      ></mat-datepicker-toggle>
-                      <mat-datepicker #picker2></mat-datepicker>
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <mat-form-field
-                      class="example-full-width"
-                      appearance="outline"
-                    >
-                      <mat-label>Justificación u observación</mat-label>
-                      <textarea
-                        matInput
-                        type="text"
-                        rows="5"
-                        formControlName="observacion"
-                      ></textarea>
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-        <hr />
-        <div class="row">
-          <div class="col text-center">
-            <button
-              type="button"
-              class="btn btn-success mr-2"
-              [disabled]="!formIntegrante.valid"
-              (click)="generarIntegrante()"
-            >
-              <i class="far fa-save"></i> Guardar
-            </button>
-            <button
-              *ngIf="editar"
-              class="btn btn-secondary mr-2"
-              (click)="desvincularIntegrante()"
-            >
-              <i class="fa-solid fa-ban"></i> Desvincular
-            </button>
-            <button *ngIf="editar" class="btn btn-warning" (click)="cancelar()">
-              <i class="fa-solid fa-xmark"></i> Cancelar
+            <button class="btn btn-info" (click)="registrarFormulario()">
+              <i class="fa-solid fa-plus"></i> Registrar
             </button>
           </div>
         </div>
-        <div class="row mt-5">
+        <div class="row mt-2">
           <div class="col">
             <table
               mat-table
@@ -277,25 +71,35 @@
                     class="btn btn-success btn-sm mr-2"
                     title="Activo"
                   >
-                    <i class="fa-solid fa-check"></i>
+                    <i class="fa-solid fa-check fa-xs"></i>
                   </button>
                   <button
                     *ngIf="element.estado !== 1"
                     class="btn btn-secondary btn-sm mr-2"
                     title="Inactivo"
                   >
-                    <i class="fa-solid fa-square-minus"></i>
-                  </button>
-                  <button class="btn btn-info btn-sm mr-2" title="Informacion">
-                    <i class="fa-solid fa-circle-info"></i>
+                    <i class="fa-solid fa-square-minus fa-xs"></i>
                   </button>
                   <button
-                    class="btn btn-primary btn-sm"
-                    (click)="editarIntegrante(element)"
-                    title="Editar"
+                    class="btn btn-corhuila-info btn-sm mr-2"
+                    title="Informacion"
                   >
-                    <i class="fa-solid fa-pencil"></i>
+                    <i class="fa-solid fa-eye fa-xs"></i>
                   </button>
+                  <button
+                  class="btn btn-corhuila-delete btn-sm mr-2"
+                  (click)="desvincularIntegrante(element)"
+                  title="Desvincular"
+                >
+                <i class="fa-solid fa-ban fa-xs"></i>
+                </button>
+                <button
+                  class="btn btn-corhuila-editar btn-sm"
+                  (click)="editarIntegrante(element)"
+                  title="Editar"
+                >
+                  <i class="fa-solid fa-pencil fa-xs"></i>
+                </button>
                 </td>
               </ng-container>
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

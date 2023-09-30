@@ -31,6 +31,7 @@ import { NaturalezaJuridica } from 'src/app/models/naturaleza-juridica';
 import { Sector } from 'src/app/models/sector';
 import { Institucion } from 'src/app/models/institucion';
 import { CabecerasCentrosPoblados } from 'src/app/models/cabeceras-centros-poblados';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { NgxPrintDirective } from 'ngx-print';
 
 @Component({
@@ -70,7 +71,7 @@ export class InstitucionComponent {
   }
 
   registrarFormulario(): void {
-    this.dialogRef = this.dialog.open(ModalFormulario, {
+    this.dialogRef = this.dialog.open(ModalFormularioInstitucion, {
       width: '70%',
       disableClose: true,
     });
@@ -80,7 +81,7 @@ export class InstitucionComponent {
   }
 
   editarFormulario(element: any): void {
-    this.dialogRef = this.dialog.open(ModalFormulario, {
+    this.dialogRef = this.dialog.open(ModalFormularioInstitucion, {
       width: '70%',
       disableClose: true,
       data: { institucion: element },
@@ -124,11 +125,17 @@ export class InstitucionComponent {
 //// MODAL FORMULARIO
 
 @Component({
-  selector: 'modal-formulario',
-  templateUrl: 'modal-formulario.html',
+  selector: 'modal-formulario-institucion',
+  templateUrl: 'modal-formulario-institucion.html',
   styleUrls: ['./institucion.component.css'],
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { subscriptSizing: 'dynamic' },
+    },
+  ],
 })
-export class ModalFormulario {
+export class ModalFormularioInstitucion {
   editar: boolean = false;
   nameFile: string = 'Archivo: pdf';
   paises: Pais[] = [];
@@ -145,7 +152,7 @@ export class ModalFormulario {
   formInstitucion!: FormGroup;
 
   constructor(
-    public dialogRef: MatDialogRef<ModalFormulario>,
+    public dialogRef: MatDialogRef<ModalFormularioInstitucion>,
     private formBuilder: FormBuilder,
     public ubicacionService: UbicacionService,
     public institucionService: InstitucionService,

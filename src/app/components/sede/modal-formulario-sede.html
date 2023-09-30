@@ -8,146 +8,141 @@
         <div class="row">
           <div class="col">
             <div class="form-group">
-              <label class="ml-1"
-                >Nombre Sede <span class="requerido">*</span></label
-              >
-              <input
-                type="text"
-                formControlName="nombre"
-                id="nombre"
-                class="form-control"
-                placeholder="Digite el nombre de la sede"
-                required
-              />
+              <label>Nombre Sede<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input matInput type="text" formControlName="nombre" required />
+              </mat-form-field>
             </div>
           </div>
           <div class="col">
             <div class="form-group">
-              <label class="ml-1"
-                >Nit Institucion <span class="requerido">*</span></label
-              >
-              <select class="form-control" formControlName="nit">
-                <option *ngFor="let ins of institucion" [value]="ins.nit">
-                  {{ ins.nit }} - {{ ins.nombre }}
-                </option>
-              </select>
+              <label>Nit Institucion<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" formControlName="nit">
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let ins of institucion"
+                    [value]="ins.nit"
+                    >{{ ins.nit }} - {{ ins.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col">
             <div class="form-group">
-              <label class="ml-1">País <span class="requerido">*</span></label>
-              <select
-                class="form-control"
-                formControlName="pais"
-                (ngModelChange)="obtenerDepartamentosPorPais($event)"
-              >
-                <option *ngFor="let pais of paisLocal" [value]="pais.codigo">
-                  {{ pais.nombre }}
-                </option>
-              </select>
+              <label>País<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" formControlName="pais">
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let pais of paisLocal"
+                    [value]="pais.codigo"
+                    (click)="obtenerDepartamentosPorPais(pais.codigo)"
+                    >{{ pais.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
             </div>
           </div>
           <div class="col">
             <div class="form-group">
-              <label class="ml-1"
-                >Departamento <span class="requerido">*</span></label
-              >
-              <select
-                class="form-control example-full-width"
-                formControlName="departamento"
-                (ngModelChange)="
-                  obtenerMunicipiosPorDepartamento($event)
-                "
-              >
-                <option
-                  *ngFor="let departamento of departamentos"
-                  [value]="departamento.divipola"
+              <label>Departamento<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  id="departamento"
+                  formControlName="departamento"
                 >
-                  {{ departamento.nombre }}
-                </option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div class="form-group">
-              <label class="ml-1"
-                >Municipio <span class="requerido">*</span></label
-              >
-              <select
-                class="form-control example-full-width"
-                formControlName="municipio"
-                (ngModelChange)="obtenerCcpPorMunicipio($event)"
-              >
-                <option *ngFor="let mun of municipios" [value]="mun.divipola">
-                  {{ mun.nombre }}
-                </option>
-              </select>
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let dep of departamentos"
+                    [value]="dep.divipola"
+                    (click)="
+                      obtenerMunicipiosPorDepartamento(dep.divipola)
+                    "
+                    >{{ dep.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
             </div>
           </div>
           <div class="col">
             <div class="form-group">
-              <label class="ml-1"
-                >Cabecera Municipale o Centro Poblado
-                <span class="requerido">*</span></label
-              >
-              <select
-                class="form-control example-full-width"
-                formControlName="ccp"
-              >
-                <option *ngFor="let ccp of listadoCcp" [value]="ccp.divipola">
-                  {{ ccp.nombre }}
-                </option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div class="form-group">
-              <label class="ml-1"
-                >Dirección <span class="requerido">*</span></label
-              >
-              <input
-                type="text"
-                formControlName="direccion"
-                class="form-control"
-                required
-              />
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
-              <label class="ml-1"
-                >Teléfono <span class="requerido">*</span></label
-              >
-              <input
-                type="number"
-                formControlName="telefono"
-                class="form-control"
-                required
-              />
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
-              <label class="ml-1"
-                >Tipo de sede <span class="requerido">*</span></label
-              >
-              <select
-                class="form-control example-full-width"
-                formControlName="tipo"
-              >
-                <option
-                  *ngFor="let tipoSede of listadoTipoSede"
-                  [value]="tipoSede.codigo"
+              <label>Municipio<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  formControlName="municipio"
                 >
-                  {{ tipoSede.nombre }}
-                </option>
-              </select>
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let mun of municipios"
+                    (click)="obtenerCcpPorMunicipio(mun.divipola)"
+                    [value]="mun.divipola"
+                    >{{ mun.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label
+                >Cabecera municipal o centro poblado<span class="requerido"
+                  >*</span
+                ></label
+              >
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" formControlName="ccp">
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let ccp of listadoCcp"
+                    [value]="ccp.divipola"
+                    >{{ ccp.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Dirección<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input matInput formControlName="direccion" required />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Teléfonos<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  formControlName="telefono"
+                  type="number"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Tipo de sede<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" formControlName="tipo">
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let tipoSede of listadoTipoSede"
+                    [value]="tipoSede.codigo"
+                    >{{ tipoSede.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
             </div>
           </div>
         </div>
