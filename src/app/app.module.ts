@@ -27,7 +27,7 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { IntegranteCuerpoColegiadoComponent, ModalFormularioIntegranteCuerpoColegiado } from './components/integrante-cuerpo-colegiado/integrante-cuerpo-colegiado.component';
 import { NgxPrintModule } from 'ngx-print';
 import { NormaGrupoComponent } from './components/marco-normativo/norma-grupo/norma-grupo.component';
-import { NormaComponent, ModalEntidadExterna } from './components/marco-normativo/norma/norma.component';
+import { NormaComponent, ModalEntidadExterna, ModalFormularioNorma } from './components/marco-normativo/norma/norma.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +48,7 @@ import { NormaComponent, ModalEntidadExterna } from './components/marco-normativ
     ModalFormularioCuerpoColegiado,
     ModalFormularioIntegranteCuerpoColegiado,
     ModalFormularioRepresentanteLegal,
+    ModalFormularioNorma,
     EstructuraComponent,
     ConfiguracionComponent,
     SedeComponent,
@@ -80,7 +81,8 @@ import { NormaComponent, ModalEntidadExterna } from './components/marco-normativ
     ModalFormularioFacultad,
     ModalFormularioCuerpoColegiado,
     ModalFormularioIntegranteCuerpoColegiado,
-    ModalFormularioRepresentanteLegal
+    ModalFormularioRepresentanteLegal,
+    ModalFormularioNorma,
   ],
   providers: [DatePipe, {provide: MAT_DATE_LOCALE, useValue: 'es-ES'}],
   bootstrap: [AppComponent]

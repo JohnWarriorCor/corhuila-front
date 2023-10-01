@@ -1,0 +1,255 @@
+<h2 mat-dialog-title class="bg-corhuila-p-as-2 font-corhuila text-white">
+  <i class="fa-solid fa-circle-info"></i> Formulario norma
+</h2>
+<mat-dialog-content>
+  <div class="row pl-4 pr-4 mt-2 text-left">
+    <div class="col">
+      <form [formGroup]="formNorma">
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Entidad<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  formControlName="entidadCodigo"
+                >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    value="1"
+                    (click)="entidadInterna()"
+                    >INTERNA</mat-option
+                  >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    value="2"
+                    (click)="entidadExterna()"
+                    >EXTERNA</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col" *ngIf="interna">
+            <div class="form-group">
+              <label
+                >Tipo de entidad interna<span class="requerido">*</span></label
+              >
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" formControlName="rectoria">
+                  <mat-option
+                    class="font-sm-corhuila"
+                    value="1"
+                    (click)="entidadRectoria()"
+                    >RECTORÍA</mat-option
+                  >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    value="0"
+                    (click)="entidadCuerpoColegiado()"
+                    >CUERPO COLEGIADO</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div *ngIf="cuerpoColegiado" class="col">
+            <div class="form-group">
+              <label>Cuerpo Colegiado<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  formControlName="cuerpoColegiadoCodigo"
+                >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="
+                      let cuerpoColegiado of listadoCuerposColegiados
+                    "
+                    [value]="cuerpoColegiado.codigo"
+                    >{{ cuerpoColegiado.nombreCorto }} - {{
+                    cuerpoColegiado.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div *ngIf="externa" class="col">
+            <div class="row">
+              <div class="col">
+                <div class="form-group">
+                  <label>Entidad externa<span class="requerido">*</span></label>
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <mat-select
+                      class="font-sm-corhuila"
+                      formControlName="entidadExternaCodigo"
+                    >
+                      <mat-option
+                        class="font-sm-corhuila"
+                        *ngFor="let item of listadoEntidadExterna"
+                        [value]="item.codigo"
+                        >{{ item.nombre }}</mat-option
+                      >
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label>Tipo de norma<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  formControlName="normaTipoCodigo"
+                >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let item of listadoNormaTipo"
+                    [value]="item.codigo"
+                    >{{ item.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label>Número de la norma<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  type="number"
+                  id="numero"
+                  formControlName="numero"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Nombre de la norma<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input matInput type="text" formControlName="nombre" required />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label
+                >Enlace (URL) de la norma<span class="requerido">*</span></label
+              >
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input matInput type="text" formControlName="url" required />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label
+                >Medio en el que se encuentra<span class="requerido"
+                  >*</span
+                ></label
+              >
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  formControlName="medioCodigo"
+                >
+                  <mat-option class="font-sm-corhuila" value="1"
+                    >DIGITAL</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="2"
+                    >FÍSICO</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Fecha de expedición<span class="requerido">*</span></label>
+              <input
+                type="date"
+                [min]="fechaLimiteMinima"
+                (change)="limiteVigencia()"
+                formControlName="fechaExpedicion"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Fecha de vigencia<span class="requerido"></span></label>
+              <input
+                type="date"
+                [min]="fechaLimiteMinimaVigencia"
+                formControlName="fechaVigencia"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <label>Deroga<span class="requerido">*</span></label>
+            <section class="example-section">
+              <mat-radio-group formControlName="deroga">
+                <mat-radio-button class="example-margin" value="1"
+                  >Si</mat-radio-button
+                >
+                <mat-radio-button class="example-margin" value="0"
+                  >No</mat-radio-button
+                >
+              </mat-radio-group>
+            </section>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label
+                >Justificación u observación<span class="requerido"
+                  >*</span
+                ></label
+              >
+              <mat-form-field class="example-full-width" appearance="outline">
+                <textarea
+                  matInput
+                  class="font-sm-corhuila"
+                  type="text"
+                  rows="5"
+                  formControlName="observacion"
+                ></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</mat-dialog-content>
+<hr />
+<mat-dialog-actions align="end">
+  <button class="btn btn-warning" mat-dialog-close (click)="cancelar()">
+    <i class="fa-solid fa-xmark"></i> Cancelar
+  </button>
+  <button
+    type="button"
+    class="btn btn-success ml-2"
+    [disabled]="!formNorma.valid"
+    (click)="generarNorma()"
+  >
+    <i class="far fa-save"></i> Guardar
+  </button>
+</mat-dialog-actions>

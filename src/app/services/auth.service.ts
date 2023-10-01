@@ -121,7 +121,6 @@ export class AuthService {
     let datos = this.obtenerdatosToken(accessToken);
     //  let helper = new JwtHelperService();
     // let datos = helper.decodeToken(accessToken);
-    console.log('DATOS', datos);
     this.usuario = new Usuario();
     this.usuario.username = datos.username;
     this.usuario.nombre = datos.nombre;
