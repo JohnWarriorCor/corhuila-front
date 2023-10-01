@@ -639,10 +639,32 @@ export class ModalFormularioCuerpoColegiado {
   selector: 'modal-cuerpo-colegiado',
   templateUrl: 'modal-cuerpo-colegiado.html',
   styleUrls: ['./cuerpos-colegiados.component.css'],
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { subscriptSizing: 'dynamic' },
+    },
+  ],
 })
 export class ModalCuerpoColegiado implements OnInit {
   listadoFuncionesCuerpoColegiado: FuncionesCuerpoColegiado[] = [];
   listadoIntegrantes: IntegranteCuerpoColegiado[] = [];
+
+  dataSourceFunciones = new MatTableDataSource<FuncionesCuerpoColegiado>([]);
+  displayedColumnsFunciones: string[] = ['index', 'funcion'];
+  @ViewChild(MatPaginator, { static: false }) paginatorFunciones!: MatPaginator;
+
+  dataSourceIntegrantes = new MatTableDataSource<IntegranteCuerpoColegiado>([]);
+  displayedColumnsIntegrantes: string[] = [
+    'index',
+    'nombre',
+    'fechaInicio',
+    'fechaFin',
+    'estamento',
+    'estado',
+  ];
+  @ViewChild(MatPaginator, { static: false })
+  paginatorIntegrantes!: MatPaginator;
 
   constructor(
     public dialogRef: MatDialogRef<ModalCuerpoColegiado>,
@@ -654,6 +676,10 @@ export class ModalCuerpoColegiado implements OnInit {
       .obtenerListadoFuncionesCuerpoColegiado(data.cuerpoColegiado.codigo)
       .subscribe((data) => {
         this.listadoFuncionesCuerpoColegiado = data;
+        this.dataSourceFunciones =
+          new MatTableDataSource<FuncionesCuerpoColegiado>(data);
+        this.paginatorFunciones.firstPage();
+        this.dataSourceFunciones.paginator = this.paginatorFunciones;
       });
     this.cuerposColegiadosService
       .obtenerListadoIntegrantesCuerpoColegiadoCodigo(
@@ -661,7 +687,10 @@ export class ModalCuerpoColegiado implements OnInit {
       )
       .subscribe((data) => {
         this.listadoIntegrantes = data;
-        console.log(this.listadoIntegrantes);
+        this.dataSourceIntegrantes =
+          new MatTableDataSource<IntegranteCuerpoColegiado>(data);
+        this.paginatorIntegrantes.firstPage();
+        this.dataSourceIntegrantes.paginator = this.paginatorIntegrantes;
       });
   }
 

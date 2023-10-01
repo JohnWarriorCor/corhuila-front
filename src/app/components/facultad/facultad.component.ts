@@ -49,7 +49,7 @@ export class FacultadComponent {
   listadoSede: Sede[] = [];
   listadoFacultad: Facultad[] = [];
 
-  formSede!: FormGroup;
+  formFacultad!: FormGroup;
 
   dataSource = new MatTableDataSource<Facultad>([]);
   displayedColumns: string[] = [
@@ -216,7 +216,7 @@ export class ModalFormularioFacultad {
   listadoSede: Sede[] = [];
   listadoFacultad: Facultad[] = [];
 
-  formSede!: FormGroup;
+  formFacultad!: FormGroup;
 
   sedes = new FormControl('');
 
@@ -250,7 +250,7 @@ export class ModalFormularioFacultad {
   }
 
   private crearFormFacultad(): void {
-    this.formSede = this.formBuilder.group({
+    this.formFacultad = this.formBuilder.group({
       codigo: new FormControl(''),
       sede: new FormControl(''),
       nombre: new FormControl('', Validators.required),
@@ -274,24 +274,42 @@ export class ModalFormularioFacultad {
   }
 
   generarFacultad(): void {
-    console.log(this.sedes.value!.length);
-    for (let index = 0; index < this.sedes.value!.length; index++) {
+    console.log(
+      JSON.stringify(this.sedes.value!.length),
+      +JSON.stringify(this.sedes.value!.length) == 0
+    );
+    if (+JSON.stringify(this.sedes.value!.length) === 0) {
+      console.log('Entra individual');
       let facultad: Facultad = new Facultad();
-      facultad.nombre = this.formSede.get('nombre')!.value;
+      facultad.codigo = this.formFacultad.get('codigo')!.value;
+      facultad.nombre = this.formFacultad.get('nombre')!.value;
       let sede: Sede = new Sede();
-      sede.codigo = +this.sedes.value![index];
+      sede.codigo = this.formFacultad.get('sede')!.value;
       facultad.sede = sede;
-      facultad.decano = this.formSede.get('decano')!.value;
-      facultad.correo = this.formSede.get('correo')!.value;
-      facultad.telefono = this.formSede.get('telefono')!.value;
-      facultad.estado = this.formSede.get('estado')!.value;
-      if (this.editar) {
-        this.actualizarFacultad(facultad);
-      } else {
-        this.registrarFacultad(facultad);
+      facultad.decano = this.formFacultad.get('decano')!.value;
+      facultad.correo = this.formFacultad.get('correo')!.value;
+      facultad.telefono = this.formFacultad.get('telefono')!.value;
+      facultad.estado = this.formFacultad.get('estado')!.value;
+      this.actualizarFacultad(facultad);
+    } else {
+      for (let index = 0; index < this.sedes.value!.length; index++) {
+        let facultad: Facultad = new Facultad();
+        facultad.nombre = this.formFacultad.get('nombre')!.value;
+        let sede: Sede = new Sede();
+        sede.codigo = +this.sedes.value![index];
+        facultad.sede = sede;
+        facultad.decano = this.formFacultad.get('decano')!.value;
+        facultad.correo = this.formFacultad.get('correo')!.value;
+        facultad.telefono = this.formFacultad.get('telefono')!.value;
+        facultad.estado = this.formFacultad.get('estado')!.value;
+        if (this.editar) {
+          this.actualizarFacultad(facultad);
+        } else {
+          this.registrarFacultad(facultad);
+        }
       }
+      this.sedes.reset();
     }
-    this.sedes.reset();
   }
 
   registrarFacultad(facultad: Facultad) {
@@ -317,6 +335,7 @@ export class ModalFormularioFacultad {
   }
 
   actualizarFacultad(facultad: Facultad) {
+    console.log(facultad);
     this.facultadServcice.actualizarFacultad(facultad).subscribe(
       (data) => {
         if (data > 0) {
@@ -338,31 +357,31 @@ export class ModalFormularioFacultad {
 
   editarFacultad(element: Facultad) {
     this.editar = true;
-    this.formSede.get('codigo')!.setValue(element.codigo);
-    this.formSede.get('sede')!.setValue(element.sede.codigo);
-    this.formSede.get('nombre')!.setValue(element.nombre);
-    this.formSede.get('decano')!.setValue(element.decano);
-    this.formSede.get('correo')!.setValue(element.correo);
-    this.formSede.get('telefono')!.setValue(element.telefono);
-    this.formSede.get('estado')!.setValue(element.estado);
+    this.formFacultad.get('codigo')!.setValue(element.codigo);
+    this.formFacultad.get('sede')!.setValue(element.sede.codigo);
+    this.formFacultad.get('nombre')!.setValue(element.nombre);
+    this.formFacultad.get('decano')!.setValue(element.decano);
+    this.formFacultad.get('correo')!.setValue(element.correo);
+    this.formFacultad.get('telefono')!.setValue(element.telefono);
+    this.formFacultad.get('estado')!.setValue(element.estado);
   }
 
   eliminarFacultad() {
     let facultad: Facultad = new Facultad();
-    facultad.codigo = this.formSede.get('codigo')!.value;
-    facultad.nombre = this.formSede.get('nombre')!.value;
+    facultad.codigo = this.formFacultad.get('codigo')!.value;
+    facultad.nombre = this.formFacultad.get('nombre')!.value;
     let sede: Sede = new Sede();
-    sede.codigo = this.formSede.get('sede')!.value;
+    sede.codigo = this.formFacultad.get('sede')!.value;
     facultad.sede = sede;
-    facultad.decano = this.formSede.get('decano')!.value;
-    facultad.correo = this.formSede.get('correo')!.value;
-    facultad.telefono = this.formSede.get('telefono')!.value;
+    facultad.decano = this.formFacultad.get('decano')!.value;
+    facultad.correo = this.formFacultad.get('correo')!.value;
+    facultad.telefono = this.formFacultad.get('telefono')!.value;
     facultad.estado = 0;
     this.actualizarFacultad(facultad);
   }
 
   cancelar() {
-    this.formSede.reset();
+    this.formFacultad.reset();
     this.obtenerPaises();
     this.obtenerPaisLocal();
     this.crearFormFacultad();

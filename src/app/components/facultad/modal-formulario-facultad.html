@@ -4,7 +4,7 @@
 <mat-dialog-content style="background-color: #fafafa16">
   <div class="row mt-3 text-left">
     <div class="col">
-      <form [formGroup]="formSede">
+      <form [formGroup]="formFacultad">
         <div class="row">
           <div class="col">
             <div class="form-group">
@@ -112,7 +112,7 @@
   <button
     type="button"
     class="btn btn-success ml-2"
-    [disabled]="!formSede.valid"
+    [disabled]="!formFacultad.valid"
     (click)="generarFacultad()"
   >
     <i class="far fa-save"></i> Guardar
