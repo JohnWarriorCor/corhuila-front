@@ -1,9 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  Inject,
-} from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -25,11 +20,13 @@ import { CuerposColegiadosService } from '../../../services/cuerpos-colegiados.s
 import { Persona } from 'src/app/models/persona';
 import { PersonaService } from 'src/app/services/persona.service';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
-import Swal from 'sweetalert2';
 import { NormaService } from '../../../services/norma.service';
 import { EntidadExterna } from 'src/app/models/entidad-externa';
 import { NormaTipo } from 'src/app/models/norma-tipo';
 import { Norma } from 'src/app/models/norma';
+import { saveAs } from 'file-saver';
+import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-norma',
@@ -44,7 +41,7 @@ import { Norma } from 'src/app/models/norma';
 })
 export class NormaComponent {
   listadoNorma: Norma[] = [];
-  excel:boolean = false;
+  excel: boolean = false;
 
   dataSource = new MatTableDataSource<Norma>([]);
   displayedColumns: string[] = [
@@ -76,7 +73,30 @@ export class NormaComponent {
     }
   }
 
-  vistaExcel(){
+  exportTableToExcel() {
+    // Obtener la referencia de la tabla desde el DOM
+    const table = document.getElementById('miTabla');
+
+    // Crear una nueva instancia de Workbook de xlsx
+    const workbook = XLSX.utils.table_to_book(table);
+
+    // Generar el archivo Excel
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+
+    // Crear un Blob a partir del buffer de Excel
+    const blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+
+    // Guardar el archivo utilizando FileSaver.js
+    let fecha = this.datePipe.transform(Date.now(), 'dd-MM-yyyy');
+    saveAs(blob, 'Normograma-CORHUILA-' + fecha + '.xlsx');
+  }
+
+  vistaExcel() {
     this.excel = !this.excel;
   }
 

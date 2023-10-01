@@ -21,11 +21,7 @@
         </div>
         <div class="row mt-2">
           <div class="col">
-            <table
-              mat-table
-              [dataSource]="dataSource"
-              class="table table-hover shadow"
-            >
+            <table mat-table [dataSource]="dataSource">
               <ng-container matColumnDef="index">
                 <th mat-header-cell *matHeaderCellDef>N°</th>
                 <td
@@ -142,7 +138,14 @@
   </div>
   <div class="row p-4" *ngIf="excel">
     <div class="col">
-      <table class="table table-bordered">
+      <div class="row text-right" *ngIf="excel">
+        <div class="col">
+          <button class="btn btn-success mb-3" (click)="exportTableToExcel()">
+            <i class="fa-solid fa-file-excel"></i> Excel
+          </button>
+        </div>
+      </div>
+      <table class="table table-bordered" id="miTabla">
         <tbody class="align-items-center">
           <tr class="text-center align-items-center">
             <th rowspan="4">
@@ -151,7 +154,7 @@
                 style="width: 100px"
               />
             </th>
-            <th colspan="8" rowspan="2">SISTEMAS INTEGRADOS DE GESTIÓN</th>
+            <th colspan="7" rowspan="2">SISTEMAS INTEGRADOS DE GESTIÓN</th>
             <th
               class="text-left"
               colspan="2"
@@ -168,7 +171,7 @@
             </th>
           </tr>
           <tr class="text-center">
-            <th colspan="8" rowspan="2">NORMOGRAMA</th>
+            <th colspan="7" rowspan="2">NORMOGRAMA</th>
             <th
               class="text-left"
               colspan="2"
@@ -190,7 +193,7 @@
                 Fecha de actualización:
               </p>
             </th>
-            <th colspan="10"></th>
+            <th colspan="9"></th>
           </tr>
           <tr class="font-sm-corhuila">
             <td>GRUPO OBJETIVO</td>
