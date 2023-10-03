@@ -27,6 +27,8 @@ import { Norma } from 'src/app/models/norma';
 import { saveAs } from 'file-saver';
 import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
+import { NormogramaExcelService } from 'src/app/services/nomograma-excel.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-norma',
@@ -58,6 +60,27 @@ export class NormaComponent {
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   dialogRef!: MatDialogRef<any>;
 
+  title = 'angular-export-to-excel';
+
+  dataForExcel: any[] = [];
+  dataNorma: any[] = [];
+
+  normograma = [
+    {
+      'GRUPO OBJETIVO': 10011,
+      'ORIGEN': 'A',
+      'TIPO DE DOCUMENTO': 'Sales',
+      'No. NORMA': 'Sales',
+      'FECHA DE EXPEDICIÓN': 'Jan',
+      'ENTIDAD DE ORIGEN': 2020,
+      'NOMBRE': 132412,
+      'MEDIO EN EL QUE SE ENCUENTRA': '55555',
+      'UBICACIÓN DEL DOCUMENTO': 12,
+      '¿DEROGA?': 35,
+      'OBSERVACIÓN': 35,
+    },
+  ];
+
   constructor(
     private formBuilder: FormBuilder,
     public cuerposColegiadosService: CuerposColegiadosService,
@@ -66,11 +89,46 @@ export class NormaComponent {
     private authService: AuthService,
     private router: Router,
     private datePipe: DatePipe,
-    public normaService: NormaService
+    public normaService: NormaService,
+    public normogramaExcelService: NormogramaExcelService,
+    private http: HttpClient
   ) {
     if (this.authService.validacionToken()) {
       this.obtenerListadoNormas();
     }
+  }
+
+  exportToExcel() {
+    this.dataNorma.forEach((row: any) => {
+      this.dataForExcel.push(Object.values(row));
+    });
+    let fecha = this.datePipe.transform(Date.now(), 'dd-MM-yyyy');
+    let reportData = {
+      title: 'Normograma CORHUILA ' + fecha,
+      data: this.dataForExcel,
+      headers: Object.keys(this.dataNorma[0]),
+    };
+
+    this.normogramaExcelService.exportExcel(reportData);
+  }
+
+  crearDatasource(){
+    for (let index = 0; index < this.listadoNorma.length; index++) {
+      this.dataNorma.push( {
+        'GRUPO OBJETIVO': this.listadoNorma[index].codigo,
+        'ORIGEN': this.listadoNorma[index].entidad,
+        'TIPO DE DOCUMENTO': this.listadoNorma[index].normaTipo,
+        'No. NORMA': this.listadoNorma[index].numero,
+        'FECHA DE EXPEDICIÓN': this.listadoNorma[index].fechaExpedicion,
+        'ENTIDAD DE ORIGEN': this.listadoNorma[index].cuerpoColegiado,
+        'NOMBRE': this.listadoNorma[index].nombre,
+        'MEDIO EN EL QUE SE ENCUENTRA': this.listadoNorma[index].medio,
+        'UBICACIÓN DEL DOCUMENTO': this.listadoNorma[index].url,
+        '¿DEROGA?': this.listadoNorma[index].deroga,
+        'OBSERVACIÓN': this.listadoNorma[index].observacion,
+      },)
+    }
+    console.log(this.dataNorma);
   }
 
   exportTableToExcel() {
@@ -131,6 +189,7 @@ export class NormaComponent {
       this.dataSource = new MatTableDataSource<Norma>(data);
       this.paginator.firstPage();
       this.dataSource.paginator = this.paginator;
+      this.crearDatasource();
     });
   }
 

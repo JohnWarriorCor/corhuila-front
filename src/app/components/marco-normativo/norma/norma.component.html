@@ -14,7 +14,7 @@
             <button class="btn btn-info mr-2" (click)="registrarFormulario()">
               <i class="fa-solid fa-plus"></i> Registrar
             </button>
-            <button class="btn btn-success" (click)="vistaExcel()">
+            <button class="btn btn-success" (click)="exportToExcel()">
               <i class="fa-solid fa-file-excel"></i> Excel
             </button>
           </div>
@@ -136,7 +136,7 @@
       </div>
     </div>
   </div>
-  <div class="row p-4" *ngIf="excel">
+  <!-- <div class="row p-4" *ngIf="excel">
     <div class="col">
       <div class="row text-right" *ngIf="excel">
         <div class="col">
@@ -233,5 +233,5 @@
         </tbody>
       </table>
     </div>
-  </div>
+  </div> -->
 </app-navbar>
