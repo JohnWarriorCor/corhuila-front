@@ -43,11 +43,11 @@ export class NormogramaExcelService {
     let workbook = new Workbook();
     let worksheet = workbook.addWorksheet('Normograma');
     worksheet.columns = [
-      { width: 20 },
-      { width: 20 },
+      { width: 15 },
       { width: 30 },
       { width: 20 },
       { width: 30 },
+      { width: 20 },
       { width: 40 },
       { width: 50 },
       { width: 40 },
@@ -62,6 +62,7 @@ export class NormogramaExcelService {
         bottom: { style: 'thin' },
         right: { style: 'thin' },
       };
+      column.alignment = { vertical: 'top', horizontal: 'left' };
     });
     //Add Row and formatting
     worksheet.mergeCells('B1', 'I2');
@@ -175,20 +176,16 @@ export class NormogramaExcelService {
     // Adding Data with Conditional Formatting
     data.forEach((d: any) => {
       let row = worksheet.addRow(d);
-
-      let sales: any = row.getCell(6);
-      let color = '';
-      /* if (+sales.value < 200000) {
-        color = '';
-      }
- */
-      sales.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: color },
+      let sales: any = row.getCell(9);
+      sales.font = {
+        color: { argb: '0000FF' }, // Cambiar el color de la letra a azul
       };
+      worksheet.getCell(sales.address).value = {
+        text: sales.value,
+        hyperlink: sales.value,
+      };
+      console.log(sales);
     });
-
     worksheet.getColumn(3).width = 20;
     worksheet.addRow([]);
 

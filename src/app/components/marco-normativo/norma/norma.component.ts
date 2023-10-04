@@ -114,19 +114,57 @@ export class NormaComponent {
 
   crearDatasource(){
     for (let index = 0; index < this.listadoNorma.length; index++) {
-      this.dataNorma.push( {
-        'GRUPO OBJETIVO': this.listadoNorma[index].codigo,
-        'ORIGEN': this.listadoNorma[index].entidad,
-        'TIPO DE DOCUMENTO': this.listadoNorma[index].normaTipo,
-        'No. NORMA': this.listadoNorma[index].numero,
-        'FECHA DE EXPEDICIÓN': this.listadoNorma[index].fechaExpedicion,
-        'ENTIDAD DE ORIGEN': this.listadoNorma[index].cuerpoColegiado,
-        'NOMBRE': this.listadoNorma[index].nombre,
-        'MEDIO EN EL QUE SE ENCUENTRA': this.listadoNorma[index].medio,
-        'UBICACIÓN DEL DOCUMENTO': this.listadoNorma[index].url,
-        '¿DEROGA?': this.listadoNorma[index].deroga,
-        'OBSERVACIÓN': this.listadoNorma[index].observacion,
-      },)
+      let deroga = '';
+      if(this.listadoNorma[index].deroga == 1){
+        deroga='SI';
+      }else{
+        deroga='NO';
+      }
+      if(this.listadoNorma[index].cuerpoColegiadoCodigo!=0){
+        this.dataNorma.push( {
+          'ORIGEN': this.listadoNorma[index].entidad,
+          'TIPO DE DOCUMENTO': this.listadoNorma[index].normaTipo,
+          'No. NORMA': this.listadoNorma[index].numero,
+          'FECHA DE EXPEDICIÓN': this.datePipe.transform(this.listadoNorma[index].fechaExpedicion, 'dd-MM-yyyy'),
+          'FECHA VIGENCIA':this.datePipe.transform(this.listadoNorma[index].fechaVigencia, 'dd-MM-yyyy'),
+          'ENTIDAD DE ORIGEN': this.listadoNorma[index].cuerpoColegiado,
+          'NOMBRE': this.listadoNorma[index].nombre,
+          'MEDIO EN EL QUE SE ENCUENTRA': this.listadoNorma[index].medio,
+          'UBICACIÓN DEL DOCUMENTO': this.listadoNorma[index].url,
+          '¿DEROGA?': deroga,
+          'OBSERVACIÓN': this.listadoNorma[index].observacion,
+        },)
+      }
+      if(this.listadoNorma[index].rectoria!=0){
+        this.dataNorma.push( {
+          'ORIGEN': this.listadoNorma[index].entidad,
+          'TIPO DE DOCUMENTO': this.listadoNorma[index].normaTipo,
+          'No. NORMA': this.listadoNorma[index].numero,
+          'FECHA DE EXPEDICIÓN': this.datePipe.transform(this.listadoNorma[index].fechaExpedicion, 'dd-MM-yyyy'),
+          'FECHA VIGENCIA':this.datePipe.transform(this.listadoNorma[index].fechaVigencia, 'dd-MM-yyyy'),
+          'ENTIDAD DE ORIGEN': 'RECTORÍA',
+          'NOMBRE': this.listadoNorma[index].nombre,
+          'MEDIO EN EL QUE SE ENCUENTRA': this.listadoNorma[index].medio,
+          'UBICACIÓN DEL DOCUMENTO': this.listadoNorma[index].url,
+          '¿DEROGA?': deroga,
+          'OBSERVACIÓN': this.listadoNorma[index].observacion,
+        },)
+      }
+      if(this.listadoNorma[index].entidadExternaCodigo!=0){
+        this.dataNorma.push( {
+          'ORIGEN': this.listadoNorma[index].entidad,
+          'TIPO DE DOCUMENTO': this.listadoNorma[index].normaTipo,
+          'No. NORMA': this.listadoNorma[index].numero,
+          'FECHA DE EXPEDICIÓN': this.datePipe.transform(this.listadoNorma[index].fechaExpedicion, 'dd-MM-yyyy'),
+          'FECHA VIGENCIA':this.datePipe.transform(this.listadoNorma[index].fechaVigencia, 'dd-MM-yyyy'),
+          'ENTIDAD DE ORIGEN': this.listadoNorma[index].entidadExterna,
+          'NOMBRE': this.listadoNorma[index].nombre,
+          'MEDIO EN EL QUE SE ENCUENTRA': this.listadoNorma[index].medio,
+          'UBICACIÓN DEL DOCUMENTO': this.listadoNorma[index].url,
+          '¿DEROGA?': deroga,
+          'OBSERVACIÓN': this.listadoNorma[index].observacion,
+        },)
+      }
     }
     console.log(this.dataNorma);
   }

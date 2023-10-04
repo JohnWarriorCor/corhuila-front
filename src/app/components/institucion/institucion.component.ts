@@ -33,6 +33,8 @@ import { Institucion } from 'src/app/models/institucion';
 import { CabecerasCentrosPoblados } from 'src/app/models/cabeceras-centros-poblados';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { NgxPrintDirective } from 'ngx-print';
+import { HttpClient } from '@angular/common/http';
+import { InstitucionPdfService } from '../../services/institucion-pdf.service';
 
 @Component({
   selector: 'app-institucion',
@@ -402,26 +404,20 @@ export class ModalInstitucion implements OnInit {
   printDirective!: NgxPrintDirective;
 
   constructor(
+    private http: HttpClient,
     public dialogRef: MatDialogRef<ModalInstitucion>,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public ubicacionService: UbicacionService,
-    public institucionService: InstitucionService
+    public institucionService: InstitucionService,
+    public institucionPdfService: InstitucionPdfService
   ) {}
 
-  printTable() {
-    // Aplica el estilo de color a la columna deseada antes de imprimir.
-    const coloredColumn =
-      this.printSection.nativeElement.querySelector('.colored-column');
-    if (coloredColumn) {
-      coloredColumn.style.backgroundColor = 'yellow'; // Cambia el color según tus preferencias.
-    }
-
-    // Llama al método de impresión de ngx-print.
-    this.printDirective.print();
-  }
-
   ngOnInit() {}
+
+  generarPdf() {
+    this.institucionPdfService.export(this.data.institucion);
+  }
 
   onNoClick(): void {
     this.dialogRef.close();
