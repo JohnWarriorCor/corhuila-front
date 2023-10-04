@@ -87,19 +87,21 @@
                     <i class="fa-solid fa-eye fa-xs"></i>
                   </button>
                   <button
-                  class="btn btn-corhuila-delete btn-sm mr-2"
-                  (click)="desvincularIntegrante(element)"
-                  title="Desvincular"
-                >
-                <i class="fa-solid fa-ban fa-xs"></i>
-                </button>
-                <button
-                  class="btn btn-corhuila-editar btn-sm"
-                  (click)="editarIntegrante(element)"
-                  title="Editar"
-                >
-                  <i class="fa-solid fa-pencil fa-xs"></i>
-                </button>
+                    *ngIf="element.estado === 1"
+                    class="btn btn-corhuila-delete btn-sm mr-2"
+                    (click)="desvincularIntegrante(element)"
+                    title="Desvincular"
+                  >
+                    <i class="fa-solid fa-ban fa-xs"></i>
+                  </button>
+                  <button
+                    *ngIf="element.estado === 1"
+                    class="btn btn-corhuila-editar btn-sm"
+                    (click)="editarIntegrante(element)"
+                    title="Editar"
+                  >
+                    <i class="fa-solid fa-pencil fa-xs"></i>
+                  </button>
                 </td>
               </ng-container>
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
