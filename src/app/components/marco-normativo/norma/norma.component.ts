@@ -29,6 +29,10 @@ import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
 import { NormogramaExcelService } from 'src/app/services/nomograma-excel.service';
 import { HttpClient } from '@angular/common/http';
+import { FuncionesCuerpoColegiado } from 'src/app/models/funciones-cuerpo-colegiado';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { NormaDeroga } from 'src/app/models/norma-deroga';
 
 @Component({
   selector: 'app-norma',
@@ -68,16 +72,16 @@ export class NormaComponent {
   normograma = [
     {
       'GRUPO OBJETIVO': 10011,
-      'ORIGEN': 'A',
+      ORIGEN: 'A',
       'TIPO DE DOCUMENTO': 'Sales',
       'No. NORMA': 'Sales',
       'FECHA DE EXPEDICIÓN': 'Jan',
       'ENTIDAD DE ORIGEN': 2020,
-      'NOMBRE': 132412,
+      NOMBRE: 132412,
       'MEDIO EN EL QUE SE ENCUENTRA': '55555',
       'UBICACIÓN DEL DOCUMENTO': 12,
       '¿DEROGA?': 35,
-      'OBSERVACIÓN': 35,
+      OBSERVACIÓN: 35,
     },
   ];
 
@@ -102,7 +106,7 @@ export class NormaComponent {
     this.dataNorma.forEach((row: any) => {
       this.dataForExcel.push(Object.values(row));
     });
-    let fecha = this.datePipe.transform(Date.now(), 'dd-MM-yyyy');
+    let fecha = this.datePipe.transform(Date.now(), 'dd-MM-yyyy h:mm a');
     let reportData = {
       title: 'Normograma CORHUILA ' + fecha,
       data: this.dataForExcel,
@@ -112,58 +116,76 @@ export class NormaComponent {
     this.normogramaExcelService.exportExcel(reportData);
   }
 
-  crearDatasource(){
+  crearDatasource() {
     for (let index = 0; index < this.listadoNorma.length; index++) {
       let deroga = '';
-      if(this.listadoNorma[index].deroga == 1){
-        deroga='SI';
-      }else{
-        deroga='NO';
+      if (this.listadoNorma[index].deroga == 1) {
+        deroga = 'SI';
+      } else {
+        deroga = 'NO';
       }
-      if(this.listadoNorma[index].cuerpoColegiadoCodigo!=0){
-        this.dataNorma.push( {
-          'ORIGEN': this.listadoNorma[index].entidad,
+      if (this.listadoNorma[index].cuerpoColegiadoCodigo != 0) {
+        this.dataNorma.push({
+          ORIGEN: this.listadoNorma[index].entidad,
           'TIPO DE DOCUMENTO': this.listadoNorma[index].normaTipo,
           'No. NORMA': this.listadoNorma[index].numero,
-          'FECHA DE EXPEDICIÓN': this.datePipe.transform(this.listadoNorma[index].fechaExpedicion, 'dd-MM-yyyy'),
-          'FECHA VIGENCIA':this.datePipe.transform(this.listadoNorma[index].fechaVigencia, 'dd-MM-yyyy'),
+          'FECHA DE EXPEDICIÓN': this.datePipe.transform(
+            this.listadoNorma[index].fechaExpedicion,
+            'dd-MM-yyyy'
+          ),
+          'FECHA VIGENCIA': this.datePipe.transform(
+            this.listadoNorma[index].fechaVigencia,
+            'dd-MM-yyyy'
+          ),
           'ENTIDAD DE ORIGEN': this.listadoNorma[index].cuerpoColegiado,
-          'NOMBRE': this.listadoNorma[index].nombre,
+          NOMBRE: this.listadoNorma[index].nombre,
           'MEDIO EN EL QUE SE ENCUENTRA': this.listadoNorma[index].medio,
           'UBICACIÓN DEL DOCUMENTO': this.listadoNorma[index].url,
           '¿DEROGA?': deroga,
-          'OBSERVACIÓN': this.listadoNorma[index].observacion,
-        },)
+          OBSERVACIÓN: this.listadoNorma[index].observacion,
+        });
       }
-      if(this.listadoNorma[index].rectoria!=0){
-        this.dataNorma.push( {
-          'ORIGEN': this.listadoNorma[index].entidad,
+      if (this.listadoNorma[index].rectoria != 0) {
+        this.dataNorma.push({
+          ORIGEN: this.listadoNorma[index].entidad,
           'TIPO DE DOCUMENTO': this.listadoNorma[index].normaTipo,
           'No. NORMA': this.listadoNorma[index].numero,
-          'FECHA DE EXPEDICIÓN': this.datePipe.transform(this.listadoNorma[index].fechaExpedicion, 'dd-MM-yyyy'),
-          'FECHA VIGENCIA':this.datePipe.transform(this.listadoNorma[index].fechaVigencia, 'dd-MM-yyyy'),
+          'FECHA DE EXPEDICIÓN': this.datePipe.transform(
+            this.listadoNorma[index].fechaExpedicion,
+            'dd-MM-yyyy'
+          ),
+          'FECHA VIGENCIA': this.datePipe.transform(
+            this.listadoNorma[index].fechaVigencia,
+            'dd-MM-yyyy'
+          ),
           'ENTIDAD DE ORIGEN': 'RECTORÍA',
-          'NOMBRE': this.listadoNorma[index].nombre,
+          NOMBRE: this.listadoNorma[index].nombre,
           'MEDIO EN EL QUE SE ENCUENTRA': this.listadoNorma[index].medio,
           'UBICACIÓN DEL DOCUMENTO': this.listadoNorma[index].url,
           '¿DEROGA?': deroga,
-          'OBSERVACIÓN': this.listadoNorma[index].observacion,
-        },)
+          OBSERVACIÓN: this.listadoNorma[index].observacion,
+        });
       }
-      if(this.listadoNorma[index].entidadExternaCodigo!=0){
-        this.dataNorma.push( {
-          'ORIGEN': this.listadoNorma[index].entidad,
+      if (this.listadoNorma[index].entidadExternaCodigo != 0) {
+        this.dataNorma.push({
+          ORIGEN: this.listadoNorma[index].entidad,
           'TIPO DE DOCUMENTO': this.listadoNorma[index].normaTipo,
           'No. NORMA': this.listadoNorma[index].numero,
-          'FECHA DE EXPEDICIÓN': this.datePipe.transform(this.listadoNorma[index].fechaExpedicion, 'dd-MM-yyyy'),
-          'FECHA VIGENCIA':this.datePipe.transform(this.listadoNorma[index].fechaVigencia, 'dd-MM-yyyy'),
+          'FECHA DE EXPEDICIÓN': this.datePipe.transform(
+            this.listadoNorma[index].fechaExpedicion,
+            'dd-MM-yyyy'
+          ),
+          'FECHA VIGENCIA': this.datePipe.transform(
+            this.listadoNorma[index].fechaVigencia,
+            'dd-MM-yyyy'
+          ),
           'ENTIDAD DE ORIGEN': this.listadoNorma[index].entidadExterna,
-          'NOMBRE': this.listadoNorma[index].nombre,
+          NOMBRE: this.listadoNorma[index].nombre,
           'MEDIO EN EL QUE SE ENCUENTRA': this.listadoNorma[index].medio,
           'UBICACIÓN DEL DOCUMENTO': this.listadoNorma[index].url,
           '¿DEROGA?': deroga,
-          'OBSERVACIÓN': this.listadoNorma[index].observacion,
-        },)
+          OBSERVACIÓN: this.listadoNorma[index].observacion,
+        });
       }
     }
     console.log(this.dataNorma);
@@ -332,7 +354,7 @@ export class NormaComponent {
 })
 export class ModalFormularioNorma {
   editar: boolean = false;
-  editarFuncion: boolean = false;
+  editarDeroga: boolean = false;
   tipo: boolean = false;
   war: any;
   interna: boolean = false;
@@ -340,16 +362,21 @@ export class ModalFormularioNorma {
   cuerpoColegiado: boolean = false;
   fechaActual = new Date();
 
+  lsitadoNormaDeroga: NormaDeroga[] = [];
   listadoNorma: Norma[] = [];
   listadoCuerposColegiados: CuerposColegiados[] = [];
   listadoEntidadExterna: EntidadExterna[] = [];
   listadoNormaTipo: NormaTipo[] = [];
   persona: Persona[] = [];
+  formularioDeroga!: FormGroup;
 
   formNorma!: FormGroup;
 
   fechaLimiteMinima!: any;
   fechaLimiteMinimaVigencia!: any;
+
+  filteredOptions!: Observable<Norma[]>;
+  myControl = new FormControl('');
 
   constructor(
     public dialogRef: MatDialogRef<ModalFormularioNorma>,
@@ -363,6 +390,8 @@ export class ModalFormularioNorma {
     public normaService: NormaService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
+    this.crearFormularioDeroga();
+
     this.fechaLimiteMinima = new Date();
     if (this.authService.validacionToken()) {
       this.obtenerCuerposColegiados();
@@ -370,12 +399,22 @@ export class ModalFormularioNorma {
       this.obtenerEntidadesExternas();
       this.obtenerListadoNormas();
       if (JSON.stringify(data) !== 'null') {
+        this.obtenerListadoDerogaEditada(data.sede.codigo);
         this.editarNorma(data.sede);
         console.log('Entra');
       } else {
         console.log('No entra');
       }
     }
+  }
+
+  private _filter(value: string): Norma[] {
+    console.log(value);
+    const filterValue = value.toLowerCase();
+
+    return this.listadoNorma.filter((option) =>
+      option.nombre.toLowerCase().includes(filterValue)
+    );
   }
   private crearFormularioNorma(): void {
     this.formNorma = this.formBuilder.group({
@@ -402,8 +441,12 @@ export class ModalFormularioNorma {
   }
 
   obtenerListadoNormas() {
-    this.normaService.obtenerListadoNormas().subscribe((data) => {
+    this.normaService.obtenerNormasNoDerogadas().subscribe((data) => {
       this.listadoNorma = data;
+      this.filteredOptions = this.myControl.valueChanges.pipe(
+        startWith(''),
+        map((value) => this._filter(value || ''))
+      );
     });
   }
 
@@ -554,7 +597,13 @@ export class ModalFormularioNorma {
     this.formNorma
       .get('cuerpoColegiadoCodigo')!
       .setValue(element.cuerpoColegiadoCodigo);
-    this.formNorma.get('normaTipoCodigo')!.setValue(element.normaTipoCodigo);
+    if (element.entidadCodigo == 2) {
+      this.formNorma.get('normaTipoCodigo')!.setValue(element.normaTipoCodigo);
+    } else {
+      this.formNorma
+        .get('normaTipoCodigo')!
+        .setValue('' + element.normaTipoCodigo);
+    }
     this.formNorma.get('numero')!.setValue(element.numero);
     this.formNorma.get('nombre')!.setValue(element.nombre);
     this.formNorma.get('url')!.setValue(element.url);
@@ -572,6 +621,240 @@ export class ModalFormularioNorma {
     this.formNorma.reset();
     this.crearFormularioNorma();
     this.editar = false;
+  }
+
+  //DEROGA
+
+  derogatTotal() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Mensaje advertencia deroga total.',
+      confirmButtonColor: '#006983',
+      confirmButtonText: 'Listo',
+    });
+  }
+
+  obtenerListadoDeroga() {
+    this.normaService
+      .obtenerNormaDerogada(this.listadoNorma.length + 1)
+      .subscribe((data) => {
+        console.log('listDeroga ', data);
+        this.lsitadoNormaDeroga = data;
+      });
+  }
+
+  obtenerListadoDerogaEditada(codigo: number) {
+    this.normaService.obtenerNormaDerogada(codigo).subscribe((data) => {
+      console.log('listDeroga ', data);
+      this.lsitadoNormaDeroga = data;
+    });
+  }
+
+  private crearFormularioDeroga(): void {
+    this.formularioDeroga = this.formBuilder.group({
+      codigo: new FormControl(''),
+      derogaTipoCodigo: new FormControl('', Validators.required),
+      normaPadreCodigo: new FormControl('', Validators.required),
+      normaHijoCodigo: new FormControl('', Validators.required),
+      observacion: new FormControl('', Validators.required),
+      estado: new FormControl(''),
+    });
+  }
+
+  asignarNormaHijo(codigo: number) {
+    this.formularioDeroga.get('normaHijoCodigo')!.setValue(codigo);
+    this.formularioDeroga
+      .get('normaPadreCodigo')!
+      .setValue(this.listadoNorma.length + 1);
+    console.log('HIJO', this.formularioDeroga.get('normaHijoCodigo')!.value);
+    console.log('PADRE', this.formularioDeroga.get('normaPadreCodigo')!.value);
+  }
+
+  preguntaCrear() {
+    Swal.fire({
+      title: '¿Está seguro de derogar esta norma?',
+      text: 'La siguiente operación será irreversible',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#00c053',
+      cancelButtonColor: '#ffc107',
+      confirmButtonText: 'Si, estoy seguro',
+      cancelButtonText: 'Cancelar opreación',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.generarNormaDeroga();
+        Swal.fire({
+          icon: 'success',
+          title: 'Norma derogada.',
+          confirmButtonColor: '#006983',
+          confirmButtonText: 'Listo',
+        });
+      }
+    });
+  }
+
+  preguntaEliminar(element: NormaDeroga) {
+    Swal.fire({
+      title: '¿Está seguro de eliminar este elemento?',
+      text: 'La siguiente operación será irreversible',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#00c053',
+      cancelButtonColor: '#ffc107',
+      confirmButtonText: 'Si, estoy seguro',
+      cancelButtonText: 'Cancelar opreación',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        element.estado = 0;
+        this.actualizarDeroga(element);
+        Swal.fire({
+          icon: 'success',
+          title: 'Elemento borrado.',
+          confirmButtonColor: '#006983',
+          confirmButtonText: 'Listo',
+        });
+      }
+    });
+  }
+
+  generarNormaDeroga(): void {
+    let normaDeroga: NormaDeroga = new NormaDeroga();
+    normaDeroga.codigo = this.formularioDeroga.get('codigo')!.value;
+    normaDeroga.derogaTipoCodigo =
+      +this.formularioDeroga.get('derogaTipoCodigo')!.value;
+    normaDeroga.normaPadreCodigo =
+      this.formularioDeroga.get('normaPadreCodigo')!.value;
+    normaDeroga.normaHijoCodigo =
+      this.formularioDeroga.get('normaHijoCodigo')!.value;
+    normaDeroga.observacion = this.formularioDeroga.get('observacion')!.value;
+    normaDeroga.estado = this.formularioDeroga.get('estado')!.value;
+    if (this.editarDeroga) {
+      this.actualizarDeroga(normaDeroga);
+    } else {
+      this.registrarDeroga(normaDeroga);
+    }
+  }
+
+  registrarDeroga(normaDeroga: NormaDeroga) {
+    this.normaService.registrarNormaDeroga(normaDeroga).subscribe(
+      (data) => {
+        if (data > 0) {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer);
+              toast.addEventListener('mouseleave', Swal.resumeTimer);
+            },
+          });
+
+          Toast.fire({
+            icon: 'success',
+            title: 'Operación exitosa.',
+          });
+          this.cancelarDeroga();
+          this.crearFormularioDeroga();
+          let norma: Norma = new Norma();
+          norma.codigo = normaDeroga.normaHijoCodigo;
+          norma.fechaVigencia = new Date();
+          this.normaService.suspenderNorma(norma).subscribe(
+            (data) => {
+              if (data > 0) {
+                const Toast = Swal.mixin({
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 3000,
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                  },
+                });
+
+                Toast.fire({
+                  icon: 'success',
+                  title: 'Norma derogada.',
+                });
+                if (this.editar) {
+                  this.obtenerListadoDerogaEditada(
+                    normaDeroga.normaPadreCodigo
+                  );
+                } else {
+                  this.obtenerListadoDeroga();
+                }
+                this.obtenerListadoNormas();
+              } else {
+                this.mensajeError();
+              }
+            },
+            (err) => this.fError(err)
+          );
+        } else {
+          this.mensajeError();
+        }
+      },
+      (err) => this.fError(err)
+    );
+  }
+
+  actualizarDeroga(normaDeroga: NormaDeroga) {
+    this.normaService.actualizarNormaDeroga(normaDeroga).subscribe(
+      (data) => {
+        if (data > 0) {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer);
+              toast.addEventListener('mouseleave', Swal.resumeTimer);
+            },
+          });
+
+          Toast.fire({
+            icon: 'success',
+            title: 'Operación exitosa.',
+          });
+          this.cancelarDeroga();
+          if (this.editar) {
+            this.obtenerListadoDerogaEditada(normaDeroga.normaPadreCodigo);
+          } else {
+            this.obtenerListadoDeroga();
+          }
+        } else {
+          this.mensajeError();
+        }
+      },
+      (err) => this.fError(err)
+    );
+  }
+
+  /* editarDerogaes(element: FuncionesCuerpoColegiado) {
+    this.editarDeroga = true;
+    this.formFunciones.get('codigo')!.setValue(element.codigo);
+    this.formFunciones.get('nombre')!.setValue(element.nombre);
+    this.formFunciones
+      .get('cuerpoColegiado')!
+      .setValue(element.cuerpoColegiado.codigo);
+    this.formFunciones.get('estado')!.setValue(element.estado);
+    console.log(element);
+  } */
+/*
+  eliminarDeroga(element: NormaDeroga) {
+    element.estado = 0;
+    this.actualizarDeroga(element);
+  } */
+
+  cancelarDeroga() {
+    this.formularioDeroga.reset();
+    this.editarDeroga = false;
+    this.myControl.reset();
   }
 
   mensajeSuccses() {

@@ -4,9 +4,10 @@
 <mat-dialog-content>
   <div class="row mt-2 text-left">
     <div class="col">
-      <div class="row pl-5 pr-5">
+      <div class="row">
         <div class="col">
-          <form [formGroup]="formSede">
+          <fieldset class="scheduler-border shadow-sm">
+            <legend class="scheduler-border">Selección de grupo</legend>
             <div class="row">
               <div class="col">
                 <div class="form-group">
@@ -15,10 +16,14 @@
                     class="example-full-width"
                     appearance="outline"
                   >
-                    <mat-select class="font-sm-corhuila" formControlName="nit">
+                    <mat-select
+                      class="font-sm-corhuila"
+                      [(ngModel)]="grupo"
+                      (ngModelChange)="obtenerNormaSinClasificar($event);obtenerNormaClasificada($event);"
+                    >
                       <mat-option
                         class="font-sm-corhuila"
-                        *ngFor="let item of listadoSede"
+                        *ngFor="let item of listadoNormaGrupo"
                         [value]="item.codigo"
                         >{{item.nombre}}</mat-option
                       >
@@ -27,94 +32,17 @@
                 </div>
               </div>
             </div>
-          </form>
+          </fieldset>
         </div>
       </div>
       <div class="row">
         <div class="col">
           <fieldset class="scheduler-border shadow-sm">
-            <legend class="scheduler-border">Categoría</legend>
+            <legend class="scheduler-border">Clasificado</legend>
             <div class="row">
               <div class="col">
                 <div class="form-group">
-                  <label
-                    >Número de identidad<span class="requerido">*</span></label
-                  >
-                  <mat-form-field
-                    class="example-full-width"
-                    appearance="outline"
-                  >
-                    <input matInput type="text" required />
-                    <button
-                      matSuffix
-                      style="
-                        text-decoration: none;
-                        background: none;
-                        border: none;
-                      "
-                    >
-                      <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-                  </mat-form-field>
-                </div>
-              </div>
-            </div>
-            <table mat-table [dataSource]="dataSourceDos">
-              <ng-container matColumnDef="index">
-                <th mat-header-cell *matHeaderCellDef>N°</th>
-                <td
-                  mat-cell
-                  *matCellDef="let element; let i = index"
-                  class="font-sm-usco"
-                >
-                  {{ dataSourceDos.filteredData.indexOf(element) + 1 }}
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="nit">
-                <th mat-header-cell *matHeaderCellDef>Norma</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.ccp.divipola }} - NOMBRE NORMA
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="sede">
-                <th mat-header-cell *matHeaderCellDef>Tipo</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.nombre }}
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="opciones">
-                <th mat-header-cell *matHeaderCellDef>Quitar</th>
-                <td
-                  mat-cell
-                  *matCellDef="let element"
-                  class="font-sm-usco text-center"
-                >
-                  <button
-                    class="btn btn-corhuila-delete btn-sm mr-2"
-                    title="Borrar"
-                  >
-                    <i class="fa-solid fa-trash fa-xs"></i>
-                  </button>
-                </td>
-              </ng-container>
-              <tr mat-header-row *matHeaderRowDef="displayedColumnsDos"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumnsDos"></tr>
-            </table>
-            <mat-paginator #MatPaginator="matPaginator"
-              [pageSizeOptions]="[1, 2, 3]"
-              showFirstLastButtons
-            ></mat-paginator>
-          </fieldset>
-        </div>
-        <div class="col">
-          <fieldset class="scheduler-border shadow-sm">
-            <legend class="scheduler-border">General</legend>
-            <div class="row">
-              <div class="col">
-                <div class="form-group">
-                  <label
-                    >Número de identidad<span class="requerido">*</span></label
-                  >
+                  <label>Palabras claves<span class="requerido">*</span></label>
                   <mat-form-field
                     class="example-full-width"
                     appearance="outline"
@@ -122,7 +50,7 @@
                     <input
                       matInput
                       type="text"
-                      (keyup)="filtrar($event)"
+                      (keyup)="filtrarCalsificado($event)"
                       required
                     />
                     <button
@@ -139,7 +67,7 @@
                 </div>
               </div>
             </div>
-            <table mat-table [dataSource]="dataSource">
+            <table mat-table [dataSource]="dataSourceClasificado">
               <ng-container matColumnDef="index">
                 <th mat-header-cell *matHeaderCellDef>N°</th>
                 <td
@@ -147,19 +75,106 @@
                   *matCellDef="let element; let i = index"
                   class="font-sm-usco"
                 >
-                  {{ dataSource.filteredData.indexOf(element) + 1 }}
+                  {{ dataSourceClasificado.filteredData.indexOf(element) + 1 }}
                 </td>
               </ng-container>
-              <ng-container matColumnDef="nit">
-                <th mat-header-cell *matHeaderCellDef>Norma</th>
+              <ng-container matColumnDef="entidad">
+                <th mat-header-cell *matHeaderCellDef>Entidad</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.ccp.divipola }} - NOMBRE NORMA
+                  {{ element.norma.entidad }}
                 </td>
               </ng-container>
-              <ng-container matColumnDef="sede">
-                <th mat-header-cell *matHeaderCellDef>Tipo</th>
+              <ng-container matColumnDef="norma">
+                <th mat-header-cell *matHeaderCellDef>Norma agrupada</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.nombre }}
+                  {{ element.norma.normaTipo }} {{ element.norma.numero }} {{
+                  element.norma.nombre }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="opciones">
+                <th mat-header-cell *matHeaderCellDef>Quitar</th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  class="font-sm-usco text-center"
+                >
+                  <button
+                    class="btn btn-corhuila-delete btn-sm"
+                    (click)="eliminar(element)"
+                  >
+                    <i class="fa-solid fa-trash fa-xs"></i>
+                  </button>
+                </td>
+              </ng-container>
+              <tr
+                mat-header-row
+                *matHeaderRowDef="displayedColumnsClasificado"
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: displayedColumnsClasificado"
+              ></tr>
+            </table>
+            <mat-paginator
+              #MatPaginatorClasificado="matPaginator"
+              [pageSizeOptions]="[10, 20, 30]"
+              showFirstLastButtons
+            ></mat-paginator>
+          </fieldset>
+        </div>
+        <div class="col">
+          <fieldset class="scheduler-border shadow-sm">
+            <legend class="scheduler-border">General</legend>
+            <div class="row">
+              <div class="col">
+                <div class="form-group">
+                  <label>Palabras claves<span class="requerido">*</span></label>
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <input
+                      matInput
+                      type="text"
+                      (keyup)="filtrarGeneral($event)"
+                      required
+                    />
+                    <button
+                      matSuffix
+                      style="
+                        text-decoration: none;
+                        background: none;
+                        border: none;
+                      "
+                    >
+                      <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <table mat-table [dataSource]="dataSourceGeneral">
+              <ng-container matColumnDef="index">
+                <th mat-header-cell *matHeaderCellDef>N°</th>
+                <td
+                  mat-cell
+                  *matCellDef="let element; let i = index"
+                  class="font-sm-usco"
+                >
+                  {{ dataSourceGeneral.filteredData.indexOf(element) + 1 }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="entidad">
+                <th mat-header-cell *matHeaderCellDef>Entidad</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                  {{ element.entidad }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="norma">
+                <th mat-header-cell *matHeaderCellDef>Normas</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                  {{ element.normaTipo }} {{ element.numero }} {{ element.nombre
+                  }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="opciones">
@@ -169,16 +184,26 @@
                   *matCellDef="let element"
                   class="font-sm-usco text-center"
                 >
-                  <button class="btn btn-info btn-sm mr-2">
+                  <button
+                    class="btn btn-info btn-sm"
+                    (click)="adicionar(element)"
+                  >
                     <i class="fa-solid fa-plus fa-xs"></i>
                   </button>
                 </td>
               </ng-container>
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+              <tr
+                mat-header-row
+                *matHeaderRowDef="displayedColumnsGeneral"
+              ></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: displayedColumnsGeneral"
+              ></tr>
             </table>
-            <mat-paginator #MatPaginatorDos="matPaginator"
-              [pageSizeOptions]="[1, 2, 3]"
+            <mat-paginator
+              #MatPaginatorGeneral="matPaginator"
+              [pageSizeOptions]="[10, 20, 30]"
               showFirstLastButtons
             ></mat-paginator>
           </fieldset>
@@ -189,10 +214,10 @@
 </mat-dialog-content>
 <hr />
 <mat-dialog-actions align="end">
-  <button class="btn btn-warning" mat-dialog-close (click)="cancelar()">
-    <i class="fa-solid fa-xmark"></i> Cancelar
+  <button class="btn btn-warning" mat-dialog-close>
+    <i class="fa-solid fa-xmark"></i> Cerrar
   </button>
-  <button type="button" class="btn btn-success ml-2">
+  <!--  <button type="button" class="btn btn-success ml-2">
     <i class="far fa-save"></i> Guardar
-  </button>
+  </button> -->
 </mat-dialog-actions>

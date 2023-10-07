@@ -22,6 +22,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTableModule } from '@angular/material/table';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   imports: [
@@ -46,7 +47,8 @@ import { MatTableModule } from '@angular/material/table';
     MatDialogModule,
     MatFormFieldModule,
     MatNativeDateModule,
-    MatTableModule
+    MatTableModule,
+    MatTooltipModule
   ],
   exports: [
     MatButtonModule,
@@ -70,11 +72,12 @@ import { MatTableModule } from '@angular/material/table';
     MatDialogModule,
     MatFormFieldModule,
     MatNativeDateModule,
-    MatTableModule
+    MatTableModule,
+    MatTooltipModule
   ],
-  providers: [  
+  providers: [
     MatDatepickerModule,
-    MatNativeDateModule  
+    MatNativeDateModule
   ],
 })
 export class MaterialModules {}

@@ -1,0 +1,33 @@
+<h2 mat-dialog-title class="bg-corhuila-p-as-2 font-corhuila text-white">
+  <i class="fa-solid fa-circle-info"></i> Grupo
+</h2>
+<mat-dialog-content>
+  <div class="container">
+    <form [formGroup]="formularioGrupo">
+      <div class="row mt-5">
+        <div class="col">
+          <div class="form-group">
+            <label>Nombre del grupo<span class="requerido">*</span></label>
+            <mat-form-field class="example-full-width" appearance="outline">
+              <input matInput formControlName="nombre" type="text" />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</mat-dialog-content>
+<hr />
+<mat-dialog-actions align="end">
+  <button class="btn btn-warning" mat-dialog-close>
+    <i class="fa-solid fa-xmark"></i> Cancelar
+  </button>
+  <button
+    type="button"
+    class="btn btn-success ml-2"
+    [disabled]="!formularioGrupo.valid"
+    (click)="generarGrupo()"
+  >
+    <i class="far fa-save"></i> Guardar
+  </button>
+</mat-dialog-actions>

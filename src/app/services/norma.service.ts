@@ -8,6 +8,9 @@ import { AuthService } from './auth.service';
 import { EntidadExterna } from '../models/entidad-externa';
 import { NormaTipo } from '../models/norma-tipo';
 import { Norma } from '../models/norma';
+import { NormaDeroga } from '../models/norma-deroga';
+import { NormaClasificada } from '../models/norma-clasificada';
+import { NormaGrupo } from '../models/norma-grupo';
 
 @Injectable({
   providedIn: 'root',
@@ -58,6 +61,21 @@ export class NormaService {
       );
   }
 
+  obtenerNormasNoDerogadas(): Observable<Norma[]> {
+    return this.http
+      .get<Norma[]>(`${this.url}/obtener-normas-no-derogadas`, {
+        headers: this.aggAutorizacionHeader(),
+      })
+      .pipe(
+        catchError((e) => {
+          if (this.isNoAutorizado(e)) {
+            return throwError(e);
+          }
+          return throwError(e);
+        })
+      );
+  }
+
   obtenerEntidadesExternas(): Observable<EntidadExterna[]> {
     return this.http
       .get<EntidadExterna[]>(`${this.url}/obtener-entidades-externas`, {
@@ -90,5 +108,111 @@ export class NormaService {
     return this.http.put<number>(`${this.url}/actualizar-norma`, norma, {
       headers: this.aggAutorizacionHeader(),
     });
+  }
+
+  suspenderNorma(norma: Norma): Observable<number> {
+    return this.http.put<number>(`${this.url}/suspender-norma`, norma, {
+      headers: this.aggAutorizacionHeader(),
+    });
+  }
+
+  ////////////////DEROGA
+
+  obtenerNormaDerogada(codigo: number): Observable<NormaDeroga[]> {
+    return this.http.get<NormaDeroga[]>(
+      `${this.url}/obtener-normas-derogadas/${codigo}`,
+      { headers: this.aggAutorizacionHeader() }
+    );
+  }
+
+  registrarNormaDeroga(deroga: NormaDeroga): Observable<number> {
+    return this.http.post<number>(
+      `${this.url}/registrar-norma-deroga`,
+      deroga,
+      {
+        headers: this.aggAutorizacionHeader(),
+      }
+    );
+  }
+
+  actualizarNormaDeroga(deroga: NormaDeroga): Observable<number> {
+    return this.http.put<number>(
+      `${this.url}/actualizar-norma-deroga`,
+      deroga,
+      {
+        headers: this.aggAutorizacionHeader(),
+      }
+    );
+  }
+
+  ////////////////CLASIFICACIÓN
+
+  obtenerNormaGrupos(): Observable<NormaGrupo[]> {
+    return this.http.get<NormaGrupo[]>(`${this.url}/obtener-norma-grupos`, {
+      headers: this.aggAutorizacionHeader(),
+    });
+  }
+
+  obtenerNormaGruposAgrupados(): Observable<NormaGrupo[]> {
+    return this.http.get<NormaGrupo[]>(
+      `${this.url}/obtener-norma-grupos-agrupado`,
+      {
+        headers: this.aggAutorizacionHeader(),
+      }
+    );
+  }
+
+  obtenerNormaSinClasificar(codigo: number): Observable<Norma[]> {
+    return this.http.get<Norma[]>(
+      `${this.url}/obtener-normas-sin-clasificar/${codigo}`,
+      { headers: this.aggAutorizacionHeader() }
+    );
+  }
+
+  obtenerNormaClasificada(codigo: number): Observable<NormaClasificada[]> {
+    return this.http.get<NormaClasificada[]>(
+      `${this.url}/obtener-normas-clasificadas/${codigo}`,
+      { headers: this.aggAutorizacionHeader() }
+    );
+  }
+
+  registrarNormaClasificada(deroga: NormaClasificada): Observable<number> {
+    return this.http.post<number>(
+      `${this.url}/registrar-norma-clasificada`,
+      deroga,
+      {
+        headers: this.aggAutorizacionHeader(),
+      }
+    );
+  }
+
+  actualizarNormaClasificada(deroga: NormaClasificada): Observable<number> {
+    return this.http.put<number>(
+      `${this.url}/actualizar-norma-clasificada`,
+      deroga,
+      {
+        headers: this.aggAutorizacionHeader(),
+      }
+    );
+  }
+
+  registrarNormaGrupo(normaGrupo: NormaGrupo): Observable<number> {
+    return this.http.post<number>(
+      `${this.url}/registrar-norma-grupo`,
+      normaGrupo,
+      {
+        headers: this.aggAutorizacionHeader(),
+      }
+    );
+  }
+
+  actualizarNormaGrupo(normaGrupo: NormaGrupo): Observable<number> {
+    return this.http.put<number>(
+      `${this.url}/actualizar-norma-grupo`,
+      normaGrupo,
+      {
+        headers: this.aggAutorizacionHeader(),
+      }
+    );
   }
 }

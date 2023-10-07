@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
+import { DatePipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +10,7 @@ import { saveAs } from 'file-saver';
 export class NormogramaExcelService {
   logo: any;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,private datePipe: DatePipe,) {
     this.loadImageAsBase64();
   }
 
@@ -43,7 +44,7 @@ export class NormogramaExcelService {
     let workbook = new Workbook();
     let worksheet = workbook.addWorksheet('Normograma');
     worksheet.columns = [
-      { width: 15 },
+      { width: 20 },
       { width: 30 },
       { width: 20 },
       { width: 30 },
@@ -128,6 +129,7 @@ export class NormogramaExcelService {
     };
     dateCell4.alignment = { vertical: 'middle', horizontal: 'center' };
     //Fecha
+    let fecha = this.datePipe.transform(Date.now(), 'dd-MM-yyyy h:mm a');
     let dateCell5 = worksheet.getCell('A5');
     dateCell5.value = 'Fecha de actualización:';
     dateCell5.font = {
@@ -135,16 +137,16 @@ export class NormogramaExcelService {
       size: 10,
       bold: true,
     };
-    dateCell5.alignment = { vertical: 'middle', horizontal: 'center' };
+    dateCell5.alignment = { vertical: 'middle', horizontal: 'left' };
     worksheet.mergeCells('B5:K5');
     let dateCell6 = worksheet.getCell('B5');
-    dateCell6.value = '';
+    dateCell6.value = fecha;
     dateCell6.font = {
       name: 'Calibri',
       size: 10,
       bold: true,
     };
-    dateCell6.alignment = { vertical: 'middle', horizontal: 'center' };
+    dateCell6.alignment = { vertical: 'middle', horizontal: 'left' };
 
     //Add Image
     let myLogoImage = workbook.addImage({
