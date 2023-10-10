@@ -1,0 +1,180 @@
+<h2 mat-dialog-title class="bg-corhuila-p-as-2 font-corhuila text-white">
+  <i class="fa-solid fa-circle-info"></i> Formulario derogación
+</h2>
+<mat-dialog-content>
+  <div class="row mt-4">
+    <div class="col">
+      <form [formGroup]="formularioDeroga">
+        <table class="table table-bordered">
+          <thead
+            class="table-dark text-justify"
+            style="background-color: #3e6c83"
+          >
+            <tr class="font-sm-corhuila white">
+              <th>NORMA QUE DEROGA</th>
+              <th class="w-30">
+                OBSERVACIÓN <i class="fa-solid fa-circle-info"></i>
+              </th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="
+                let deroga of lsitadoNormaDeroga;
+                let i = index
+              "
+            >
+              <td class="align-middle">
+                <div class="row">
+                  <div class="col-sm-3">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <input
+                        matInput
+                        type="text"
+                        [value]="deroga.derogaTipo"
+                        readonly
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <input
+                        matInput
+                        type="text"
+                        [value]="deroga.normaHijo"
+                        readonly
+                      />
+                    </mat-form-field>
+                  </div>
+                </div>
+              </td>
+              <td class="align-middle">
+                <div>
+                  <mat-form-field
+                    class="example-full-width"
+                    appearance="outline"
+                  >
+                    <input
+                      matInput
+                      type="text"
+                      [value]="deroga.observacion"
+                      readonly
+                    />
+                  </mat-form-field>
+                </div>
+              </td>
+              <td class="text-center">
+                <button
+                  class="btn btn-corhuila-delete btn-sm mb-1"
+                  type="button"
+                  #tooltip="matTooltip"
+                  matTooltip="Eliminar"
+                  matTooltipPosition="above"
+                  (click)="preguntaEliminar(deroga)"
+                >
+                  <i class="far fa-trash-alt fa-xs"></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td class="align-middle">
+                <div class="row">
+                  <div class="col-sm-3">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <mat-select
+                        class="font-sm-corhuila"
+                        formControlName="derogaTipoCodigo"
+                      >
+                        <mat-option class="font-sm-corhuila" value="" selected
+                          >Seleccionar</mat-option
+                        >
+                        <mat-option
+                          (click)="derogatTotal()"
+                          class="font-sm-corhuila"
+                          value="1"
+                          >TOTAL</mat-option
+                        >
+                        <mat-option class="font-sm-corhuila" value="2"
+                          >PARCIAL</mat-option
+                        >
+                        <mat-option class="font-sm-corhuila" value="3"
+                          >MODIFICA</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col">
+                    <mat-form-field
+                      class="example-full-width"
+                      appearance="outline"
+                    >
+                      <input
+                        type="text"
+                        placeholder="Ecribe el nombre de la norma"
+                        aria-label="Number"
+                        matInput
+                        [matAutocomplete]="auto"
+                        [formControl]="myControl"
+                      />
+                      <mat-autocomplete
+                        autoActiveFirstOption
+                        #auto="matAutocomplete"
+                      >
+                        <mat-option
+                          *ngFor="let option of filteredOptions | async"
+                          [value]="option.nombre"
+                          (click)="asignarNormaHijo(option.codigo)"
+                        >
+                          {{option.normaTipo}} {{option.numero}} {{option.nombre
+                          | uppercase}}
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </td>
+              <td class="align-middle">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <textarea
+                    matInput
+                    class="font-sm-corhuila"
+                    type="text"
+                    rows="1"
+                    placeholder="Observación derogación"
+                    formControlName="observacion"
+                  ></textarea>
+                </mat-form-field>
+              </td>
+              <td class="text-center">
+                <button
+                  [disabled]="!formularioDeroga.valid"
+                  class="btn btn-info btn-sm"
+                  type="button"
+                  (click)="preguntaCrear()"
+                >
+                  <i class="fa-solid fa-plus fa-xs"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+    </div>
+  </div>
+</mat-dialog-content>
+<hr />
+<mat-dialog-actions align="end">
+  <button class="btn btn-warning" mat-dialog-close (click)="cancelar()">
+    <i class="fa-solid fa-xmark"></i> Cancelar
+  </button>
+</mat-dialog-actions>

@@ -39,6 +39,7 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 export class IntegranteCuerpoColegiadoComponent {
   listadoCuerposColegiados: CuerposColegiados[] = [];
   listadoIntegrantesCuerpoColegiado: IntegranteCuerpoColegiado[] = [];
+  fechaActual = new Date();
 
   dataSource = new MatTableDataSource<IntegranteCuerpoColegiado>([]);
   displayedColumns: string[] = [
@@ -81,6 +82,11 @@ export class IntegranteCuerpoColegiadoComponent {
         this.paginator.firstPage();
         this.dataSource.paginator = this.paginator;
       });
+  }
+
+  botonActivo(element: IntegranteCuerpoColegiado): boolean {
+    const fechaJson = new Date(element.fechaFin);
+    return fechaJson <= this.fechaActual;
   }
 
   obtenerCuerposColegiados() {
@@ -220,7 +226,6 @@ export class ModalFormularioIntegranteCuerpoColegiado {
   persona: Persona[] = [];
 
   formIntegrante!: FormGroup;
-
   fechaLimiteMinima!: any;
   fechaLimiteMinimaVigencia!: any;
 
@@ -285,6 +290,7 @@ export class ModalFormularioIntegranteCuerpoColegiado {
       .toISOString()
       .split('T')[0];
   }
+
   obtenerIntegrantesCuerpoColegiado() {
     this.cuerposColegiadosService
       .obtenerListadoIntegrantesCuerpoColegiado()

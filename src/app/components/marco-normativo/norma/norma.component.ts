@@ -25,14 +25,13 @@ import { EntidadExterna } from 'src/app/models/entidad-externa';
 import { NormaTipo } from 'src/app/models/norma-tipo';
 import { Norma } from 'src/app/models/norma';
 import { saveAs } from 'file-saver';
-import Swal from 'sweetalert2';
-import * as XLSX from 'xlsx';
 import { NormogramaExcelService } from 'src/app/services/nomograma-excel.service';
 import { HttpClient } from '@angular/common/http';
-import { FuncionesCuerpoColegiado } from 'src/app/models/funciones-cuerpo-colegiado';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { NormaDeroga } from 'src/app/models/norma-deroga';
+import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-norma',
@@ -52,10 +51,7 @@ export class NormaComponent {
   dataSource = new MatTableDataSource<Norma>([]);
   displayedColumns: string[] = [
     'index',
-    'entidad',
     'nombreEntidad',
-    'tipo',
-    'numero',
     'nombre',
     'fechaExpedicion',
     'fechaVigencia',
@@ -69,33 +65,15 @@ export class NormaComponent {
   dataForExcel: any[] = [];
   dataNorma: any[] = [];
 
-  normograma = [
-    {
-      'GRUPO OBJETIVO': 10011,
-      ORIGEN: 'A',
-      'TIPO DE DOCUMENTO': 'Sales',
-      'No. NORMA': 'Sales',
-      'FECHA DE EXPEDICIÓN': 'Jan',
-      'ENTIDAD DE ORIGEN': 2020,
-      NOMBRE: 132412,
-      'MEDIO EN EL QUE SE ENCUENTRA': '55555',
-      'UBICACIÓN DEL DOCUMENTO': 12,
-      '¿DEROGA?': 35,
-      OBSERVACIÓN: 35,
-    },
-  ];
+  fechaActual = new Date();
 
   constructor(
-    private formBuilder: FormBuilder,
-    public cuerposColegiadosService: CuerposColegiadosService,
-    public personaService: PersonaService,
     public dialog: MatDialog,
     private authService: AuthService,
     private router: Router,
     private datePipe: DatePipe,
     public normaService: NormaService,
-    public normogramaExcelService: NormogramaExcelService,
-    private http: HttpClient
+    public normogramaExcelService: NormogramaExcelService
   ) {
     if (this.authService.validacionToken()) {
       this.obtenerListadoNormas();
@@ -103,6 +81,10 @@ export class NormaComponent {
   }
 
   exportToExcel() {
+    this.listadoNorma = [];
+    this.normaService.obtenerListadoNormas().subscribe((data) => {
+      this.listadoNorma = data;
+    });
     this.dataNorma.forEach((row: any) => {
       this.dataForExcel.push(Object.values(row));
     });
@@ -188,40 +170,23 @@ export class NormaComponent {
         });
       }
     }
-    console.log(this.dataNorma);
-  }
-
-  exportTableToExcel() {
-    // Obtener la referencia de la tabla desde el DOM
-    const table = document.getElementById('miTabla');
-
-    // Crear una nueva instancia de Workbook de xlsx
-    const workbook = XLSX.utils.table_to_book(table);
-
-    // Generar el archivo Excel
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: 'xlsx',
-      type: 'array',
-    });
-
-    // Crear un Blob a partir del buffer de Excel
-    const blob = new Blob([excelBuffer], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
-
-    // Guardar el archivo utilizando FileSaver.js
-    let fecha = this.datePipe.transform(Date.now(), 'dd-MM-yyyy');
-    saveAs(blob, 'Normograma-CORHUILA-' + fecha + '.xlsx');
-  }
-
-  vistaExcel() {
-    this.excel = !this.excel;
   }
 
   registrarFormulario(): void {
     this.dialogRef = this.dialog.open(ModalFormularioNorma, {
       width: '70%',
       disableClose: true,
+    });
+    this.dialogRef.afterClosed().subscribe(() => {
+      this.onModalClosed();
+    });
+  }
+
+  registrarFormularioDeroga(element: any): void {
+    this.dialogRef = this.dialog.open(ModalFormularioDeroga, {
+      width: '70%',
+      disableClose: true,
+      data: { norma: element },
     });
     this.dialogRef.afterClosed().subscribe(() => {
       this.onModalClosed();
@@ -251,6 +216,11 @@ export class NormaComponent {
       this.dataSource.paginator = this.paginator;
       this.crearDatasource();
     });
+  }
+
+  botonActivo(element: Norma): boolean {
+    const fechaJson = new Date(element.fechaVigencia);
+    return fechaJson <= this.fechaActual;
   }
 
   openDialog(): void {
@@ -339,7 +309,7 @@ export class NormaComponent {
   }
 }
 
-//// MODAL FORMULARIO
+//// MODALNORMA
 
 @Component({
   selector: 'modal-formulario-norma',
@@ -390,16 +360,12 @@ export class ModalFormularioNorma {
     public normaService: NormaService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.crearFormularioDeroga();
-
     this.fechaLimiteMinima = new Date();
     if (this.authService.validacionToken()) {
       this.obtenerCuerposColegiados();
       this.crearFormularioNorma();
       this.obtenerEntidadesExternas();
-      this.obtenerListadoNormas();
       if (JSON.stringify(data) !== 'null') {
-        this.obtenerListadoDerogaEditada(data.sede.codigo);
         this.editarNorma(data.sede);
         console.log('Entra');
       } else {
@@ -408,14 +374,6 @@ export class ModalFormularioNorma {
     }
   }
 
-  private _filter(value: string): Norma[] {
-    console.log(value);
-    const filterValue = value.toLowerCase();
-
-    return this.listadoNorma.filter((option) =>
-      option.nombre.toLowerCase().includes(filterValue)
-    );
-  }
   private crearFormularioNorma(): void {
     this.formNorma = this.formBuilder.group({
       codigo: new FormControl(''),
@@ -438,16 +396,6 @@ export class ModalFormularioNorma {
 
   onNoClick(): void {
     this.dialogRef.close();
-  }
-
-  obtenerListadoNormas() {
-    this.normaService.obtenerNormasNoDerogadas().subscribe((data) => {
-      this.listadoNorma = data;
-      this.filteredOptions = this.myControl.valueChanges.pipe(
-        startWith(''),
-        map((value) => this._filter(value || ''))
-      );
-    });
   }
 
   obtenerEntidadesExternas() {
@@ -623,7 +571,109 @@ export class ModalFormularioNorma {
     this.editar = false;
   }
 
-  //DEROGA
+  mensajeSuccses() {
+    Swal.fire({
+      icon: 'success',
+      title: 'Proceso realizado',
+      text: '¡Operación exitosa!',
+      showConfirmButton: false,
+      timer: 2500,
+    });
+  }
+
+  mensajeError() {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo completar el proceso.',
+      showConfirmButton: true,
+      confirmButtonText: 'Listo',
+      confirmButtonColor: '#8f141b',
+    });
+  }
+
+  fError(er: any): void {
+    let err = er.error.error_description;
+    let arr: string[] = err.split(':');
+    if (arr[0] == 'Access token expired') {
+      this.authService.logout();
+      this.router.navigate(['login']);
+    } else {
+      this.mensajeError();
+    }
+  }
+}
+
+//MODALDEROGA
+
+@Component({
+  selector: 'modal-formulario-deroga',
+  templateUrl: 'modal-formulario-deroga.html',
+  styleUrls: ['./norma.component.css'],
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { subscriptSizing: 'dynamic' },
+    },
+  ],
+})
+export class ModalFormularioDeroga {
+  editar: boolean = false;
+  fechaActual = new Date();
+
+  lsitadoNormaDeroga: NormaDeroga[] = [];
+  listadoNorma: Norma[] = [];
+  formularioDeroga!: FormGroup;
+
+  filteredOptions!: Observable<Norma[]>;
+  myControl = new FormControl('');
+
+  constructor(
+    public dialogRef: MatDialogRef<ModalFormularioDeroga>,
+    private formBuilder: FormBuilder,
+    public cuerposColegiadosService: CuerposColegiadosService,
+    public personaService: PersonaService,
+    public dialog: MatDialog,
+    private authService: AuthService,
+    private router: Router,
+    private datePipe: DatePipe,
+    public normaService: NormaService,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    this.crearFormularioDeroga();
+    if (this.authService.validacionToken()) {
+      this.obtenerListadoNormas();
+      if (JSON.stringify(data) !== 'null') {
+        this.obtenerListadoDeroga();
+        console.log('Entra');
+      } else {
+        console.log('No entra');
+      }
+    }
+  }
+
+  private _filter(value: string): Norma[] {
+    console.log(value);
+    const filterValue = value.toLowerCase();
+
+    return this.listadoNorma.filter((option) =>
+      option.nombreCompleto.toLowerCase().includes(filterValue)
+    );
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  obtenerListadoNormas() {
+    this.normaService.obtenerNormasNoDerogadas().subscribe((data) => {
+      this.listadoNorma = data;
+      this.filteredOptions = this.myControl.valueChanges.pipe(
+        startWith(''),
+        map((value) => this._filter(value || ''))
+      );
+    });
+  }
 
   derogatTotal() {
     Swal.fire({
@@ -636,18 +686,10 @@ export class ModalFormularioNorma {
 
   obtenerListadoDeroga() {
     this.normaService
-      .obtenerNormaDerogada(this.listadoNorma.length + 1)
+      .obtenerNormaDerogada(this.data.norma.codigo)
       .subscribe((data) => {
-        console.log('listDeroga ', data);
         this.lsitadoNormaDeroga = data;
       });
-  }
-
-  obtenerListadoDerogaEditada(codigo: number) {
-    this.normaService.obtenerNormaDerogada(codigo).subscribe((data) => {
-      console.log('listDeroga ', data);
-      this.lsitadoNormaDeroga = data;
-    });
   }
 
   private crearFormularioDeroga(): void {
@@ -665,7 +707,7 @@ export class ModalFormularioNorma {
     this.formularioDeroga.get('normaHijoCodigo')!.setValue(codigo);
     this.formularioDeroga
       .get('normaPadreCodigo')!
-      .setValue(this.listadoNorma.length + 1);
+      .setValue(this.data.norma.codigo);
     console.log('HIJO', this.formularioDeroga.get('normaHijoCodigo')!.value);
     console.log('PADRE', this.formularioDeroga.get('normaPadreCodigo')!.value);
   }
@@ -728,7 +770,7 @@ export class ModalFormularioNorma {
       this.formularioDeroga.get('normaHijoCodigo')!.value;
     normaDeroga.observacion = this.formularioDeroga.get('observacion')!.value;
     normaDeroga.estado = this.formularioDeroga.get('estado')!.value;
-    if (this.editarDeroga) {
+    if (this.editar) {
       this.actualizarDeroga(normaDeroga);
     } else {
       this.registrarDeroga(normaDeroga);
@@ -755,47 +797,45 @@ export class ModalFormularioNorma {
             icon: 'success',
             title: 'Operación exitosa.',
           });
-          this.cancelarDeroga();
-          this.crearFormularioDeroga();
-          let norma: Norma = new Norma();
-          norma.codigo = normaDeroga.normaHijoCodigo;
-          norma.fechaVigencia = new Date();
-          this.normaService.suspenderNorma(norma).subscribe(
-            (data) => {
-              if (data > 0) {
-                const Toast = Swal.mixin({
-                  toast: true,
-                  position: 'top-end',
-                  showConfirmButton: false,
-                  timer: 3000,
-                  timerProgressBar: true,
-                  didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                  },
-                });
 
-                Toast.fire({
-                  icon: 'success',
-                  title: 'Norma derogada.',
-                });
-                if (this.editar) {
-                  this.obtenerListadoDerogaEditada(
-                    normaDeroga.normaPadreCodigo
-                  );
+          if (this.formularioDeroga.get('derogaTipoCodigo')!.value == 1) {
+            this.crearFormularioDeroga();
+            let norma: Norma = new Norma();
+            norma.codigo = normaDeroga.normaHijoCodigo;
+            norma.fechaVigencia = new Date();
+            this.normaService.suspenderNorma(norma).subscribe(
+              (data) => {
+                if (data > 0) {
+                  const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                      toast.addEventListener('mouseenter', Swal.stopTimer);
+                      toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    },
+                  });
+
+                  Toast.fire({
+                    icon: 'success',
+                    title: 'Norma derogada.',
+                  });
+                  this.obtenerListadoNormas();
                 } else {
-                  this.obtenerListadoDeroga();
+                  this.mensajeError();
                 }
-                this.obtenerListadoNormas();
-              } else {
-                this.mensajeError();
-              }
-            },
-            (err) => this.fError(err)
-          );
+              },
+              (err) => this.fError(err)
+            );
+          }
         } else {
           this.mensajeError();
         }
+        this.cancelar();
+        this.obtenerListadoDeroga();
+        this.obtenerListadoNormas();
       },
       (err) => this.fError(err)
     );
@@ -821,12 +861,9 @@ export class ModalFormularioNorma {
             icon: 'success',
             title: 'Operación exitosa.',
           });
-          this.cancelarDeroga();
-          if (this.editar) {
-            this.obtenerListadoDerogaEditada(normaDeroga.normaPadreCodigo);
-          } else {
-            this.obtenerListadoDeroga();
-          }
+          this.cancelar();
+          this.obtenerListadoDeroga();
+          this.obtenerListadoNormas();
         } else {
           this.mensajeError();
         }
@@ -845,15 +882,15 @@ export class ModalFormularioNorma {
     this.formFunciones.get('estado')!.setValue(element.estado);
     console.log(element);
   } */
-/*
+  /*
   eliminarDeroga(element: NormaDeroga) {
     element.estado = 0;
     this.actualizarDeroga(element);
   } */
 
-  cancelarDeroga() {
+  cancelar() {
     this.formularioDeroga.reset();
-    this.editarDeroga = false;
+    this.editar = false;
     this.myControl.reset();
   }
 

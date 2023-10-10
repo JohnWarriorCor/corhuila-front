@@ -15,7 +15,7 @@
               <i class="fa-solid fa-plus"></i> Registrar
             </button>
             <button class="btn btn-success" (click)="exportToExcel()">
-              <i class="fa-solid fa-file-excel"></i> Excel
+              <i class="fa-solid fa-file-excel"></i> Generar normograma
             </button>
           </div>
         </div>
@@ -32,94 +32,133 @@
                   {{ dataSource.filteredData.indexOf(element) + 1 }}
                 </td>
               </ng-container>
-              <ng-container matColumnDef="entidad">
-                <th mat-header-cell *matHeaderCellDef>Entidad</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.entidad }}
-                </td>
-              </ng-container>
               <ng-container matColumnDef="nombreEntidad">
-                <th mat-header-cell *matHeaderCellDef>Nombre entidad</th>
+                <th mat-header-cell *matHeaderCellDef>ENTIDAD</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
                   <span
                     *ngIf="element.entidadCodigo == 1 && element.rectoria == 0"
-                    >{{ element.cuerpoColegiado }}</span
+                    >{{ element.entidad }} - {{ element.cuerpoColegiado }}</span
                   >
-                  <span *ngIf="element.entidadCodigo == 2">{{
-                    element.entidadExterna
-                  }}</span>
-                  <span *ngIf="element.rectoria == 1">RECTORÍA</span>
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="tipo">
-                <th mat-header-cell *matHeaderCellDef>Tipo</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.normaTipo }}
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="numero">
-                <th mat-header-cell *matHeaderCellDef>Número</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.numero }}
+                  <span *ngIf="element.entidadCodigo == 2"
+                    >{{ element.entidad }} - {{ element.entidadExterna }}</span
+                  >
+                  <span *ngIf="element.rectoria == 1"
+                    >{{ element.entidad }} - RECTORÍA</span
+                  >
                 </td>
               </ng-container>
               <ng-container matColumnDef="nombre">
-                <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                <th mat-header-cell *matHeaderCellDef>NOMBRE</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                  {{ element.normaTipo }} {{ element.numero }}
                   {{ element.nombre | uppercase }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="fechaExpedicion">
-                <th mat-header-cell *matHeaderCellDef>Fecha Expedición</th>
+                <th mat-header-cell *matHeaderCellDef>FECHA EXPEDICIÓN</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
                   {{ element.fechaExpedicion | date : "dd/MM/yyyy" }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="fechaVigencia">
-                <th mat-header-cell *matHeaderCellDef>Fecha Expedición</th>
+                <th mat-header-cell *matHeaderCellDef>FECHA VIGENCIA</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
                   {{ element.fechaVigencia | date : "dd/MM/yyyy" }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="opciones">
-                <th mat-header-cell *matHeaderCellDef>Enlace</th>
+                <th mat-header-cell *matHeaderCellDef>OPCIONES</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
                   <button
-                    *ngIf="true"
+                    *ngIf="!botonActivo(element)"
                     class="btn btn-success btn-sm mr-2"
-                    title="Activo"
+                    #tooltip="matTooltip"
+                    matTooltip="Activo"
+                    matTooltipPosition="above"
                   >
                     <i class="fa-solid fa-check fa-xs"></i>
                   </button>
                   <button
-                    *ngIf="false"
+                    *ngIf="botonActivo(element)"
                     class="btn btn-secondary btn-sm mr-2"
-                    title="Inactivo"
+                    #tooltip="matTooltip"
+                    matTooltip="Inactivo"
+                    matTooltipPosition="above"
                   >
                     <i class="fa-solid fa-square-minus fa-xs"></i>
                   </button>
                   <button
                     class="btn btn-corhuila-info btn-sm mr-2"
-                    title="Informacion"
+                    #tooltip="matTooltip"
+                    matTooltip="Informacion"
+                    matTooltipPosition="above"
                   >
                     <i class="fa-solid fa-eye fa-xs"></i>
                   </button>
                   <button
+                    *ngIf="!botonActivo(element)"
                     class="btn btn-corhuila-delete btn-sm mr-2"
                     (click)="eliminarNorma(element)"
-                    title="Borrar"
+                    #tooltip="matTooltip"
+                    matTooltip="Borrar"
+                    matTooltipPosition="above"
                   >
                     <i class="fa-solid fa-trash fa-xs"></i>
                   </button>
                   <button
-                    class="btn btn-corhuila-editar btn-sm"
+                    *ngIf="!botonActivo(element)"
+                    class="btn btn-corhuila-editar btn-sm mr-2"
                     (click)="editarNorma(element)"
-                    title="Editar"
+                    #tooltip="matTooltip"
+                    matTooltip="Editar"
+                    matTooltipPosition="above"
                   >
                     <i class="fa-solid fa-pencil fa-xs"></i>
                   </button>
+                  <button
+                    *ngIf="element.deroga == 1"
+                    class="btn btn-corhuila-p-1 btn-sm mr-2"
+                    (click)="registrarFormularioDeroga(element)"
+                    #tooltip="matTooltip"
+                    matTooltip="Derogar"
+                    matTooltipPosition="above"
+                  >
+                    <i class="fa-solid fa-sitemap"></i>
+                  </button>
+                  <button
+                    *ngIf="element.derogaTipoCodigo == 1"
+                    class="btn btn-danger btn-sm mr-2"
+                    #tooltip="matTooltip"
+                    matTooltip="{{ element.derogaPadre }}"
+                    matTooltipPosition="above"
+                  >
+                    <i class="fa-solid fa-traffic-light"></i>
+                  </button>
+                  <button
+                    *ngIf="element.derogaTipoCodigo == 2"
+                    class="btn btn-warning btn-sm mr-2"
+                    #tooltip="matTooltip"
+                    matTooltip="{{ element.derogaPadre }}"
+                    matTooltipPosition="above"
+                  >
+                    <i class="fa-solid fa-traffic-light"></i>
+                  </button>
+                  <button
+                    *ngIf="element.derogaTipoCodigo == 3"
+                    class="btn btn-primary btn-sm mr-2"
+                    #tooltip="matTooltip"
+                    matTooltip="{{ element.derogaPadre }}"
+                    matTooltipPosition="above"
+                  >
+                    <i class="fa-solid fa-traffic-light"></i>
+                  </button>
                   <a href="{{ element.url }}" target="_blank">
-                    <button class="btn btn-info btn-sm ml-2" title="Enlace">
+                    <button
+                      class="btn btn-info btn-sm mr-2"
+                      #tooltip="matTooltip"
+                      matTooltip="Archivo"
+                      matTooltipPosition="above"
+                    >
                       <i class="fa-solid fa-link"></i></button
                   ></a>
                 </td>
@@ -136,102 +175,4 @@
       </div>
     </div>
   </div>
-  <!-- <div class="row p-4" *ngIf="excel">
-    <div class="col">
-      <div class="row text-right" *ngIf="excel">
-        <div class="col">
-          <button class="btn btn-success mb-3" (click)="exportTableToExcel()">
-            <i class="fa-solid fa-file-excel"></i> Excel
-          </button>
-        </div>
-      </div>
-      <table class="table table-bordered" id="miTabla">
-        <tbody class="align-items-center">
-          <tr class="text-center align-items-center">
-            <th rowspan="4">
-              <img
-                src="assets/logo-corhuila-completo.png"
-                style="width: 100px"
-              />
-            </th>
-            <th colspan="7" rowspan="2">SISTEMAS INTEGRADOS DE GESTIÓN</th>
-            <th
-              class="text-left"
-              colspan="2"
-              style="margin-bottom: 0; padding-bottom: 0"
-            >
-              <p style="margin-bottom: 0; padding-bottom: 0">
-                CÓDIGO: FO-SI-25
-              </p>
-            </th>
-          </tr>
-          <tr>
-            <th colspan="2" style="margin-bottom: 0; padding-bottom: 0">
-              <p style="margin-bottom: 0; padding-bottom: 0">VERSIÓN: 04</p>
-            </th>
-          </tr>
-          <tr class="text-center">
-            <th colspan="7" rowspan="2">NORMOGRAMA</th>
-            <th
-              class="text-left"
-              colspan="2"
-              style="margin-bottom: 0; padding-bottom: 0"
-            >
-              <p style="margin-bottom: 0; padding-bottom: 0">PAGINA: 1 de 1</p>
-            </th>
-          </tr>
-          <tr>
-            <th colspan="2" style="margin-bottom: 0; padding-bottom: 0">
-              <p style="margin-bottom: 0; padding-bottom: 0">
-                VIGENCIA: diciembre 04 de 2021
-              </p>
-            </th>
-          </tr>
-          <tr>
-            <th style="margin-bottom: 0; padding-bottom: 0">
-              <p style="margin-bottom: 0; padding-bottom: 0">
-                Fecha de actualización:
-              </p>
-            </th>
-            <th colspan="9"></th>
-          </tr>
-          <tr class="font-sm-corhuila">
-            <td>GRUPO OBJETIVO</td>
-            <td>ORIGEN</td>
-            <td>No. NORMA</td>
-            <td>FECHA DE EXPEDICIÓN</td>
-            <td>ENTIDAD DE ORIGEN</td>
-            <td>NOMBRE</td>
-            <td>MEDIO EN EL QUE SE ENCUENTRA</td>
-            <td>UBICACIÓN DEL DOCUMENTO</td>
-            <td>¿Deroga?</td>
-            <td>Observación</td>
-          </tr>
-          <tr class="font-sm-corhuila" *ngFor="let item of listadoNorma">
-            <td>Por clasificar</td>
-            <td>{{ item.deroga }}</td>
-            <td>{{ item.numero }}</td>
-            <td>{{ item.fechaExpedicion | date : "dd-MM-yyyy" }}</td>
-            <td>
-              <span *ngIf="item.entidadCodigo == 1 && item.rectoria == 0">{{
-                item.cuerpoColegiado
-              }}</span>
-              <span *ngIf="item.entidadCodigo == 2">{{
-                item.entidadExterna
-              }}</span>
-              <span *ngIf="item.rectoria == 1">RECTORÍA</span>
-            </td>
-            <td>{{ item.nombre }}</td>
-            <td>{{ item.medio }}</td>
-            <td>{{ item.url }}</td>
-            <td>
-              <span *ngIf="item.deroga == 1">SI</span
-              ><span *ngIf="item.deroga == 0">NO</span>
-            </td>
-            <td>{{ item.observacion }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div> -->
 </app-navbar>

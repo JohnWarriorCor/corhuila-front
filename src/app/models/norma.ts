@@ -9,14 +9,17 @@ export class Norma {
   cuerpoColegiado!: string;
   normaTipoCodigo!: number;
   normaTipo!: string;
-  numero!: number;
+  numero!: string;
   nombre!: string;
+  nombreCompleto!: string;
   url!: string;
   medioCodigo!: number;
   medio!: string;
   fechaExpedicion!: Date;
   fechaVigencia!: Date;
   deroga!: number;
+  derogaTipoCodigo!: number;
+  derogaPadre!: string;
   observacion!: string;
   estado!: number;
 }

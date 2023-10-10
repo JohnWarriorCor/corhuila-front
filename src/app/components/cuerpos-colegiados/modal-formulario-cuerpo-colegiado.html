@@ -41,7 +41,9 @@
             <div class="col">
               <div class="form-group">
                 <label
-                  >Máximo número de miembros<span class="requerido">*</span></label
+                  >Máximo número de miembros<span class="requerido"
+                    >*</span
+                  ></label
                 >
                 <mat-form-field class="example-full-width" appearance="outline">
                   <input
@@ -132,17 +134,17 @@
                     </mat-form-field>
                   </div>
                 </td>
-                <!-- (click)="deleteFieldValue(i)" -->
                 <td>
                   <button
                     class="btn btn-corhuila-editar btn-sm"
                     type="button"
                     (click)="editarFunciones(funciones)"
-                    title="Editar"
+                    #tooltip="matTooltip"
+                    matTooltip="Editar"
+                    matTooltipPosition="above"
                   >
                     <i class="fa-solid fa-pencil fa-xs"></i>
                   </button>
-                  <!-- (click)="deleteFieldValue(i)" -->
                 </td>
               </tr>
               <tr>
@@ -182,6 +184,9 @@
                     type="button"
                     [disabled]="!formCuerposColegiados.valid"
                     (click)="generarFunciones()"
+                    #tooltip="matTooltip"
+                    matTooltip="Agregar"
+                    matTooltipPosition="above"
                   >
                     <i class="fa-solid fa-plus fa-xs"></i>
                   </button>
@@ -191,7 +196,9 @@
                     type="button"
                     [disabled]="!formCuerposColegiados.valid"
                     (click)="generarFunciones()"
-                    title="Guardar"
+                    #tooltip="matTooltip"
+                    matTooltip="Guardar"
+                    matTooltipPosition="above"
                   >
                     <i class="far fa-save fa-xs"></i>
                   </button>
@@ -200,7 +207,9 @@
                     class="btn btn-corhuila-delete btn-sm mb-1"
                     (click)="eliminarFunciones()"
                     type="button"
-                    title="Borrar"
+                    #tooltip="matTooltip"
+                    matTooltip="Borrar"
+                    matTooltipPosition="above"
                   >
                     <i class="far fa-trash-alt fa-xs"></i>
                   </button>
@@ -209,7 +218,9 @@
                     class="btn btn-warning btn-sm"
                     (click)="cancelarFunciones()"
                     type="button"
-                    title="Cancelar"
+                    #tooltip="matTooltip"
+                    matTooltip="Cancelar"
+                    matTooltipPosition="above"
                   >
                     <i class="fa-solid fa-xmark fa-xs"></i>
                   </button>

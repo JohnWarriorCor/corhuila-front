@@ -38,6 +38,7 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 export class RepresentanteLegalComponent {
   listadoPersona: Persona[] = [];
   listadoRepresentanteLegal: RepresentanteLegal[] = [];
+  fechaActual = new Date();
 
   dataSource = new MatTableDataSource<RepresentanteLegal>([]);
   displayedColumns: string[] = [
@@ -108,6 +109,11 @@ export class RepresentanteLegalComponent {
         this.paginator.firstPage();
         this.dataSource.paginator = this.paginator;
       });
+  }
+
+  botonActivo(element: RepresentanteLegal): boolean {
+    const fechaJson = new Date(element.fechaFin);
+    return fechaJson <= this.fechaActual;
   }
 
   actualizarRepresentantLegal(representantLegal: RepresentanteLegal) {

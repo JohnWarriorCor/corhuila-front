@@ -243,7 +243,7 @@ export class ModalFormularioNormaGrupo {
     normaGrupo.codigo = this.grupo;
     normaClasificada.normaGrupo = normaGrupo;
     Swal.fire({
-      title: '¿Está seguro de quitar este elemento?',
+      title: '¿Está seguro de adicionar este elemento?',
       text: 'La siguiente operación será irreversible',
       icon: 'warning',
       showCancelButton: true,
