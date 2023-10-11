@@ -61,6 +61,21 @@ export class NormaService {
       );
   }
 
+  obtenerListadoNorma(codigo: number): Observable<Norma[]> {
+    return this.http
+      .get<Norma[]>(`${this.url}/obtener-norma/${codigo}`, {
+        headers: this.aggAutorizacionHeader(),
+      })
+      .pipe(
+        catchError((e) => {
+          if (this.isNoAutorizado(e)) {
+            return throwError(e);
+          }
+          return throwError(e);
+        })
+      );
+  }
+
   obtenerNormasNoDerogadas(): Observable<Norma[]> {
     return this.http
       .get<Norma[]>(`${this.url}/obtener-normas-no-derogadas`, {

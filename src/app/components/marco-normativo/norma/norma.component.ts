@@ -193,6 +193,17 @@ export class NormaComponent {
     });
   }
 
+  vistaNorma(element: any): void {
+    this.dialogRef = this.dialog.open(ModalVistaNorma, {
+      width: '70%',
+      disableClose: true,
+      data: { norma: element },
+    });
+    this.dialogRef.afterClosed().subscribe(() => {
+      this.onModalClosed();
+    });
+  }
+
   editarFormulario(element: any): void {
     this.dialogRef = this.dialog.open(ModalFormularioNorma, {
       width: '70%',
@@ -221,12 +232,6 @@ export class NormaComponent {
   botonActivo(element: Norma): boolean {
     const fechaJson = new Date(element.fechaVigencia);
     return fechaJson <= this.fechaActual;
-  }
-
-  openDialog(): void {
-    const dialogRef = this.dialog.open(ModalEntidadExterna, {
-      width: '60%',
-    });
   }
 
   actualizarNorma(norma: Norma) {
@@ -432,12 +437,6 @@ export class ModalFormularioNorma {
     this.cuerpoColegiado = false;
     this.formNorma.get('cuerpoColegiadoCodigo')!.setValue(0);
     this.formNorma.get('rectoria')!.setValue(0);
-  }
-
-  openDialog(): void {
-    const dialogRef = this.dialog.open(ModalEntidadExterna, {
-      width: '60%',
-    });
   }
 
   limiteVigencia() {
@@ -872,22 +871,6 @@ export class ModalFormularioDeroga {
     );
   }
 
-  /* editarDerogaes(element: FuncionesCuerpoColegiado) {
-    this.editarDeroga = true;
-    this.formFunciones.get('codigo')!.setValue(element.codigo);
-    this.formFunciones.get('nombre')!.setValue(element.nombre);
-    this.formFunciones
-      .get('cuerpoColegiado')!
-      .setValue(element.cuerpoColegiado.codigo);
-    this.formFunciones.get('estado')!.setValue(element.estado);
-    console.log(element);
-  } */
-  /*
-  eliminarDeroga(element: NormaDeroga) {
-    element.estado = 0;
-    this.actualizarDeroga(element);
-  } */
-
   cancelar() {
     this.formularioDeroga.reset();
     this.editar = false;
@@ -930,37 +913,60 @@ export class ModalFormularioDeroga {
 //// MODAL ENTIDAD EXTERNA
 
 @Component({
-  selector: 'modal-entidad-externa',
-  templateUrl: 'modal-entidad-externa.html',
+  selector: 'modal-vista-norma',
+  templateUrl: 'modal-vista-norma.html',
   styleUrls: ['./norma.component.css'],
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { subscriptSizing: 'dynamic' },
+    },
+  ],
 })
-export class ModalEntidadExterna implements OnInit {
+export class ModalVistaNorma implements OnInit {
+  lsitadoNormaDeroga: NormaDeroga[] = [];
+  listadoNorma: Norma[] = [];
+  deroga: any;
+
+  dataSource = new MatTableDataSource<NormaDeroga>([]);
+  displayedColumns: string[] = ['index', 'tipo', 'nombre', 'observacion'];
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+
   constructor(
-    public dialogRef: MatDialogRef<ModalEntidadExterna>,
+    public dialogRef: MatDialogRef<ModalVistaNorma>,
     public dialog: MatDialog,
-    public cuerposColegiadosService: CuerposColegiadosService,
+    public normaService: NormaService,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) {
+    this.deroga = '' + data.norma.deroga;
+    this.obtenerListadoNorma();
+    this.obtenerListadoDeroga();
+  }
 
   ngOnInit() {}
 
   onNoClick(): void {
     this.dialogRef.close();
-    const Toast = Swal.mixin({
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.addEventListener('mouseenter', Swal.stopTimer);
-        toast.addEventListener('mouseleave', Swal.resumeTimer);
-      },
-    });
+  }
 
-    Toast.fire({
-      icon: 'success',
-      title: 'Se agregó con éxito.',
-    });
+  obtenerListadoNorma() {
+    this.normaService
+      .obtenerListadoNorma(this.data.norma.codigo)
+      .subscribe((data) => {
+        this.listadoNorma = data;
+      });
+  }
+
+  obtenerListadoDeroga() {
+    this.normaService
+      .obtenerNormaDerogada(this.data.norma.codigo)
+      .subscribe((data) => {
+        this.lsitadoNormaDeroga = data;
+        if (JSON.stringify(data) != '[]') {
+          this.dataSource = new MatTableDataSource<NormaDeroga>(data);
+          this.paginator.firstPage();
+          this.dataSource.paginator = this.paginator;
+        }
+      });
   }
 }

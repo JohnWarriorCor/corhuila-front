@@ -1,0 +1,275 @@
+<h2 mat-dialog-title class="bg-corhuila-p-as-2 font-corhuila text-white">
+  <i class="fa-solid fa-circle-info"></i> {{data.norma.nombreCompleto}}
+</h2>
+<mat-dialog-content>
+  <div class="row mt-3">
+    <div class="col">
+      <fieldset class="scheduler-border shadow-sm">
+        <legend class="scheduler-border">Norma</legend>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Entidad</label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  type="text"
+                  [value]="data.norma.entidad"
+                  readonly
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Tipo de entidad interna</label>
+              <mat-form-field
+                class="example-full-width"
+                appearance="outline"
+                *ngIf="data.norma.cuerpoColegiadoCodigo != 0"
+              >
+                <input
+                  matInput
+                  type="text"
+                  [value]="data.norma.cuerpoColegiado"
+                  readonly
+                />
+              </mat-form-field>
+              <mat-form-field
+                class="example-full-width"
+                appearance="outline"
+                *ngIf="data.norma.rectoria == 1"
+              >
+                <input matInput type="text" value="RECTORÍA" readonly />
+              </mat-form-field>
+              <mat-form-field
+                class="example-full-width"
+                appearance="outline"
+                *ngIf="data.norma.entidadExternaCodigo != 0"
+              >
+                <input
+                  matInput
+                  type="text"
+                  [value]="data.norma.entidadExterna"
+                  readonly
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label>Tipo de norma</label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  type="text"
+                  [value]="data.norma.normaTipo"
+                  readonly
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label>Número de la norma</label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  type="text"
+                  [value]="data.norma.numero"
+                  readonly
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Nombre de la norma</label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  type="text"
+                  [value]="data.norma.nombre"
+                  readonly
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Enlace (URL) de la norma</label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input matInput type="text" [value]="data.norma.url" readonly />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label
+                >Medio en el que se encuentra<span class="requerido"
+                  >*</span
+                ></label
+              >
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  type="text"
+                  [value]="data.norma.medio"
+                  readonly
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Fecha de expedición</label>
+              <input
+                type="date"
+                [value]="data.norma.fechaExpedicion"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Fecha de vigencia<span class="requerido"></span></label>
+              <input
+                type="date"
+                [value]="data.norma.fechaVigencia"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <label>Deroga</label>
+            <section class="example-section">
+              <mat-radio-group [(ngModel)]="deroga">
+                <mat-radio-button class="example-margin" value="1"
+                  >Si</mat-radio-button
+                >
+                <mat-radio-button class="example-margin" value="0"
+                  >No</mat-radio-button
+                >
+              </mat-radio-group>
+            </section>
+          </div>
+        </div>
+        <div class="row" *ngIf="data.norma.derogaTipoCodigo != 0">
+          <div class="col">
+            <div class="form-group">
+              <label>Tipo derogación<span class="requerido">*</span></label>
+              <mat-form-field
+                class="example-full-width"
+                appearance="outline"
+                *ngIf="data.norma.derogaTipoCodigo == 1"
+              >
+                <input matInput type="text" value="TOTAL" readonly />
+              </mat-form-field>
+              <mat-form-field
+                class="example-full-width"
+                appearance="outline"
+                *ngIf="data.norma.derogaTipoCodigo == 2"
+              >
+                <input matInput type="text" value="PARCIAL" readonly />
+              </mat-form-field>
+              <mat-form-field
+                class="example-full-width"
+                appearance="outline"
+                *ngIf="data.norma.derogaTipoCodigo == 3"
+              >
+                <input matInput type="text" value="MODIFICA" readonly />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Norma padre<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  type="text"
+                  [value]="data.norma.derogaPadre"
+                  readonly
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Justificación u observación de norma</label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <textarea
+                  matInput
+                  class="font-sm-corhuila"
+                  type="text"
+                  rows="2"
+                  [value]="data.norma.observacion"
+                  readonly
+                ></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset
+        class="scheduler-border shadow-sm"
+        *ngIf="data.norma.deroga == 1"
+      >
+        <legend class="scheduler-border">Derogación</legend>
+        <table mat-table [dataSource]="dataSource" class="table shadow">
+          <ng-container matColumnDef="index">
+            <th mat-header-cell *matHeaderCellDef>N°</th>
+            <td
+              mat-cell
+              *matCellDef="let element; let i = index"
+              class="font-sm-usco"
+            >
+              {{ dataSource.filteredData.indexOf(element) + 1 }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="tipo">
+            <th mat-header-cell *matHeaderCellDef>Tipo de derogación</th>
+            <td mat-cell *matCellDef="let element" class="font-sm-usco">
+              {{ element.derogaTipo }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef>
+              Nombre de la norma derogada
+            </th>
+            <td mat-cell *matCellDef="let element" class="font-sm-usco">
+              {{ element.normaHijo }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="observacion">
+            <th mat-header-cell *matHeaderCellDef>Observación</th>
+            <td mat-cell *matCellDef="let element" class="font-sm-usco">
+              {{ element.observacion }}
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        <mat-paginator
+          [pageSizeOptions]="[10, 20, 30]"
+          showFirstLastButtons
+        ></mat-paginator>
+      </fieldset>
+    </div>
+  </div>
+</mat-dialog-content>
+<hr />
+<mat-dialog-actions align="end">
+  <button class="btn btn-warning" mat-dialog-close>
+    <i class="fa-solid fa-xmark"></i> Cancelar
+  </button>
+</mat-dialog-actions>
