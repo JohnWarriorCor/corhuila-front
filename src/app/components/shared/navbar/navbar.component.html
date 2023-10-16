@@ -265,6 +265,46 @@
         </mat-nav-list>
       </mat-expansion-panel>
     </mat-accordion>
+    <mat-accordion>
+      <mat-expansion-panel
+        class="sidenav"
+        style="width: 100%"
+        (opened)="panelOpenState = true"
+        (closed)="panelOpenState = false"
+      >
+        <mat-expansion-panel-header class="disable_ripple specific-class">
+          <mat-panel-title>
+            <small class="text-white mt-2">
+              <i class="fa-solid fa-chalkboard"></i> Programas
+            </small>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a
+            class="pl-5 sidenav-accordion"
+            mat-list-item
+            style="width: 300px"
+            [routerLink]="['/cine']"
+            routerLinkActive="router-link-active"
+          >
+            <small class="text-white">
+              <i class="fa-solid fa-list"></i> Clasificación CINE
+            </small>
+          </a>
+          <a
+            class="pl-5 sidenav-accordion"
+            mat-list-item
+            style="width: 300px"
+            [routerLink]="['/persona']"
+            routerLinkActive="router-link-active"
+          >
+            <small class="text-white">
+              <i class="fa-solid fa-user-pen"></i> Programa
+            </small>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+    </mat-accordion>
     <mat-nav-list>
       <!--  <a
         class="list"

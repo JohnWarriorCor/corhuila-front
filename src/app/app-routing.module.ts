@@ -15,6 +15,7 @@ import { RepresentanteLegalComponent } from './components/representante-legal/re
 import { IntegranteCuerpoColegiadoComponent } from './components/integrante-cuerpo-colegiado/integrante-cuerpo-colegiado.component';
 import { NormaComponent } from './components/marco-normativo/norma/norma.component';
 import { NormaGrupoComponent } from './components/marco-normativo/norma-grupo/norma-grupo.component';
+import { CineComponent } from './components/cine/cine.component';
 
 const routes: Routes = [
   //COMPONENTES DEL SISTEMA
@@ -40,6 +41,8 @@ const routes: Routes = [
   { path: 'persona', component: PersonaComponent },
 
   { path: 'desarrollo', component: DesarrolloComponent },
+
+  { path: 'cine', component: CineComponent },
 
   //REDIRECCIONAMIENTO COMOPONENTE POR DEFECTO PARA RUTAS INEXISTENTES EN EL NAVEGADOR
   { path: '', pathMatch: 'full', redirectTo: '/login' },

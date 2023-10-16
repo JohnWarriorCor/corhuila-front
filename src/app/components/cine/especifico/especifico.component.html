@@ -1,0 +1,95 @@
+<div class="mb-4 text-center">
+  <div class="card shadow-sm mt-5">
+    <div
+      class="card-header text-left cursor-select"
+      [routerLink]="['/estructura']"
+      routerLinkActive="router-link-active"
+    >
+      <h4 class="mt-2">Formulario campo específico</h4>
+    </div>
+    <div class="card-body">
+      <div class="row text-right">
+        <div class="col">
+          <button class="btn btn-info" (click)="registrarFormulario()">
+            <i class="fa-solid fa-plus"></i> Registrar
+          </button>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col">
+          <table mat-table [dataSource]="dataSource" class="table shadow">
+            <ng-container matColumnDef="index">
+              <th mat-header-cell *matHeaderCellDef>N°</th>
+              <td
+                mat-cell
+                *matCellDef="let element; let i = index"
+                class="font-sm-usco"
+              >
+                {{ dataSource.filteredData.indexOf(element) + 1 }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="especifico">
+              <th mat-header-cell *matHeaderCellDef>CAMPO ESPECÍFICO</th>
+              <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                {{ element.cine }} - {{ element.nombre }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="amplio">
+              <th mat-header-cell *matHeaderCellDef>CAMPO AMPLIO</th>
+              <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                {{ element.amplioCine }} - {{ element.amplio }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="opciones">
+              <th mat-header-cell *matHeaderCellDef>OPCIONES</th>
+              <td mat-cell *matCellDef="let element" class="font-sm-usco">
+                <button
+                  *ngIf="element.estado === 1"
+                  class="btn btn-success btn-sm mr-2"
+                  #tooltip="matTooltip"
+                  matTooltip="Activo"
+                  matTooltipPosition="above"
+                >
+                  <i class="fa-solid fa-check fa-xs"></i>
+                </button>
+                <button
+                  *ngIf="element.estado !== 1"
+                  class="btn btn-secondary btn-sm mr-2"
+                  #tooltip="matTooltip"
+                  matTooltip="Inactivo"
+                  matTooltipPosition="above"
+                >
+                  <i class="fa-solid fa-square-minus fa-xs"></i>
+                </button>
+                <button
+                  class="btn btn-corhuila-delete btn-sm mr-2"
+                  (click)="eliminarEspecifico(element)"
+                  #tooltip="matTooltip"
+                  matTooltip="Borrar"
+                  matTooltipPosition="above"
+                >
+                  <i class="fa-solid fa-trash fa-xs"></i>
+                </button>
+                <button
+                  class="btn btn-corhuila-editar btn-sm"
+                  (click)="editarEspecifico(element)"
+                  #tooltip="matTooltip"
+                  matTooltip="Editar"
+                  matTooltipPosition="above"
+                >
+                  <i class="fa-solid fa-pencil fa-xs"></i>
+                </button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+          <mat-paginator
+            [pageSizeOptions]="[10, 20, 30]"
+            showFirstLastButtons
+          ></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

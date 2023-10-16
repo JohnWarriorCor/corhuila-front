@@ -28,6 +28,10 @@ import { IntegranteCuerpoColegiadoComponent, ModalFormularioIntegranteCuerpoCole
 import { NgxPrintModule } from 'ngx-print';
 import { NormaGrupoComponent, ModalFormularioNormaGrupo, ModalFormularioGrupo } from './components/marco-normativo/norma-grupo/norma-grupo.component';
 import { NormaComponent, ModalVistaNorma, ModalFormularioNorma, ModalFormularioDeroga } from './components/marco-normativo/norma/norma.component';
+import { CineComponent } from './components/cine/cine.component';
+import { AmplioComponent, ModalFormularioAmplio } from './components/cine/amplio/amplio.component';
+import { EspecificoComponent, ModalFormularioEspecifico} from './components/cine/especifico/especifico.component';
+import { DetalladoComponent, ModalFormularioDetallado} from './components/cine/detallado/detallado.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +56,9 @@ import { NormaComponent, ModalVistaNorma, ModalFormularioNorma, ModalFormularioD
     ModalFormularioNormaGrupo,
     ModalFormularioGrupo,
     ModalFormularioDeroga,
+    ModalFormularioAmplio,
+    ModalFormularioEspecifico,
+    ModalFormularioDetallado,
     EstructuraComponent,
     ConfiguracionComponent,
     SedeComponent,
@@ -62,7 +69,11 @@ import { NormaComponent, ModalVistaNorma, ModalFormularioNorma, ModalFormularioD
     AreaAcademiAdmiComponent,
     IntegranteCuerpoColegiadoComponent,
     NormaGrupoComponent,
-    NormaComponent
+    NormaComponent,
+    CineComponent,
+    AmplioComponent,
+    EspecificoComponent,
+    DetalladoComponent,
   ],
   imports: [
     BrowserModule,
@@ -89,6 +100,9 @@ import { NormaComponent, ModalVistaNorma, ModalFormularioNorma, ModalFormularioD
     ModalFormularioNormaGrupo,
     ModalFormularioGrupo,
     ModalFormularioDeroga,
+    ModalFormularioAmplio,
+    ModalFormularioEspecifico,
+    ModalFormularioDetallado,
   ],
   providers: [DatePipe, {provide: MAT_DATE_LOCALE, useValue: 'es-ES'}],
   bootstrap: [AppComponent]
