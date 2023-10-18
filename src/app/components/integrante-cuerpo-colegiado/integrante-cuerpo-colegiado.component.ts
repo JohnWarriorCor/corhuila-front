@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  Inject,
-  ElementRef,
-} from '@angular/core';
+import { Component, ViewChild, Inject } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -19,7 +13,6 @@ import {
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
 import { AuthService } from 'src/app/services/auth.service';
 import { DatePipe } from '@angular/common';
 import { CuerposColegiados } from 'src/app/models/cuerpos-colegiados';
@@ -30,6 +23,7 @@ import { IntegranteCuerpoColegiado } from 'src/app/models/integrante-cuerpo-cole
 import { UsuarioTipo } from 'src/app/models/usuario-tipo';
 import { MiembroTipo } from 'src/app/models/miembro-tipo';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-integrante-cuerpo-colegiado',
@@ -85,8 +79,12 @@ export class IntegranteCuerpoColegiadoComponent {
   }
 
   botonActivo(element: IntegranteCuerpoColegiado): boolean {
-    const fechaJson = new Date(element.fechaFin);
-    return fechaJson <= this.fechaActual;
+    if (element.fechaFin == null) {
+      return false;
+    } else {
+      const fechaJson = new Date(element.fechaFin);
+      return fechaJson <= this.fechaActual;
+    }
   }
 
   obtenerCuerposColegiados() {
@@ -262,10 +260,10 @@ export class ModalFormularioIntegranteCuerpoColegiado {
       personaIdentificacion: new FormControl('', Validators.required),
       personaNombre: new FormControl('', Validators.required),
       codigoNorma: new FormControl('', Validators.required),
-      usuarioTipo: new FormControl('', Validators.required),
+      usuarioTipo: new FormControl(''),
       miembroTipo: new FormControl(''),
       fechaInicio: new FormControl('', Validators.required),
-      fechaFin: new FormControl('', Validators.required),
+      fechaFin: new FormControl(''),
       observacion: new FormControl(''),
       estado: new FormControl(''),
     });

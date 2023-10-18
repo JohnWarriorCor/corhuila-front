@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  Inject,
-  ElementRef,
-} from '@angular/core';
+import { Component, ViewChild, Inject } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -18,12 +12,9 @@ import {
 } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthService } from 'src/app/services/auth.service';
-import { CabecerasCentrosPoblados } from 'src/app/models/cabeceras-centros-poblados';
 import { Persona } from 'src/app/models/persona';
 import { PersonaService } from 'src/app/services/persona.service';
 import { RepresentanteLegalService } from '../../services/representante-legal.service';
@@ -55,7 +46,6 @@ export class RepresentanteLegalComponent {
   dialogRef!: MatDialogRef<any>;
 
   constructor(
-    private formBuilder: FormBuilder,
     public personaService: PersonaService,
     public representanteLegalService: RepresentanteLegalService,
     public dialog: MatDialog,
@@ -95,7 +85,6 @@ export class RepresentanteLegalComponent {
 
   obtenerPersonas() {
     this.personaService.obtenerPersonas().subscribe((data) => {
-      console.log(data);
       this.listadoPersona = data;
     });
   }
@@ -216,20 +205,6 @@ export class ModalFormularioRepresentanteLegal {
   fechaLimiteMinima!: any;
   fechaLimiteMinimaVigencia!: any;
 
-  dataSource = new MatTableDataSource<RepresentanteLegal>([]);
-  displayedColumns: string[] = [
-    'index',
-    'persona',
-    'correo',
-    'norma',
-    'fechaInicio',
-    'fechaFin',
-    'opciones',
-  ];
-  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  // Referencia al elemento div oculto
-  @ViewChild('hiddenDiv') hiddenDiv!: ElementRef;
-
   constructor(
     public dialogRef: MatDialogRef<ModalFormularioRepresentanteLegal>,
     private formBuilder: FormBuilder,
@@ -243,13 +218,9 @@ export class ModalFormularioRepresentanteLegal {
     this.fechaLimiteMinima = new Date();
     if (this.authService.validacionToken()) {
       this.crearFormRepresentanteLegal();
-      this.obtenerListadoRepresentanteLegal();
       this.obtenerPersonas();
       if (JSON.stringify(data) !== 'null') {
         this.editarRepresentantLegal(data.sede);
-        console.log('Entra');
-      } else {
-        console.log('No entra');
       }
     }
   }
@@ -278,20 +249,8 @@ export class ModalFormularioRepresentanteLegal {
 
   obtenerPersonas() {
     this.personaService.obtenerPersonas().subscribe((data) => {
-      console.log(data);
       this.listadoPersona = data;
     });
-  }
-
-  obtenerListadoRepresentanteLegal() {
-    this.representanteLegalService
-      .obtenerListadoRepresentanteLegal()
-      .subscribe((data) => {
-        this.listadoRepresentanteLegal = data;
-        this.dataSource = new MatTableDataSource<RepresentanteLegal>(data);
-        this.paginator.firstPage();
-        this.dataSource.paginator = this.paginator;
-      });
   }
 
   precargaCorreo(element: Persona) {
@@ -408,7 +367,6 @@ export class ModalFormularioRepresentanteLegal {
   cancelar() {
     this.formRepresentanteLegal.reset();
     this.crearFormRepresentanteLegal();
-    this.obtenerListadoRepresentanteLegal();
     this.editar = false;
     this.correo = '';
   }

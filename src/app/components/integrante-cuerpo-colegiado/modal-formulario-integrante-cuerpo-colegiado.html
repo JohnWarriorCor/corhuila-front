@@ -23,8 +23,10 @@
                     "
                     [value]="cuerpoColegiado.codigo"
                     [disabled]="cuerpoColegiado.disponibilidadMiembros >= cuerpoColegiado.cantidadMiembros"
-                    >{{ cuerpoColegiado.disponibilidadMiembros }}/{{ cuerpoColegiado.cantidadMiembros }} | {{ cuerpoColegiado.nombreCorto }} - {{
-                    cuerpoColegiado.nombre }}</mat-option
+                    >{{ cuerpoColegiado.disponibilidadMiembros }}/{{
+                    cuerpoColegiado.cantidadMiembros }} | {{
+                    cuerpoColegiado.nombreCorto }} - {{ cuerpoColegiado.nombre
+                    }}</mat-option
                   >
                 </mat-select>
               </mat-form-field>
@@ -109,7 +111,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col">
+          <div class="col" *ngIf="!tipo">
             <div class="form-group">
               <label>Estamento<span class="requerido">*</span></label>
               <mat-form-field class="example-full-width" appearance="outline">
@@ -148,13 +150,12 @@
           </div>
           <div class="col">
             <div class="form-group">
-              <label>Fecha fin<span class="requerido">*</span></label>
+              <label>Fecha fin</label>
               <input
                 type="date"
                 [min]="fechaLimiteMinimaVigencia"
                 formControlName="fechaFin"
                 class="form-control"
-                required
               />
             </div>
           </div>
