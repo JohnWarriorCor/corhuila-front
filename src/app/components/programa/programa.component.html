@@ -1,0 +1,146 @@
+<app-navbar>
+  <div class="mb-4 text-center">
+    <div class="card shadow-sm mt-3">
+      <div
+        class="card-header text-left cursor-select"
+        [routerLink]="['/estructura']"
+        routerLinkActive="router-link-active"
+      >
+        <h4 class="mt-2">Formulario programa</h4>
+      </div>
+      <div class="card-body">
+        <div class="row text-right">
+          <div class="col">
+            <button class="btn btn-info" (click)="registrarFormulario()">
+              <i class="fa-solid fa-plus"></i> Registrar
+            </button>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col">
+            <table mat-table [dataSource]="dataSource" class="table shadow">
+              <ng-container matColumnDef="index">
+                <th mat-header-cell *matHeaderCellDef>N°</th>
+                <td
+                  mat-cell
+                  *matCellDef="let element; let i = index"
+                  class="font-sm-corhuila"
+                >
+                  {{ dataSource.filteredData.indexOf(element) + 1 }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="nit">
+                <th mat-header-cell *matHeaderCellDef>NIT</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
+                  {{ element.nit }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="ies">
+                <th mat-header-cell *matHeaderCellDef>SNIES</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
+                  {{ element.ies }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="iespadre">
+                <th mat-header-cell *matHeaderCellDef>SNIES PADRE</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
+                  {{ element.iesPadre }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef>NOMBRE</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
+                  {{ element.nombre | uppercase }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="ccp">
+                <th mat-header-cell *matHeaderCellDef>UBICACIÓN</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
+                  {{ element.ccp.nombre | uppercase }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="naturaleza">
+                <th mat-header-cell *matHeaderCellDef>NATURALEZA</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
+                  {{ element.naturaleza.nombre | uppercase }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="sector">
+                <th mat-header-cell *matHeaderCellDef>SECTOR</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
+                  {{ element.sector.nombre | uppercase }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="caracter">
+                <th mat-header-cell *matHeaderCellDef>CARACTER</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
+                  {{ element.caracter.nombre | uppercase }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="norma">
+                <th mat-header-cell *matHeaderCellDef>NORMA</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
+                  {{ element.norma | uppercase }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="fechanorma">
+                <th mat-header-cell *matHeaderCellDef>FECHA NORMA</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
+                  {{ element.fechaNorma | date : "dd/MM/yyyy" }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="estado">
+                <th mat-header-cell *matHeaderCellDef>OPCIONES</th>
+                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
+                  <button
+                    *ngIf="dataSource.filteredData.indexOf(element) + 1 === 1"
+                    class="btn btn-success btn-sm mr-2"
+                    #tooltip="matTooltip"
+                    matTooltip="Activo"
+                    matTooltipPosition="above"
+                  >
+                    <i class="fa-solid fa-check fa-xs"></i>
+                  </button>
+                  <button
+                    *ngIf="dataSource.filteredData.indexOf(element) + 1 !== 1"
+                    class="btn btn-secondary btn-sm mr-2"
+                    #tooltip="matTooltip"
+                    matTooltip="Inactivo"
+                    matTooltipPosition="above"
+                  >
+                    <i class="fa-solid fa-minus fa-xs"></i>
+                  </button>
+                  <button
+                    class="btn btn-corhuila-info btn-sm mr-2"
+                    #tooltip="matTooltip"
+                    matTooltip="Informacion"
+                    matTooltipPosition="above"
+                    (click)="openDialog(element)"
+                  >
+                    <i class="fa-solid fa-eye fa-xs"></i>
+                  </button>
+                  <button
+                    class="btn btn-corhuila-editar btn-sm"
+                    *ngIf="dataSource.filteredData.indexOf(element) + 1 === 1"
+                    (click)="editarInstitucion(element)"
+                    #tooltip="matTooltip"
+                    matTooltip="Editar"
+                    matTooltipPosition="above"
+                  >
+                    <i class="fa-solid fa-pencil fa-xs"></i>
+                  </button>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+            <mat-paginator
+              [pageSizeOptions]="[5, 10, 15]"
+              showFirstLastButtons
+            ></mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-navbar>

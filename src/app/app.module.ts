@@ -32,6 +32,7 @@ import { CineComponent } from './components/cine/cine.component';
 import { AmplioComponent, ModalFormularioAmplio } from './components/cine/amplio/amplio.component';
 import { EspecificoComponent, ModalFormularioEspecifico} from './components/cine/especifico/especifico.component';
 import { DetalladoComponent, ModalFormularioDetallado} from './components/cine/detallado/detallado.component';
+import { ProgramaComponent, ModalFormularioPrograma, ModalVistaPrograma } from './components/programa/programa.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,8 @@ import { DetalladoComponent, ModalFormularioDetallado} from './components/cine/d
     ModalFormularioAmplio,
     ModalFormularioEspecifico,
     ModalFormularioDetallado,
+    ModalFormularioPrograma,
+    ModalVistaPrograma,
     EstructuraComponent,
     ConfiguracionComponent,
     SedeComponent,
@@ -74,6 +77,7 @@ import { DetalladoComponent, ModalFormularioDetallado} from './components/cine/d
     AmplioComponent,
     EspecificoComponent,
     DetalladoComponent,
+    ProgramaComponent,
   ],
   imports: [
     BrowserModule,
@@ -103,6 +107,8 @@ import { DetalladoComponent, ModalFormularioDetallado} from './components/cine/d
     ModalFormularioAmplio,
     ModalFormularioEspecifico,
     ModalFormularioDetallado,
+    ModalFormularioPrograma,
+    ModalVistaPrograma
   ],
   providers: [DatePipe, {provide: MAT_DATE_LOCALE, useValue: 'es-ES'}],
   bootstrap: [AppComponent]

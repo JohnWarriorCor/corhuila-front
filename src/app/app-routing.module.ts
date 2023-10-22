@@ -16,6 +16,7 @@ import { IntegranteCuerpoColegiadoComponent } from './components/integrante-cuer
 import { NormaComponent } from './components/marco-normativo/norma/norma.component';
 import { NormaGrupoComponent } from './components/marco-normativo/norma-grupo/norma-grupo.component';
 import { CineComponent } from './components/cine/cine.component';
+import { ProgramaComponent } from './components/programa/programa.component';
 
 const routes: Routes = [
   //COMPONENTES DEL SISTEMA
@@ -42,6 +43,7 @@ const routes: Routes = [
 
   { path: 'desarrollo', component: DesarrolloComponent },
 
+  { path: 'programa', component: ProgramaComponent },
   { path: 'cine', component: CineComponent },
 
   //REDIRECCIONAMIENTO COMOPONENTE POR DEFECTO PARA RUTAS INEXISTENTES EN EL NAVEGADOR

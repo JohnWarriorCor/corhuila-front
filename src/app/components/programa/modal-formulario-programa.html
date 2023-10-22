@@ -1,0 +1,376 @@
+<h2 mat-dialog-title class="bg-corhuila-p-as-2 font-corhuila text-white">
+  <i class="fa-solid fa-circle-info"></i> Formulario programa
+</h2>
+<mat-dialog-content>
+  <div class="row pl-4 pr-4 mt-2 text-left">
+    <div class="col">
+      <form [formGroup]="formInstitucion">
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Código SNIES<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  type="text"
+                  formControlName="nit"
+                  class="form_control"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Nombre de programa<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  class="form_control"
+                  formControlName="nombre"
+                  type="text"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Título otorgado<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  class="form_control"
+                  formControlName="nombre"
+                  type="text"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Nivel académico<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  formControlName="naturaleza"
+                >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    value="1"
+                    (click)="obtenerNivelFormacion(1)"
+                    >PREGRADO</mat-option
+                  >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    value="2"
+                    (click)="obtenerNivelFormacion(2)"
+                    >POSGRADO</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Nivel de formación<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  formControlName="naturaleza"
+                >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let listado of listadoNivelFormacion"
+                    [value]="listado.codigo"
+                    >{{ listado.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <label>Ciclos propedeuticos<span class="requerido">*</span></label>
+            <section class="example-section">
+              <mat-radio-group formControlName="fechaNorma">
+                <mat-radio-button class="example-margin" value="1"
+                  >Si</mat-radio-button
+                >
+                <mat-radio-button class="example-margin" value="0"
+                  >No</mat-radio-button
+                >
+              </mat-radio-group>
+            </section>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Modalidad<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" formControlName="sector">
+                  <mat-option class="font-sm-corhuila" value="1"
+                    >PRESENCIAL</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="2"
+                    >VIRTUAL</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="3"
+                    >A DISTANCIA</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="4"
+                    >DUAL</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label
+                >Área de conocimiento<span class="requerido">*</span></label
+              >
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" formControlName="caracter">
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let listado of listadoAreaConocimiento"
+                    [value]="listado.codigo"
+                    (click)="obtenerListadoNbc(listado.codigo)"
+                    >{{ listado.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>NBC<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" formControlName="caracter">
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let listado of listadoNbc"
+                    [value]="listado.codigo"
+                    >{{ listado.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Sede<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" formControlName="caracter">
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let listado of listadoSede"
+                    [value]="listado.codigo"
+                    (click)="obtenerFacultades(listado.codigo)"
+                    >{{ listado.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Facultad<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" formControlName="caracter">
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let listado of listadoFacultad"
+                    [value]="listado.codigo"
+                    >{{ listado.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Número de créditos<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  class="form_control"
+                  formControlName="nombre"
+                  type="text"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Tipo duración<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" formControlName="caracter">
+                  <mat-option class="font-sm-corhuila" value="1"
+                    >AÑO(S)</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="2"
+                    >SEMESTRE(S)</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Duración<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  class="form_control"
+                  formControlName="nombre"
+                  type="text"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Tipo de admisión<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" formControlName="caracter">
+                  <mat-option class="font-sm-corhuila" value="1"
+                    >ANUAL</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="2"
+                    >SEMESTRAL</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="1"
+                    >BIEMESTRAL</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="2"
+                    >TRIMESTRAL</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Número de cupos<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  class="form_control"
+                  formControlName="nombre"
+                  type="text"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Sitio web<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  class="form_control"
+                  formControlName="nombre"
+                  type="text"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label>Norma de creación<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  type="text"
+                  placeholder="Ecriba el nombre de la norma"
+                  aria-label="Number"
+                  matInput
+                  [matAutocomplete]="auto"
+                  [formControl]="myControl"
+                />
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let option of filteredOptions | async"
+                    [value]="option.nombre"
+                    (click)="asignarNormaHijo(option.codigo)"
+                  >
+                    {{option.normaTipo}} {{option.numero}} {{option.nombre |
+                    uppercase}}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label>Fecha creación<span class="requerido">*</span></label>
+              <input
+                type="date"
+                formControlName="fechaNorma"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label
+                >Fecha registro en SNIES<span class="requerido">*</span></label
+              >
+              <input
+                type="date"
+                formControlName="fechaNorma"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+          <div class="col">
+            <label>Convenio<span class="requerido">*</span></label>
+            <section class="example-section">
+              <mat-radio-group formControlName="fechaNorma">
+                <mat-radio-button class="example-margin" value="1"
+                  >Si</mat-radio-button
+                >
+                <mat-radio-button class="example-margin" value="0"
+                  >No</mat-radio-button
+                >
+              </mat-radio-group>
+            </section>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</mat-dialog-content>
+<hr />
+<mat-dialog-actions align="end">
+  <button class="btn btn-warning" mat-dialog-close (click)="cancelar()">
+    <i class="fa-solid fa-xmark"></i> Cancelar
+  </button>
+  <button
+    type="button"
+    class="btn btn-success ml-2"
+    [disabled]="!formInstitucion.valid"
+    (click)="generarInstitucion()"
+  >
+    <i class="far fa-save"></i> Guardar
+  </button>
+</mat-dialog-actions>

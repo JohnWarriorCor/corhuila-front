@@ -1,0 +1,15 @@
+.card {
+  display: inline-block !important;
+  position: relative !important;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 14%) !important;
+  border-radius: 5px !important;
+  color: rgba(0, 0, 0, 0.87);
+  background: #fff;
+  padding-top: 0px !important;
+}
+
+.card-header {
+  background-color: #006983;
+  border-radius: 5px 5px 0px 0px !important;
+  color: #fff;
+}

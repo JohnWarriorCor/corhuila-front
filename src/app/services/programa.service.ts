@@ -5,15 +5,15 @@ import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
-import { Sede } from '../models/sede';
-import { SedeTipo } from '../models/sede-tipo';
-import { Facultad } from '../models/facultad';
+import { NivelFormacion } from '../models/nivel-formacion';
+import { AreaConocimiento } from '../models/area-conocimiento';
+import { Nbc } from '../models/nbc';
 
 @Injectable({
   providedIn: 'root',
 })
-export class FacultadService {
-  private url: string = `${environment.URL_BACKEND}/facultad`;
+export class ProgramaService {
+  private url: string = `${environment.URL_BACKEND}/programa`;
   private httpHeaders = new HttpHeaders({ 'Content-type': 'application/json' });
 
   userLogeado: String = this.authservice.user.username;
@@ -43,9 +43,27 @@ export class FacultadService {
     return false;
   }
 
-  obtenerListadoFacultades(): Observable<Facultad[]> {
+  obtenerListadoNivelFormacion(codigo: number): Observable<NivelFormacion[]> {
     return this.http
-      .get<Facultad[]>(`${this.url}/obtener-listado-facultades`, {
+      .get<NivelFormacion[]>(
+        `${this.url}/obtener-listado-nivel-formacion/${codigo}`,
+        {
+          headers: this.aggAutorizacionHeader(),
+        }
+      )
+      .pipe(
+        catchError((e) => {
+          if (this.isNoAutorizado(e)) {
+            return throwError(e);
+          }
+          return throwError(e);
+        })
+      );
+  }
+
+  obtenerListadoAreaConocimiento(): Observable<AreaConocimiento[]> {
+    return this.http
+      .get<AreaConocimiento[]>(`${this.url}/obtener-listado-area-conocimiento`, {
         headers: this.aggAutorizacionHeader(),
       })
       .pipe(
@@ -58,11 +76,14 @@ export class FacultadService {
       );
   }
 
-  obtenerListadoFacultadSede(codigo: number): Observable<Facultad[]> {
+  obtenerListadoNbc(codigo: number): Observable<Nbc[]> {
     return this.http
-      .get<Facultad[]>(`${this.url}/obtener-listado-facultad-sede/${codigo}`, {
-        headers: this.aggAutorizacionHeader(),
-      })
+      .get<Nbc[]>(
+        `${this.url}/obtener-listado-nbc/${codigo}`,
+        {
+          headers: this.aggAutorizacionHeader(),
+        }
+      )
       .pipe(
         catchError((e) => {
           if (this.isNoAutorizado(e)) {
@@ -71,17 +92,5 @@ export class FacultadService {
           return throwError(e);
         })
       );
-  }
-
-  registrarFacultad(facultad: Facultad): Observable<number> {
-    return this.http.post<number>(`${this.url}/registrar-facultad`, facultad, {
-      headers: this.aggAutorizacionHeader(),
-    });
-  }
-
-  actualizarFacultad(facultad: Facultad): Observable<number> {
-    return this.http.put<number>(`${this.url}/actualizar-facultad`, facultad, {
-      headers: this.aggAutorizacionHeader(),
-    });
   }
 }
