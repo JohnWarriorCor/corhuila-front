@@ -52,6 +52,7 @@ import { CineDetallado } from '../../models/cine-detallado';
 import { ClasificacionCineService } from 'src/app/services/clasificacion-cine.service';
 import { CineAmplio } from 'src/app/models/cine-amplio';
 import { CineEspecifico } from 'src/app/models/cine-especifico';
+import { ProgramaPdfService } from '../../services/programa-pdf.service';
 
 @Component({
   selector: 'app-programa',
@@ -574,6 +575,7 @@ export class ModalVistaPrograma implements OnInit {
   listadoSector: Sector[] = [];
   listadoCcp: CabecerasCentrosPoblados[] = [];
   listadoInstitucion: Institucion[] = [];
+  aniosPasados: any;
 
   @ViewChild('printSection', { static: false }) printSection!: ElementRef;
   @ViewChild(NgxPrintDirective, { static: false })
@@ -586,19 +588,33 @@ export class ModalVistaPrograma implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     public ubicacionService: UbicacionService,
     public institucionService: InstitucionService,
-    public institucionPdfService: InstitucionPdfService
+    public programaPdfService: ProgramaPdfService
   ) {
     this.obtenerListadoInstitucion();
+    this.calcularAniosPasados();
   }
 
   ngOnInit() {}
 
   generarPdf() {
-    this.institucionPdfService.export(this.data.institucion);
+    this.programaPdfService.export(this.data.programa, this.listadoInstitucion);
   }
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  calcularAniosPasados() {
+    console.log(this.data.programa.fechaRegistroSnies);
+
+    const fechaDada = new Date(this.data.programa.fechaRegistroSnies);
+    const fechaActual = new Date();
+
+    const diferenciaEnMilisegundos =
+      fechaActual.getTime() - fechaDada.getTime();
+    this.aniosPasados = Math.floor(
+      diferenciaEnMilisegundos / (1000 * 60 * 60 * 24 * 365.25)
+    );
   }
 
   obtenerListadoInstitucion() {
