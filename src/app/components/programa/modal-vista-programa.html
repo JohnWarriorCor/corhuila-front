@@ -11,15 +11,23 @@
       </div>
     </div>
     <form>
+      <div class="row text-center m-3 font-weight-bold"><div class="col">
+        <h3>Hoja de vida - Programa académico</h3>
+      </div></div>
       <div class="row pl-4 pr-4 mb-2">
         <div class="col">
           <table class="table table-bordered text-center">
-            <thead class="font-weight-bold thead-corhuila">
+            <thead
+              class="font-weight-bold thead-corhuila"
+              style="background-color: #edeff0 !important; color: black"
+            >
               <th>INSTITUCIÓN</th>
             </thead>
             <tbody>
               <tr>
-                <td>{{data.institucion.nombre}}</td>
+                <td *ngIf="(listadoInstitucion | json)!='[]'">
+                  {{listadoInstitucion[0].nombre}}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -28,16 +36,25 @@
       <div class="row pl-4 pr-4">
         <div class="col">
           <table class="table table-bordered text-center shadow-sm">
-            <thead class="font-weight-bold thead-corhuila">
+            <thead
+              class="font-weight-bold thead-corhuila"
+              style="background-color: #edeff0 !important; color: black"
+            >
               <th>NIT</th>
               <th>CÓDIGO SNIES</th>
               <th>CÓDIGO SNIES PADRE</th>
             </thead>
             <tbody>
               <tr>
-                <td>{{data.institucion.nit}}</td>
-                <td>{{data.institucion.ies}}</td>
-                <td>{{data.institucion.iesPadre}}</td>
+                <td *ngIf="(listadoInstitucion | json)!='[]'">
+                  {{listadoInstitucion[0].nit}}
+                </td>
+                <td *ngIf="(listadoInstitucion | json)!='[]'">
+                  {{listadoInstitucion[0].ies}}
+                </td>
+                <td *ngIf="(listadoInstitucion | json)!='[]'">
+                  {{listadoInstitucion[0].iesPadre}}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -56,9 +73,9 @@
             </thead>
             <tbody>
               <tr>
-                <td>{{data.institucion.sector.nombre}}</td>
-                <td>{{data.institucion.naturaleza.nombre}}</td>
-                <td>{{data.institucion.caracter.nombre}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
               </tr>
             </tbody>
           </table>
@@ -78,10 +95,10 @@
             </thead>
             <tbody>
               <tr>
-                <td>{{data.institucion.pais.nombre}}</td>
-                <td>{{data.institucion.departamento.nombre}}</td>
-                <td>{{data.institucion.municipio.nombre}}</td>
-                <td>{{data.institucion.ccp.nombre}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
               </tr>
             </tbody>
           </table>
@@ -100,9 +117,9 @@
             </thead>
             <tbody>
               <tr>
-                <td>{{data.institucion.direccion}}</td>
-                <td>{{data.institucion.telefono}}</td>
-                <td>{{data.institucion.url}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
               </tr>
             </tbody>
           </table>
@@ -120,8 +137,8 @@
             </thead>
             <tbody>
               <tr>
-                <td>{{data.institucion.norma}}</td>
-                <td>{{data.institucion.fechaNorma | date: 'dd/MM/yyyy'}}</td>
+                <td></td>
+                <td></td>
               </tr>
             </tbody>
           </table>

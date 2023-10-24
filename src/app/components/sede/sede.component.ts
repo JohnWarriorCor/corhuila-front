@@ -119,10 +119,6 @@ export class SedeComponent {
     );
   }
 
-  editarSede(element: Sede) {
-    this.editarFormulario(element);
-  }
-
   eliminarSede(element: Sede) {
     Swal.fire({
       title: '¿Está seguro de eliminar este elemento?',

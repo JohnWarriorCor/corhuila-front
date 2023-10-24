@@ -47,6 +47,11 @@ import { Sede } from 'src/app/models/sede';
 import { Facultad } from 'src/app/models/facultad';
 import { SedeService } from '../../services/sede.service';
 import { FacultadService } from 'src/app/services/facultad.service';
+import { Programa } from 'src/app/models/programa';
+import { CineDetallado } from '../../models/cine-detallado';
+import { ClasificacionCineService } from 'src/app/services/clasificacion-cine.service';
+import { CineAmplio } from 'src/app/models/cine-amplio';
+import { CineEspecifico } from 'src/app/models/cine-especifico';
 
 @Component({
   selector: 'app-programa',
@@ -54,20 +59,17 @@ import { FacultadService } from 'src/app/services/facultad.service';
   styleUrls: ['./programa.component.css'],
 })
 export class ProgramaComponent {
-  listadoInstitucion: Institucion[] = [];
-
-  dataSource = new MatTableDataSource<Institucion>([]);
+  dataSource = new MatTableDataSource<Programa>([]);
   displayedColumns: string[] = [
     'index',
-    'nit',
-    'ies',
-    'iespadre',
+    'snies',
     'nombre',
-    'ccp',
-    'naturaleza',
-    'sector',
-    'caracter',
-    'estado',
+    'academico',
+    'formacion',
+    'modalidad',
+    'fechaCreacion',
+    'fechaSnies',
+    'opciones',
   ];
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
@@ -75,12 +77,12 @@ export class ProgramaComponent {
 
   constructor(
     public ubicacionService: UbicacionService,
-    public institucionService: InstitucionService,
+    public programaService: ProgramaService,
     public dialog: MatDialog,
     private authService: AuthService
   ) {
     if (this.authService.validacionToken()) {
-      this.obtenerListadoInstitucion();
+      this.obtenerListadoProgramas();
     }
   }
 
@@ -98,7 +100,7 @@ export class ProgramaComponent {
     this.dialogRef = this.dialog.open(ModalFormularioPrograma, {
       width: '70%',
       disableClose: true,
-      data: { institucion: element },
+      data: { programa: element },
     });
     this.dialogRef.afterClosed().subscribe(() => {
       this.onModalClosed();
@@ -106,33 +108,90 @@ export class ProgramaComponent {
   }
 
   onModalClosed() {
-    this.obtenerListadoInstitucion();
+    this.obtenerListadoProgramas();
   }
 
   openDialog(element: any): void {
     const dialogRef = this.dialog.open(ModalVistaPrograma, {
       width: '70%',
-      data: { institucion: element },
+      data: { programa: element },
     });
   }
 
-  /*   openFormulario(): void {
-    const dialogRef = this.dialog.open(ModalFormulario, {
-      width: '70%',
-    });
-  }
- */
-  obtenerListadoInstitucion() {
-    this.institucionService.obtenerListadoInstitucion().subscribe((data) => {
-      this.listadoInstitucion = data;
-      this.dataSource = new MatTableDataSource<Institucion>(data);
+  obtenerListadoProgramas() {
+    this.programaService.obtenerListadoProgramas().subscribe((data) => {
+      this.dataSource = new MatTableDataSource<Programa>(data);
       this.paginator.firstPage();
       this.dataSource.paginator = this.paginator;
     });
   }
 
-  editarInstitucion(element: Institucion) {
-    this.editarFormulario(element);
+  actualizarPrograma(porgrama: Programa) {
+    this.programaService.actualizarPrograma(porgrama).subscribe(
+      (data) => {
+        if (data > 0) {
+          this.obtenerListadoProgramas();
+        } else {
+          this.mensajeError();
+        }
+      },
+      (err) => this.fError(err)
+    );
+  }
+
+  eliminarPrograma(element: Programa) {
+    Swal.fire({
+      title: '¿Está seguro de eliminar este elemento?',
+      text: 'La siguiente operación será irreversible',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#00c053',
+      cancelButtonColor: '#ffc107',
+      confirmButtonText: 'Si, estoy seguro',
+      cancelButtonText: 'Cancelar opreación',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        element.estado = 0;
+        this.actualizarPrograma(element);
+        Swal.fire({
+          icon: 'success',
+          title: 'Elemento borrado.',
+          confirmButtonColor: '#006983',
+          confirmButtonText: 'Listo',
+        });
+      }
+    });
+  }
+
+  mensajeSuccses() {
+    Swal.fire({
+      icon: 'success',
+      title: 'Proceso realizado',
+      text: '¡Operación exitosa!',
+      showConfirmButton: false,
+      timer: 2500,
+    });
+  }
+
+  mensajeError() {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo completar el proceso.',
+      showConfirmButton: true,
+      confirmButtonText: 'Listo',
+      confirmButtonColor: '#8f141b',
+    });
+  }
+
+  fError(er: any): void {
+    let err = er.error.error_description;
+    let arr: string[] = err.split(':');
+    if (arr[0] == 'Access token expired') {
+      this.authService.logout();
+    } else {
+      this.mensajeError();
+    }
   }
 }
 
@@ -156,10 +215,13 @@ export class ModalFormularioPrograma {
   listadoNbc: Nbc[] = [];
   listadoSede: Sede[] = [];
   listadoFacultad: Facultad[] = [];
+  listadoCineAmplio: CineAmplio[] = [];
+  listadoCineEspecifico: CineEspecifico[] = [];
+  listadoCineDetallado: CineDetallado[] = [];
 
   listadoInstitucion: Institucion[] = [];
 
-  formInstitucion!: FormGroup;
+  formularioPrograma!: FormGroup;
 
   listadoNorma: Norma[] = [];
   filteredOptions!: Observable<Norma[]>;
@@ -168,24 +230,25 @@ export class ModalFormularioPrograma {
   constructor(
     public dialogRef: MatDialogRef<ModalFormularioPrograma>,
     private formBuilder: FormBuilder,
-    public ubicacionService: UbicacionService,
     public institucionService: InstitucionService,
     public programaService: ProgramaService,
     public normaService: NormaService,
     public sedeService: SedeService,
     public facultadService: FacultadService,
+    public clasificacionCineService: ClasificacionCineService,
     public dialog: MatDialog,
     private authService: AuthService,
     private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     if (this.authService.validacionToken()) {
-      this.crearFormInstitucion();
+      this.crearFormularioPrograma();
       this.obtenerListadoAreaConocimiento();
       this.obtenerListadoNormas();
       this.obtenerSedes();
+      this.obtenerCampoAmplio();
       if (JSON.stringify(data) !== 'null') {
-        this.editarInstitucion(data.institucion);
+        this.editarPorgrama(data.programa);
         console.log('Entra');
       } else {
         console.log('No entra');
@@ -221,6 +284,32 @@ export class ModalFormularioPrograma {
     });
   }
 
+  obtenerCampoAmplio() {
+    this.clasificacionCineService
+      .obtenerListadoClasificacionCineAmplio()
+      .subscribe((data) => {
+        this.listadoCineAmplio = data;
+      });
+  }
+
+  obtenerCampoEspecifico(codigo: number) {
+    this.listadoCineEspecifico = [];
+    this.clasificacionCineService
+      .obtenerListadoEspecificoAmplio(codigo)
+      .subscribe((data) => {
+        this.listadoCineEspecifico = data;
+      });
+  }
+
+  obtenerCampoDetallado(codigo: number) {
+    this.listadoCineDetallado = [];
+    this.clasificacionCineService
+      .obtenerListadoDetalladoEspecifico(codigo)
+      .subscribe((data) => {
+        this.listadoCineDetallado = data;
+      });
+  }
+
   obtenerFacultades(codigo: number) {
     this.listadoFacultad = [];
     this.facultadService
@@ -239,7 +328,10 @@ export class ModalFormularioPrograma {
     );
   }
 
-  asignarNormaHijo(codigo: number) {}
+  asignarNormaHijo(codigo: number, fecha: Date) {
+    this.formularioPrograma.get('norma')!.setValue(codigo);
+    this.formularioPrograma.get('fechaCreacion')!.setValue(fecha);
+  }
 
   obtenerListadoNormas() {
     this.normaService.obtenerNormasNoDerogadas().subscribe((data) => {
@@ -251,25 +343,33 @@ export class ModalFormularioPrograma {
     });
   }
 
-  private crearFormInstitucion(): void {
-    this.formInstitucion = this.formBuilder.group({
+  private crearFormularioPrograma(): void {
+    this.formularioPrograma = this.formBuilder.group({
       codigo: new FormControl(''),
-      nit: new FormControl('', Validators.required),
-      ies: new FormControl('', Validators.required),
-      iesPadre: new FormControl('', Validators.required),
-      naturaleza: new FormControl('', Validators.required),
-      sector: new FormControl('', Validators.required),
-      caracter: new FormControl('', Validators.required),
+      snies: new FormControl('', Validators.required),
       nombre: new FormControl('', Validators.required),
-      pais: new FormControl('', Validators.required),
-      departamento: new FormControl('', Validators.required),
-      municipio: new FormControl('', Validators.required),
-      ccp: new FormControl('', Validators.required),
-      direccion: new FormControl('', Validators.required),
-      telefono: new FormControl('', Validators.required),
-      url: new FormControl('', Validators.required),
+      titulo: new FormControl('', Validators.required),
+      nivelAcademico: new FormControl('', Validators.required),
+      nivelFormacion: new FormControl('', Validators.required),
+      ciclos: new FormControl('', Validators.required),
+      modalidad: new FormControl('', Validators.required),
+      areaConocimiento: new FormControl('', Validators.required),
+      nbc: new FormControl('', Validators.required),
+      sede: new FormControl('', Validators.required),
+      facultad: new FormControl('', Validators.required),
+      creditos: new FormControl('', Validators.required),
+      tipoDuracion: new FormControl('', Validators.required),
+      duracion: new FormControl('', Validators.required),
+      tipoAdmision: new FormControl('', Validators.required),
+      cupo: new FormControl('', Validators.required),
+      web: new FormControl('', Validators.required),
       norma: new FormControl('', Validators.required),
-      fechaNorma: new FormControl('', Validators.required),
+      fechaCreacion: new FormControl('', Validators.required),
+      fechaSnies: new FormControl('', Validators.required),
+      convenio: new FormControl('', Validators.required),
+      cineAmplio: new FormControl('', Validators.required),
+      cineEspecifico: new FormControl('', Validators.required),
+      cineDetallado: new FormControl('', Validators.required),
       estado: new FormControl(''),
     });
   }
@@ -278,34 +378,51 @@ export class ModalFormularioPrograma {
     this.dialogRef.close();
   }
 
-  generarInstitucion(): void {
-    let institucion: Institucion = new Institucion();
-    institucion.nit = this.formInstitucion.get('nit')!.value;
-    institucion.ies = this.formInstitucion.get('ies')!.value;
-    institucion.iesPadre = this.formInstitucion.get('iesPadre')!.value;
-    let naturalezaJuridica: NaturalezaJuridica = new NaturalezaJuridica();
-    naturalezaJuridica.codigo = this.formInstitucion.get('naturaleza')!.value;
-    institucion.naturaleza = naturalezaJuridica;
-    let sector: Sector = new Sector();
-    sector.codigo = this.formInstitucion.get('sector')!.value;
-    institucion.sector = sector;
-    let caracterAcademico: CaracterAcademico = new CaracterAcademico();
-    caracterAcademico.codigo = this.formInstitucion.get('caracter')!.value;
-    institucion.caracter = caracterAcademico;
-    institucion.nombre = this.formInstitucion.get('nombre')!.value;
-    let ccp: CabecerasCentrosPoblados = new CabecerasCentrosPoblados();
-    ccp.divipola = this.formInstitucion.get('ccp')!.value;
-    institucion.ccp = ccp;
-    institucion.direccion = this.formInstitucion.get('direccion')!.value;
-    institucion.telefono = this.formInstitucion.get('telefono')!.value;
-    institucion.url = this.formInstitucion.get('url')!.value;
-    institucion.norma = this.formInstitucion.get('norma')!.value;
-    institucion.fechaNorma = this.formInstitucion.get('fechaNorma')!.value;
-    this.registrarInstitucio(institucion);
+  generarPrograma(): void {
+    let programa: Programa = new Programa();
+    programa.codigo = this.formularioPrograma.get('codigo')!.value;
+    programa.snies = +this.formularioPrograma.get('snies')!.value;
+    programa.nombre = this.formularioPrograma.get('nombre')!.value;
+    programa.titulo = this.formularioPrograma.get('titulo')!.value;
+    programa.nivelAcademicoCodigo =
+      +this.formularioPrograma.get('nivelAcademico')!.value;
+    programa.nivelFormacionCodigo =
+      +this.formularioPrograma.get('nivelFormacion')!.value;
+    programa.ciclosCodigo = +this.formularioPrograma.get('ciclos')!.value;
+    programa.modalidadCodigo = +this.formularioPrograma.get('modalidad')!.value;
+    programa.areaConocimientoCodigo =
+      +this.formularioPrograma.get('areaConocimiento')!.value;
+    programa.nbcCodigo = this.formularioPrograma.get('nbc')!.value;
+    let facultad: Facultad = new Facultad();
+    facultad.codigo = this.formularioPrograma.get('facultad')!.value;
+    programa.facultad = facultad;
+    programa.creditos = this.formularioPrograma.get('creditos')!.value;
+    programa.tipoDuracionCodigo =
+      +this.formularioPrograma.get('tipoDuracion')!.value;
+    programa.duracion = this.formularioPrograma.get('duracion')!.value;
+    programa.tipoAdmisionCodigo =
+      +this.formularioPrograma.get('tipoAdmision')!.value;
+    programa.cupos = this.formularioPrograma.get('cupo')!.value;
+    programa.sitioWeb = this.formularioPrograma.get('web')!.value;
+    programa.normaCodigo = this.formularioPrograma.get('norma')!.value;
+    programa.fechaCreacion =
+      this.formularioPrograma.get('fechaCreacion')!.value;
+    programa.fechaRegistroSnies =
+      this.formularioPrograma.get('fechaSnies')!.value;
+    programa.convenio = +this.formularioPrograma.get('convenio')!.value;
+    let cineDetallado: CineDetallado = new CineDetallado();
+    cineDetallado.codigo = this.formularioPrograma.get('cineDetallado')!.value;
+    programa.campoDetallado = cineDetallado;
+    programa.estado = this.formularioPrograma.get('estado')!.value;
+    if (this.editar) {
+      this.actualizarPrograma(programa);
+    } else {
+      this.registrarPrograma(programa);
+    }
   }
 
-  registrarInstitucio(institucion: Institucion) {
-    this.institucionService.registrarInstitucion(institucion).subscribe(
+  registrarPrograma(programa: Programa) {
+    this.programaService.registrarPrograma(programa).subscribe(
       (data) => {
         if (data > 0) {
           Swal.fire({
@@ -316,7 +433,6 @@ export class ModalFormularioPrograma {
             timer: 2500,
           });
           this.cancelar();
-          this.crearFormInstitucion();
           this.dialogRef.close();
         } else {
           this.mensajeError();
@@ -326,33 +442,85 @@ export class ModalFormularioPrograma {
     );
   }
 
-  editarInstitucion(element: Institucion) {
+  actualizarPrograma(programa: Programa) {
+    this.programaService.actualizarPrograma(programa).subscribe(
+      (data) => {
+        if (data > 0) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Actualizado',
+            text: '¡Operación exitosa!',
+            showConfirmButton: false,
+            timer: 2500,
+          });
+          this.cancelar();
+          this.dialogRef.close();
+        } else {
+          this.mensajeError();
+        }
+      },
+      (err) => this.fError(err)
+    );
+  }
+
+  editarPorgrama(element: Programa) {
     this.editar = true;
-    this.formInstitucion.get('codigo')!.setValue(element.codigo);
-    this.formInstitucion.get('nit')!.setValue(element.nit);
-    this.formInstitucion.get('ies')!.setValue(element.ies);
-    this.formInstitucion.get('iesPadre')!.setValue(element.iesPadre);
-    this.formInstitucion.get('naturaleza')!.setValue(element.naturaleza.codigo);
-    this.formInstitucion.get('sector')!.setValue(element.sector.codigo);
-    this.formInstitucion.get('caracter')!.setValue(element.caracter.codigo);
-    this.formInstitucion.get('nombre')!.setValue(element.nombre);
-    this.formInstitucion.get('pais')!.setValue(element.pais.codigo);
-    this.formInstitucion
-      .get('departamento')!
-      .setValue(element.departamento.divipola);
-    this.formInstitucion.get('municipio')!.setValue(element.municipio.divipola);
-    this.formInstitucion.get('ccp')!.setValue(element.ccp.divipola);
-    this.formInstitucion.get('direccion')!.setValue(element.direccion);
-    this.formInstitucion.get('telefono')!.setValue(element.telefono);
-    this.formInstitucion.get('url')!.setValue(element.url);
-    this.formInstitucion.get('norma')!.setValue(element.norma);
-    this.formInstitucion.get('fechaNorma')!.setValue(element.fechaNorma);
-    this.formInstitucion.get('estado')!.setValue(element.estado);
+    this.formularioPrograma.get('codigo')!.setValue(element.codigo);
+    this.formularioPrograma.get('snies')!.setValue(element.snies);
+    this.formularioPrograma.get('nombre')!.setValue(element.nombre);
+    this.formularioPrograma.get('titulo')!.setValue(element.titulo);
+    this.formularioPrograma
+      .get('nivelAcademico')!
+      .setValue('' + element.nivelAcademicoCodigo);
+    this.obtenerNivelFormacion(element.nivelAcademicoCodigo);
+    this.formularioPrograma
+      .get('nivelFormacion')!
+      .setValue(element.nivelFormacionCodigo);
+    this.formularioPrograma.get('ciclos')!.setValue('' + element.ciclosCodigo);
+    this.formularioPrograma
+      .get('modalidad')!
+      .setValue('' + element.modalidadCodigo);
+    this.formularioPrograma
+      .get('areaConocimiento')!
+      .setValue(element.areaConocimientoCodigo);
+    this.formularioPrograma.get('nbc')!.setValue(element.nbcCodigo);
+    this.formularioPrograma.get('sede')!.setValue(element.facultad.sede.codigo);
+    this.obtenerFacultades(element.facultad.sede.codigo);
+    this.formularioPrograma.get('facultad')!.setValue(element.facultad.codigo);
+    this.formularioPrograma.get('creditos')!.setValue(element.creditos);
+    this.formularioPrograma
+      .get('tipoDuracion')!
+      .setValue('' + element.tipoDuracionCodigo);
+    this.formularioPrograma.get('duracion')!.setValue(element.duracion);
+    this.formularioPrograma
+      .get('tipoAdmision')!
+      .setValue('' + element.tipoAdmisionCodigo);
+    this.formularioPrograma.get('cupo')!.setValue(element.cupos);
+    this.formularioPrograma.get('web')!.setValue(element.sitioWeb);
+    this.formularioPrograma.get('norma')!.setValue(element.normaCodigo);
+    this.formularioPrograma
+      .get('fechaCreacion')!
+      .setValue(element.fechaCreacion);
+    this.formularioPrograma
+      .get('fechaSnies')!
+      .setValue(element.fechaRegistroSnies);
+    this.formularioPrograma.get('convenio')!.setValue('' + element.convenio);
+    this.formularioPrograma
+      .get('cineAmplio')!
+      .setValue(element.campoDetallado.amplioCodigo);
+    this.obtenerCampoEspecifico(element.campoDetallado.amplioCodigo);
+    this.formularioPrograma
+      .get('cineEspecifico')!
+      .setValue(element.campoDetallado.especificoCodigo);
+    this.obtenerCampoDetallado(element.campoDetallado.especificoCodigo);
+    this.formularioPrograma
+      .get('cineDetallado')!
+      .setValue(element.campoDetallado.codigo);
+    this.formularioPrograma.get('estado')!.setValue(element.estado);
   }
 
   cancelar() {
-    this.formInstitucion.reset();
-    this.crearFormInstitucion();
+    this.formularioPrograma.reset();
     this.editar = false;
   }
 
@@ -405,6 +573,7 @@ export class ModalVistaPrograma implements OnInit {
   listadoNaturalezaJuridica: NaturalezaJuridica[] = [];
   listadoSector: Sector[] = [];
   listadoCcp: CabecerasCentrosPoblados[] = [];
+  listadoInstitucion: Institucion[] = [];
 
   @ViewChild('printSection', { static: false }) printSection!: ElementRef;
   @ViewChild(NgxPrintDirective, { static: false })
@@ -418,7 +587,9 @@ export class ModalVistaPrograma implements OnInit {
     public ubicacionService: UbicacionService,
     public institucionService: InstitucionService,
     public institucionPdfService: InstitucionPdfService
-  ) {}
+  ) {
+    this.obtenerListadoInstitucion();
+  }
 
   ngOnInit() {}
 
@@ -428,6 +599,14 @@ export class ModalVistaPrograma implements OnInit {
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  obtenerListadoInstitucion() {
+    this.institucionService.obtenerListadoInstitucion().subscribe((data) => {
+      if (JSON.stringify(data) != '[]') {
+        this.listadoInstitucion = data;
+      }
+    });
   }
 
   obtenerListadoCaracterAcademico() {

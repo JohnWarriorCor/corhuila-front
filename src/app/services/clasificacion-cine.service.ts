@@ -112,6 +112,26 @@ export class ClasificacionCineService {
       );
   }
 
+  obtenerListadoDetalladoEspecifico(
+    codigo: number
+  ): Observable<CineDetallado[]> {
+    return this.http
+      .get<CineDetallado[]>(
+        `${this.url}/obtener-listado-cine-detallado-especifico/${codigo}`,
+        {
+          headers: this.aggAutorizacionHeader(),
+        }
+      )
+      .pipe(
+        catchError((e) => {
+          if (this.isNoAutorizado(e)) {
+            return throwError(e);
+          }
+          return throwError(e);
+        })
+      );
+  }
+
   obtenerListadoCineDetallado(codigo: number): Observable<CineDetallado[]> {
     return this.http
       .get<CineDetallado[]>(`${this.url}/obtener-listado-cine/${codigo}`, {

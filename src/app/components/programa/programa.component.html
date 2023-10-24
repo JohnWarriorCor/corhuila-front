@@ -29,71 +29,53 @@
                   {{ dataSource.filteredData.indexOf(element) + 1 }}
                 </td>
               </ng-container>
-              <ng-container matColumnDef="nit">
-                <th mat-header-cell *matHeaderCellDef>NIT</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
-                  {{ element.nit }}
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="ies">
+              <ng-container matColumnDef="snies">
                 <th mat-header-cell *matHeaderCellDef>SNIES</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
-                  {{ element.ies }}
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="iespadre">
-                <th mat-header-cell *matHeaderCellDef>SNIES PADRE</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
-                  {{ element.iesPadre }}
+                  {{ element.snies }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="nombre">
-                <th mat-header-cell *matHeaderCellDef>NOMBRE</th>
+                <th mat-header-cell *matHeaderCellDef>PROGRAMA</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
-                  {{ element.nombre | uppercase }}
+                  {{ element.nombre }}
                 </td>
               </ng-container>
-              <ng-container matColumnDef="ccp">
-                <th mat-header-cell *matHeaderCellDef>UBICACIÓN</th>
+              <ng-container matColumnDef="academico">
+                <th mat-header-cell *matHeaderCellDef>NIVEL ACADÉMICO</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
-                  {{ element.ccp.nombre | uppercase }}
+                  {{ element.nivelAcademico }}
                 </td>
               </ng-container>
-              <ng-container matColumnDef="naturaleza">
-                <th mat-header-cell *matHeaderCellDef>NATURALEZA</th>
+              <ng-container matColumnDef="formacion">
+                <th mat-header-cell *matHeaderCellDef>NIVEL DE FORMACIÓN</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
-                  {{ element.naturaleza.nombre | uppercase }}
+                  {{ element.nivelFormacion | uppercase }}
                 </td>
               </ng-container>
-              <ng-container matColumnDef="sector">
-                <th mat-header-cell *matHeaderCellDef>SECTOR</th>
+              <ng-container matColumnDef="modalidad">
+                <th mat-header-cell *matHeaderCellDef>MODALIDAD</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
-                  {{ element.sector.nombre | uppercase }}
+                  {{ element.modalidad | uppercase }}
                 </td>
               </ng-container>
-              <ng-container matColumnDef="caracter">
-                <th mat-header-cell *matHeaderCellDef>CARACTER</th>
+              <ng-container matColumnDef="fechaCreacion">
+                <th mat-header-cell *matHeaderCellDef>CREACIÓN</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
-                  {{ element.caracter.nombre | uppercase }}
+                  {{ element.fechaCreacion | date : "dd/MM/yyyy" }}
                 </td>
               </ng-container>
-              <ng-container matColumnDef="norma">
-                <th mat-header-cell *matHeaderCellDef>NORMA</th>
+              <ng-container matColumnDef="fechaSnies">
+                <th mat-header-cell *matHeaderCellDef>REGISTRO EN SNIES</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
-                  {{ element.norma | uppercase }}
+                  {{ element.fechaRegistroSnies | date : "dd/MM/yyyy" }}
                 </td>
               </ng-container>
-              <ng-container matColumnDef="fechanorma">
-                <th mat-header-cell *matHeaderCellDef>FECHA NORMA</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
-                  {{ element.fechaNorma | date : "dd/MM/yyyy" }}
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="estado">
+              <ng-container matColumnDef="opciones">
                 <th mat-header-cell *matHeaderCellDef>OPCIONES</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
                   <button
-                    *ngIf="dataSource.filteredData.indexOf(element) + 1 === 1"
+                    *ngIf="element.estado === 1"
                     class="btn btn-success btn-sm mr-2"
                     #tooltip="matTooltip"
                     matTooltip="Activo"
@@ -102,27 +84,35 @@
                     <i class="fa-solid fa-check fa-xs"></i>
                   </button>
                   <button
-                    *ngIf="dataSource.filteredData.indexOf(element) + 1 !== 1"
+                    *ngIf="element.estado !== 1"
                     class="btn btn-secondary btn-sm mr-2"
                     #tooltip="matTooltip"
                     matTooltip="Inactivo"
                     matTooltipPosition="above"
                   >
-                    <i class="fa-solid fa-minus fa-xs"></i>
+                    <i class="fa-solid fa-square-minus fa-xs"></i>
                   </button>
                   <button
                     class="btn btn-corhuila-info btn-sm mr-2"
+                    (click)="openDialog(element)"
                     #tooltip="matTooltip"
                     matTooltip="Informacion"
                     matTooltipPosition="above"
-                    (click)="openDialog(element)"
                   >
                     <i class="fa-solid fa-eye fa-xs"></i>
                   </button>
                   <button
+                    class="btn btn-corhuila-delete btn-sm mr-2"
+                    (click)="eliminarPrograma(element)"
+                    #tooltip="matTooltip"
+                    matTooltip="Borrar"
+                    matTooltipPosition="above"
+                  >
+                    <i class="fa-solid fa-trash fa-xs"></i>
+                  </button>
+                  <button
                     class="btn btn-corhuila-editar btn-sm"
-                    *ngIf="dataSource.filteredData.indexOf(element) + 1 === 1"
-                    (click)="editarInstitucion(element)"
+                    (click)="editarFormulario(element)"
                     #tooltip="matTooltip"
                     matTooltip="Editar"
                     matTooltipPosition="above"

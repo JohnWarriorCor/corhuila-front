@@ -8,6 +8,7 @@ import { AuthService } from './auth.service';
 import { NivelFormacion } from '../models/nivel-formacion';
 import { AreaConocimiento } from '../models/area-conocimiento';
 import { Nbc } from '../models/nbc';
+import { Programa } from '../models/programa';
 
 @Injectable({
   providedIn: 'root',
@@ -43,6 +44,21 @@ export class ProgramaService {
     return false;
   }
 
+  obtenerListadoProgramas(): Observable<Programa[]> {
+    return this.http
+      .get<Programa[]>(`${this.url}/obtener-listado-programas`, {
+        headers: this.aggAutorizacionHeader(),
+      })
+      .pipe(
+        catchError((e) => {
+          if (this.isNoAutorizado(e)) {
+            return throwError(e);
+          }
+          return throwError(e);
+        })
+      );
+  }
+
   obtenerListadoNivelFormacion(codigo: number): Observable<NivelFormacion[]> {
     return this.http
       .get<NivelFormacion[]>(
@@ -63,23 +79,8 @@ export class ProgramaService {
 
   obtenerListadoAreaConocimiento(): Observable<AreaConocimiento[]> {
     return this.http
-      .get<AreaConocimiento[]>(`${this.url}/obtener-listado-area-conocimiento`, {
-        headers: this.aggAutorizacionHeader(),
-      })
-      .pipe(
-        catchError((e) => {
-          if (this.isNoAutorizado(e)) {
-            return throwError(e);
-          }
-          return throwError(e);
-        })
-      );
-  }
-
-  obtenerListadoNbc(codigo: number): Observable<Nbc[]> {
-    return this.http
-      .get<Nbc[]>(
-        `${this.url}/obtener-listado-nbc/${codigo}`,
+      .get<AreaConocimiento[]>(
+        `${this.url}/obtener-listado-area-conocimiento`,
         {
           headers: this.aggAutorizacionHeader(),
         }
@@ -92,5 +93,32 @@ export class ProgramaService {
           return throwError(e);
         })
       );
+  }
+
+  obtenerListadoNbc(codigo: number): Observable<Nbc[]> {
+    return this.http
+      .get<Nbc[]>(`${this.url}/obtener-listado-nbc/${codigo}`, {
+        headers: this.aggAutorizacionHeader(),
+      })
+      .pipe(
+        catchError((e) => {
+          if (this.isNoAutorizado(e)) {
+            return throwError(e);
+          }
+          return throwError(e);
+        })
+      );
+  }
+
+  registrarPrograma(programa: Programa): Observable<number> {
+    return this.http.post<number>(`${this.url}/registrar-programa`, programa, {
+      headers: this.aggAutorizacionHeader(),
+    });
+  }
+
+  actualizarPrograma(programa: Programa): Observable<number> {
+    return this.http.put<number>(`${this.url}/actualizar-programa`, programa, {
+      headers: this.aggAutorizacionHeader(),
+    });
   }
 }
