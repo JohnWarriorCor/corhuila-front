@@ -6,7 +6,7 @@
     <div class="col">
       <form [formGroup]="formularioPrograma">
         <div class="row">
-          <div class="col">
+          <div class="col-sm-2">
             <div class="form-group">
               <label>Código SNIES<span class="requerido">*</span></label>
               <mat-form-field class="example-full-width" appearance="outline">
@@ -17,6 +17,28 @@
                   class="form_control"
                   required
                 />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-sm-2">
+            <div class="form-group">
+              <label>Nivel académico<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  formControlName="estadoSnies"
+                >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    value="1"
+                    >ACTIVO</mat-option
+                  >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    value="2"
+                    >INACTIVO</mat-option
+                  >
+                </mat-select>
               </mat-form-field>
             </div>
           </div>

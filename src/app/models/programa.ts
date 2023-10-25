@@ -10,6 +10,8 @@ export class Programa {
   nivelAcademico!: string;
   nivelFormacionCodigo!: number;
   nivelFormacion!: string;
+  estadoSniesCodigo!: number;
+  estadoSnies!: string;
   ciclosCodigo!: number;
   ciclos!: string;
   modalidadCodigo!: number;

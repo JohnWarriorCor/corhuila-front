@@ -16,35 +16,29 @@
           <h3>Hoja de vida - Programa académico</h3>
         </div>
       </div>
-      <div class="row pl-4 pr-4 mb-2">
-        <div class="col">
-          <table class="table table-bordered text-center">
-            <thead
-              class="font-weight-bold thead-corhuila"
-              style="background-color: #edeff0 !important; color: black"
-            >
-              <th>INSTITUCIÓN</th>
-            </thead>
-            <tbody>
-              <tr>
-                <td *ngIf="(listadoInstitucion | json)!='[]'">
-                  {{listadoInstitucion[0].nombre | uppercase}}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
       <div class="row pl-4 pr-4">
         <div class="col">
           <table class="table table-bordered text-center shadow-sm">
-            <thead
-              class="font-weight-bold thead-corhuila"
-              style="background-color: #edeff0 !important; color: black"
-            >
-              <th>NIT</th>
-              <th>CÓDIGO SNIES</th>
-              <th>CÓDIGO SNIES PADRE</th>
+            <thead>
+              <tr
+                class="font-weight-bold thead-corhuila"
+                style="background-color: #edeff0 !important; color: black"
+              >
+                <th colspan="3">INSTITUCIÓN</th>
+              </tr>
+              <tr>
+                <td colspan="3" *ngIf="(listadoInstitucion | json)!='[]'">
+                  {{listadoInstitucion[0].nombre | uppercase}}
+                </td>
+              </tr>
+              <tr
+                class="font-weight-bold thead-corhuila"
+                style="background-color: #edeff0 !important; color: black"
+              >
+                <th>NIT</th>
+                <th>CÓDIGO SNIES</th>
+                <th>CÓDIGO SNIES PADRE</th>
+              </tr>
             </thead>
             <tbody>
               <tr>
@@ -96,7 +90,7 @@
             <tbody>
               <tr>
                 <td>{{data.programa.snies}}</td>
-                <td></td>
+                <td>{{data.programa.estadoSnies}}</td>
                 <td>
                   <span *ngIf="data.programa.convenio==0">NO</span
                   ><span *ngIf="data.programa.convenio==1">SI</span>

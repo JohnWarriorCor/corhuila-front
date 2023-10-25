@@ -352,6 +352,7 @@ export class ModalFormularioPrograma {
       titulo: new FormControl('', Validators.required),
       nivelAcademico: new FormControl('', Validators.required),
       nivelFormacion: new FormControl('', Validators.required),
+      estadoSnies: new FormControl('', Validators.required),
       ciclos: new FormControl('', Validators.required),
       modalidad: new FormControl('', Validators.required),
       areaConocimiento: new FormControl('', Validators.required),
@@ -389,6 +390,8 @@ export class ModalFormularioPrograma {
       +this.formularioPrograma.get('nivelAcademico')!.value;
     programa.nivelFormacionCodigo =
       +this.formularioPrograma.get('nivelFormacion')!.value;
+    programa.estadoSniesCodigo =
+      +this.formularioPrograma.get('estadoSnies')!.value;
     programa.ciclosCodigo = +this.formularioPrograma.get('ciclos')!.value;
     programa.modalidadCodigo = +this.formularioPrograma.get('modalidad')!.value;
     programa.areaConocimientoCodigo =
@@ -477,6 +480,9 @@ export class ModalFormularioPrograma {
     this.formularioPrograma
       .get('nivelFormacion')!
       .setValue(element.nivelFormacionCodigo);
+    this.formularioPrograma
+      .get('estadoSnies')!
+      .setValue('' + element.estadoSniesCodigo);
     this.formularioPrograma.get('ciclos')!.setValue('' + element.ciclosCodigo);
     this.formularioPrograma
       .get('modalidad')!
@@ -484,6 +490,7 @@ export class ModalFormularioPrograma {
     this.formularioPrograma
       .get('areaConocimiento')!
       .setValue(element.areaConocimientoCodigo);
+    this.obtenerListadoNbc(element.areaConocimientoCodigo);
     this.formularioPrograma.get('nbc')!.setValue(element.nbcCodigo);
     this.formularioPrograma.get('sede')!.setValue(element.facultad.sede.codigo);
     this.obtenerFacultades(element.facultad.sede.codigo);

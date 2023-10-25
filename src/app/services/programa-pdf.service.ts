@@ -14,7 +14,7 @@ import { DatePipe } from '@angular/common';
 export class ProgramaPdfService {
   header: any;
   footer: any;
-  aniosPasados:any;
+  aniosPasados: any;
 
   constructor(private http: HttpClient, private datePipe: DatePipe) {
     this.hedaerBase64();
@@ -198,26 +198,29 @@ export class ProgramaPdfService {
         {
           style: 'tableInit',
           table: {
-            widths: ['*'],
             heights: 20,
+            widths: ['*', '*', '*'],
             body: [
               [
                 {
+                  colSpan: '3',
                   text: 'INSTITUCIÓN',
                   fillColor: '#edeff0',
                   bold: true,
                   margin: 5,
                 },
+                {},
+                {},
               ],
-              [{ text: institucion[0].nombre.toUpperCase(), margin: 5 }],
-            ],
-          },
-        },
-        {
-          style: 'tableExample',
-          table: {
-            widths: ['*', '*', '*'],
-            body: [
+              [
+                {
+                  colSpan: '3',
+                  text: institucion[0].nombre.toUpperCase(),
+                  margin: 5,
+                },
+                {},
+                {},
+              ],
               [
                 { text: 'NIT', fillColor: '#edeff0', bold: true, margin: 5 },
                 {
@@ -302,7 +305,7 @@ export class ProgramaPdfService {
               ],
               [
                 { text: element.snies, margin: 5 },
-                { text: '', margin: 5 },
+                { text: element.estadoSnies, margin: 5 },
                 { text: convenio, margin: 5 },
                 { text: '', margin: 5 },
               ],
@@ -470,7 +473,7 @@ export class ProgramaPdfService {
                 },
                 {},
                 {
-                  text: 'PÁGINA WEB',
+                  text: 'CÓDIGO CINE',
                   fillColor: '#edeff0',
                   bold: true,
                   margin: 5,
@@ -615,13 +618,21 @@ export class ProgramaPdfService {
           alignment: 'center',
         },
         tableInit: {
-          margin: [0, 10, 0, 10],
+          margin: [0, 10, 0, 5],
           fontSize: 10,
           alignment: 'center',
         },
       },
     };
 
-    pdfMake.createPdf(docDefinition).download('Institución CORHUILA.pdf');
+    pdfMake
+      .createPdf(docDefinition)
+      .download(
+        'Hoja de vida porgrama - ' +
+          element.nombre +
+          ' - ' +
+          this.datePipe.transform(new Date(), 'dd-MM-yyyy h:mm a') +
+          '.pdf'
+      );
   }
 }
