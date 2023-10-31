@@ -239,16 +239,44 @@
           </div>
         </div>
         <div class="row">
-          <div class="col">
+          <div class="col" *ngIf="editar">
+            <div class="form-group">
+              <label>Norma de creación<span class="requerido">*</span></label>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" formControlName="norma">
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let listado of listadoNorma"
+                    [value]="listado.codigo"
+                    >{{ listado.nombreCompleto }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col" *ngIf="!editar">
             <div class="form-group">
               <label>Norma de creación<span class="requerido">*</span></label>
               <mat-form-field class="example-full-width" appearance="outline">
                 <input
+                  type="text"
+                  placeholder="Ecriba el nombre de la norma"
+                  aria-label="Number"
                   matInput
-                  formControlName="norma"
-                  class="form_control"
-                  required
+                  [matAutocomplete]="auto"
+                  [formControl]="myControl"
                 />
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let option of filteredOptions | async"
+                    [value]="option.nombre"
+                    (click)="asignarNormaHijo(option.codigo,option.fechaExpedicion)"
+                  >
+                    {{option.normaTipo}} {{option.numero}} {{option.nombre |
+                    uppercase}}
+                  </mat-option>
+                </mat-autocomplete>
               </mat-form-field>
             </div>
           </div>
@@ -263,7 +291,7 @@
                 type="date"
                 formControlName="fechaNorma"
                 class="form-control"
-                required
+                readonly
               />
             </div>
           </div>

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Institucion } from '../models/institucion';
+import { DatePipe } from '@angular/common';
 
 (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
 
@@ -13,7 +14,7 @@ export class InstitucionPdfService {
   header: any;
   footer: any;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private datePipe: DatePipe) {
     this.hedaerBase64();
     this.footerBase64();
   }
@@ -60,21 +61,90 @@ export class InstitucionPdfService {
 
   public export(element: Institucion): void {
     const docDefinition: any = {
-      pageMargins: [60, 40, 60, 120],
+      background: [
+        {
+          image: this.footer,
+          width: 600,
+          height: 120,
+          alignment: 'center',
+          opacity: 0.5,
+          margin: [0, 704, 30, 0],
+        },
+      ],
+      pageMargins: [40, 110, 40, 17.8],
       header: {
+        margin: [30, 0, 0, 0],
         image: this.header,
-        width: 650,
-        height: 120,
+        width: 600,
+        height: 90,
+        opacity: 0.5,
       },
 
-      footer: {
-        image: this.footer,
-        width: 590,
-        height: 120,
+      footer: function (
+        currentPage: { toString: () => string },
+        pageCount: string
+      ) {
+        let dia = [
+          'lunes',
+          'martes',
+          'miércoles',
+          'jueves',
+          'viernes',
+          'sábado',
+          'domingo',
+        ];
+        let mes = [
+          'enero',
+          'febrero',
+          'marzo',
+          'abril',
+          'mayo',
+          'junio',
+          'julio',
+          'agosto',
+          'septiembre',
+          'octubre',
+          'noviembre',
+          'diciembre',
+        ];
+        let d = new Date();
+        let date =
+          ' ' +
+          dia[d.getDay() - 1] +
+          ' ' +
+          d.getDate() +
+          ' ' +
+          mes[d.getMonth()] +
+          ' ' +
+          d.getFullYear();
+        return {
+          margin: [0, 0, 0, 0],
+          style: 'footer',
+          table: {
+            widths: ['*', '*'],
+            body: [
+              [
+                {
+                  border: [false, false, false, false],
+                  text: 'Fecha de impresión:  ' + date,
+                  fillColor: '#8996a4',
+                  bold: true,
+                  alignment: 'left',
+                },
+                {
+                  border: [false, false, false, false],
+                  text:
+                    'Pagina: ' + currentPage.toString() + ' de ' + pageCount,
+                  fillColor: '#8996a4',
+                  bold: true,
+                  alignment: 'right',
+                },
+              ],
+            ],
+          },
+        };
       },
       content: [
-        { text: '', style: 'header' },
-        'Official documentation is in progress, this document is just a glimpse of what is possible with pdfmake and its layout engine.',
         {
           text: '',
           style: 'subheader',
@@ -257,7 +327,9 @@ export class InstitucionPdfService {
       ],
       styles: {
         footer: {
-          margin: [0, 10, 0, 5],
+          color: '#FFFFFF',
+          fontSize: 10,
+          bold: true,
         },
         subheader: {
           fontSize: 16,
@@ -266,18 +338,24 @@ export class InstitucionPdfService {
           alignment: 'center',
         },
         tableExample: {
-          margin: [0, 10, 0, 10],
+          margin: [0, 5, 0, 5],
           fontSize: 10,
           alignment: 'center',
         },
         tableInit: {
-          margin: [0, 55, 0, 10],
+          margin: [0, 10, 0, 5],
           fontSize: 10,
           alignment: 'center',
         },
       },
     };
 
-    pdfMake.createPdf(docDefinition).download('Institución CORHUILA.pdf');
+    pdfMake
+      .createPdf(docDefinition)
+      .download(
+        'Reporte Institución' +
+          this.datePipe.transform(new Date(), 'dd-MM-yyyy h:mm a') +
+          ' .pdf'
+      );
   }
 }

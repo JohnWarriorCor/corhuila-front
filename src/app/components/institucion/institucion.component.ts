@@ -35,6 +35,9 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { NgxPrintDirective } from 'ngx-print';
 import { HttpClient } from '@angular/common/http';
 import { InstitucionPdfService } from '../../services/institucion-pdf.service';
+import { Norma } from 'src/app/models/norma';
+import { Observable, map, startWith } from 'rxjs';
+import { NormaService } from 'src/app/services/norma.service';
 
 @Component({
   selector: 'app-institucion',
@@ -98,18 +101,12 @@ export class InstitucionComponent {
   }
 
   openDialog(element: any): void {
-    const dialogRef = this.dialog.open(ModalInstitucion, {
+    const dialogRef = this.dialog.open(ModalVistaInstitucion, {
       width: '70%',
       data: { institucion: element },
     });
   }
 
-  /*   openFormulario(): void {
-    const dialogRef = this.dialog.open(ModalFormulario, {
-      width: '70%',
-    });
-  }
- */
   obtenerListadoInstitucion() {
     this.institucionService.obtenerListadoInstitucion().subscribe((data) => {
       this.listadoInstitucion = data;
@@ -149,15 +146,19 @@ export class ModalFormularioInstitucion {
   listadoSector: Sector[] = [];
   listadoCcp: CabecerasCentrosPoblados[] = [];
   listadoInstitucion: Institucion[] = [];
-  formularioOculto: boolean = false;
 
   formInstitucion!: FormGroup;
+
+  listadoNorma: Norma[] = [];
+  filteredOptions!: Observable<Norma[]>;
+  myControl = new FormControl('');
 
   constructor(
     public dialogRef: MatDialogRef<ModalFormularioInstitucion>,
     private formBuilder: FormBuilder,
     public ubicacionService: UbicacionService,
     public institucionService: InstitucionService,
+    public normaService: NormaService,
     public dialog: MatDialog,
     private authService: AuthService,
     private router: Router,
@@ -169,14 +170,36 @@ export class ModalFormularioInstitucion {
       this.obtenerListadoCaracterAcademico();
       this.obtenerListadoNaturalezaJuridica();
       this.obtenerListadoSector();
+      this.obtenerListadoNormas();
       this.crearFormInstitucion();
       if (JSON.stringify(data) !== 'null') {
         this.editarInstitucion(data.institucion);
-        console.log('Entra');
-      } else {
-        console.log('No entra');
       }
     }
+  }
+
+  obtenerListadoNormas() {
+    this.normaService.obtenerNormasNoDerogadas().subscribe((data) => {
+      this.listadoNorma = data;
+      this.filteredOptions = this.myControl.valueChanges.pipe(
+        startWith(''),
+        map((value) => this._filter(value || ''))
+      );
+    });
+  }
+
+  private _filter(value: string): Norma[] {
+    console.log(value);
+    const filterValue = value.toLowerCase();
+
+    return this.listadoNorma.filter((option) =>
+      option.nombreCompleto.toLowerCase().includes(filterValue)
+    );
+  }
+
+  asignarNormaHijo(codigo: number, fecha: Date) {
+    this.formInstitucion.get('norma')!.setValue(codigo);
+    this.formInstitucion.get('fechaNorma')!.setValue(fecha);
   }
 
   private crearFormInstitucion(): void {
@@ -282,7 +305,6 @@ export class ModalFormularioInstitucion {
   }
 
   cancelar() {
-    this.formularioOculto = false;
     this.formInstitucion.reset();
     this.crearFormInstitucion();
     this.editar = false;
@@ -386,10 +408,10 @@ export class ModalFormularioInstitucion {
 
 @Component({
   selector: 'modal-institucion',
-  templateUrl: 'modal-institucion.html',
+  templateUrl: 'modal-vista-institucion.html',
   styleUrls: ['./institucion.component.css'],
 })
-export class ModalInstitucion implements OnInit {
+export class ModalVistaInstitucion implements OnInit {
   paises: Pais[] = [];
   departamentos: Departamento[] = [];
   municipios: Municipio[] = [];
@@ -405,7 +427,7 @@ export class ModalInstitucion implements OnInit {
 
   constructor(
     private http: HttpClient,
-    public dialogRef: MatDialogRef<ModalInstitucion>,
+    public dialogRef: MatDialogRef<ModalVistaInstitucion>,
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public ubicacionService: UbicacionService,

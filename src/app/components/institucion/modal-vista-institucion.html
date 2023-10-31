@@ -1,0 +1,148 @@
+<h2 mat-dialog-title class="bg-corhuila-p-as-2 font-corhuila text-white">
+  <i class="fa-solid fa-circle-info"></i> Información reporte institución
+  <!-- <i class="fa-solid fa-xmark" mat-dialog-close></i> -->
+</h2>
+<mat-dialog-content>
+  <br />
+  <div
+    class="container text-center"
+    style="border: solid #edeff0 1px; width: 60%"
+  >
+    <div class="row">
+      <div class="col">
+        <img src="assets/header.jpg" alt="CORHUILA" style="opacity: 0.5" />
+      </div>
+    </div>
+    <div class="row pl-4 pr-4 mt-4">
+      <div class="col">
+        <table class="table table-bordered shadow-sm">
+          <thead>
+            <tr
+              class="font-weight-bold thead-corhuila"
+              style="background-color: #edeff0 !important; color: black"
+            >
+              <th colspan="3">INSTITUCIÓN</th>
+            </tr>
+            <tr>
+              <td colspan="3">{{data.institucion.nombre | uppercase}}</td>
+            </tr>
+            <tr
+              class="font-weight-bold thead-corhuila"
+              style="background-color: #edeff0 !important; color: black"
+            >
+              <th>NIT</th>
+              <th>CÓDIGO SNIES</th>
+              <th>CÓDIGO SNIES PADRE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{data.institucion.nit}}</td>
+              <td>{{data.institucion.ies}}</td>
+              <td>{{data.institucion.iesPadre}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row pl-4 pr-4">
+      <div class="col">
+        <table class="table table-bordered text-center shadow-sm">
+          <thead
+            class="font-weight-bold"
+            style="background-color: #edeff0 !important; color: black"
+          >
+            <th>SECTOR</th>
+            <th>NATURALEZA JURÍDICA</th>
+            <th>CARÁCTER ACADÉMICO</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{data.institucion.sector.nombre}}</td>
+              <td>{{data.institucion.naturaleza.nombre}}</td>
+              <td>{{data.institucion.caracter.nombre}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row pl-4 pr-4">
+      <div class="col">
+        <table class="table table-bordered text-center shadow-sm">
+          <thead
+            class="font-weight-bold"
+            style="background-color: #edeff0 !important; color: black"
+          >
+            <th>PAÍS</th>
+            <th>DEPARTAMENTO</th>
+            <th>MUNICIPIO</th>
+            <th>CABECERA MUNICIPAL</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{data.institucion.pais.nombre}}</td>
+              <td>{{data.institucion.departamento.nombre}}</td>
+              <td>{{data.institucion.municipio.nombre}}</td>
+              <td>{{data.institucion.ccp.nombre}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row pl-4 pr-4">
+      <div class="col">
+        <table class="table table-bordered text-center shadow-sm">
+          <thead
+            class="font-weight-bold"
+            style="background-color: #edeff0 !important; color: black"
+          >
+            <th>DIRECCIÓN</th>
+            <th>TELEFONO</th>
+            <th>PÁGINA WEB</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{data.institucion.direccion}}</td>
+              <td>{{data.institucion.telefono}}</td>
+              <td>{{data.institucion.url}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row pl-4 pr-4">
+      <div class="col">
+        <table class="table table-bordered text-center shadow-sm">
+          <thead
+            class="font-weight-bold"
+            style="background-color: #edeff0 !important; color: black"
+          >
+            <th>NORMA DE CREACIÓN</th>
+            <th>FECHA DE LA NORMA DE CREACIÓN</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{data.institucion.norma}}</td>
+              <td>{{data.institucion.fechaNorma | date: 'dd/MM/yyyy'}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <br /><br /><br /><br />
+    <div class="row">
+      <div class="col">
+        <img src="assets/footer.jpg" alt="CORHUILA" style="opacity: 0.5" />
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<hr />
+<mat-dialog-actions align="end">
+  <button class="btn btn-warning mr-2" mat-dialog-close>
+    <i class="fa-solid fa-xmark"></i> Cancelar
+  </button>
+  <button class="btn btn-corhuila-print" (click)="generarPdf()">
+    <i class="fa-solid fa-print"></i> Imprimir
+  </button>
+</mat-dialog-actions>

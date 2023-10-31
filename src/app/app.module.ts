@@ -13,7 +13,7 @@ import { LoginComponent } from './components/login/login.component';
 import { InicioComponent } from './components/inicio/inicio.component';
 import { NavbarComponent } from './components/shared/navbar/navbar.component';
 import { DesarrolloComponent } from './components/desarrollo/desarrollo.component';
-import { InstitucionComponent, ModalInstitucion, ModalFormularioInstitucion } from './components/institucion/institucion.component';
+import { InstitucionComponent, ModalVistaInstitucion, ModalFormularioInstitucion } from './components/institucion/institucion.component';
 import { PersonaComponent, ModalFormularioPersona } from './components/configuracion/persona/persona.component';
 import { EstructuraComponent } from './components/inicio/estructura/estructura.component';
 import { ConfiguracionComponent } from './components/inicio/configuracion/configuracion.component';
@@ -43,7 +43,7 @@ import { ProgramaComponent, ModalFormularioPrograma, ModalVistaPrograma } from '
     DesarrolloComponent,
     InstitucionComponent,
     PersonaComponent,
-    ModalInstitucion,
+    ModalVistaInstitucion,
     ModalCuerpoColegiado,
     ModalVistaNorma,
     ModalFormularioSede,
@@ -90,7 +90,7 @@ import { ProgramaComponent, ModalFormularioPrograma, ModalVistaPrograma } from '
     NgxPrintModule
   ],
   entryComponents: [
-    ModalInstitucion,
+    ModalVistaInstitucion,
     ModalCuerpoColegiado,
     ModalVistaNorma,
     ModalFormularioInstitucion,

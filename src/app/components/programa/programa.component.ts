@@ -34,7 +34,6 @@ import { CabecerasCentrosPoblados } from 'src/app/models/cabeceras-centros-pobla
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { NgxPrintDirective } from 'ngx-print';
 import { HttpClient } from '@angular/common/http';
-import { InstitucionPdfService } from '../../services/institucion-pdf.service';
 import { NivelFormacion } from 'src/app/models/nivel-formacion';
 import { ProgramaService } from '../../services/programa.service';
 import { AreaConocimiento } from 'src/app/models/area-conocimiento';
@@ -250,9 +249,6 @@ export class ModalFormularioPrograma {
       this.obtenerCampoAmplio();
       if (JSON.stringify(data) !== 'null') {
         this.editarPorgrama(data.programa);
-        console.log('Entra');
-      } else {
-        console.log('No entra');
       }
     }
   }

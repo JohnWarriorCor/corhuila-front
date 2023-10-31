@@ -4,283 +4,277 @@
 </h2>
 <mat-dialog-content>
   <br />
-  <div class="container" style="border: solid #edeff0 1px" id="print-section">
+  <div class="container text-center" style="border: solid #edeff0 1px;width: 60%;">
     <div class="row">
       <div class="col">
-        <img src="assets/header.jpg" alt="CORHUILA" style="width: 100%" />
+        <img src="assets/header.jpg" alt="CORHUILA" />
       </div>
     </div>
-    <form>
-      <div class="row text-center m-3 font-weight-bold">
-        <div class="col">
-          <h3>Hoja de vida - Programa académico</h3>
-        </div>
+    <div class="row m-3 font-weight-bold">
+      <div class="col">
+        <h3>Hoja de vida - Programa académico</h3>
       </div>
-      <div class="row pl-4 pr-4">
-        <div class="col">
-          <table class="table table-bordered text-center shadow-sm">
-            <thead>
-              <tr
-                class="font-weight-bold thead-corhuila"
-                style="background-color: #edeff0 !important; color: black"
-              >
-                <th colspan="3">INSTITUCIÓN</th>
-              </tr>
-              <tr>
-                <td colspan="3" *ngIf="(listadoInstitucion | json)!='[]'">
-                  {{listadoInstitucion[0].nombre | uppercase}}
-                </td>
-              </tr>
-              <tr
-                class="font-weight-bold thead-corhuila"
-                style="background-color: #edeff0 !important; color: black"
-              >
-                <th>NIT</th>
-                <th>CÓDIGO SNIES</th>
-                <th>CÓDIGO SNIES PADRE</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td *ngIf="(listadoInstitucion | json)!='[]'">
-                  {{listadoInstitucion[0].nit}}
-                </td>
-                <td *ngIf="(listadoInstitucion | json)!='[]'">
-                  {{listadoInstitucion[0].ies}}
-                </td>
-                <td *ngIf="(listadoInstitucion | json)!='[]'">
-                  {{listadoInstitucion[0].iesPadre}}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="row pl-4 pr-4 mb-2">
-        <div class="col">
-          <table class="table table-bordered text-center">
-            <thead
+    </div>
+    <div class="row">
+      <div class="col mx-auto">
+        <table class="table table-bordered shadow-sm">
+          <thead>
+            <tr
               class="font-weight-bold thead-corhuila"
               style="background-color: #edeff0 !important; color: black"
             >
-              <th>NOMBRE DEL PROGRAMA ACADÉMICO</th>
-              <th>TÍTULO OTORGADO</th>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{data.programa.nombre}}</td>
-                <td>{{data.programa.titulo}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="row pl-4 pr-4">
-        <div class="col">
-          <table class="table table-bordered text-center shadow-sm">
-            <thead
-              class="font-weight-bold"
+              <th colspan="3">INSTITUCIÓN</th>
+            </tr>
+            <tr>
+              <td colspan="3" *ngIf="(listadoInstitucion | json)!='[]'">
+                {{listadoInstitucion[0].nombre | uppercase}}
+              </td>
+            </tr>
+            <tr
+              class="font-weight-bold thead-corhuila"
               style="background-color: #edeff0 !important; color: black"
             >
-              <th>SNIES</th>
-              <th>ESTADO EN SNIES</th>
-              <th>CONVENIO</th>
-              <th>¿SE OFERTA?</th>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{data.programa.snies}}</td>
-                <td>{{data.programa.estadoSnies}}</td>
-                <td>
-                  <span *ngIf="data.programa.convenio==0">NO</span
-                  ><span *ngIf="data.programa.convenio==1">SI</span>
-                </td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+              <th>NIT</th>
+              <th>CÓDIGO SNIES</th>
+              <th>CÓDIGO SNIES PADRE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td *ngIf="(listadoInstitucion | json)!='[]'">
+                {{listadoInstitucion[0].nit}}
+              </td>
+              <td *ngIf="(listadoInstitucion | json)!='[]'">
+                {{listadoInstitucion[0].ies}}
+              </td>
+              <td *ngIf="(listadoInstitucion | json)!='[]'">
+                {{listadoInstitucion[0].iesPadre}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="row pl-4 pr-4">
-        <div class="col">
-          <table class="table table-bordered text-center shadow-sm">
-            <thead
-              class="font-weight-bold"
-              style="background-color: #edeff0 !important; color: black"
-            >
-              <th>MODALIDAD</th>
-              <th>NIVEL ACADÉMICO</th>
-              <th>NIVEL DE FORMACIÓN</th>
-              <th>OFRECE CICLOS PROPEDEÚTICOS</th>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{data.programa.modalidad}}</td>
-                <td>{{data.programa.nivelAcademico}}</td>
-                <td>{{data.programa.nivelFormacion}}</td>
-                <td>{{data.programa.ciclos}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col mx-auto">
+        <table class="table table-bordered text-center">
+          <thead
+            class="font-weight-bold thead-corhuila"
+            style="background-color: #edeff0 !important; color: black"
+          >
+            <th>NOMBRE DEL PROGRAMA ACADÉMICO</th>
+            <th>TÍTULO OTORGADO</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{data.programa.nombre}}</td>
+              <td>{{data.programa.titulo}}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="row pl-4 pr-4">
-        <div class="col">
-          <table class="table table-bordered text-center shadow-sm">
-            <thead
-              class="font-weight-bold"
-              style="background-color: #edeff0 !important; color: black"
-            >
-              <tr>
-                <th colspan="4">UBICACIÓN DEL PROGRAMA</th>
-              </tr>
-              <tr>
-                <th>DEPARTAMENTO</th>
-                <th>MUNICIPIO</th>
-                <th>SEDE</th>
-                <th>FACULTAD</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{data.programa.facultad.sede.departamento.nombre}}</td>
-                <td>{{data.programa.facultad.sede.municipio.nombre}}</td>
-                <td>{{data.programa.facultad.sede.nombre}}</td>
-                <td>{{data.programa.facultad.nombre}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="row pl-4 pr-4">
-        <div class="col">
-          <table class="table table-bordered text-center shadow-sm">
-            <thead
-              class="font-weight-bold"
-              style="background-color: #edeff0 !important; color: black"
-            >
-              <tr>
-                <th colspan="4">INFORMACIÓN DE CREACIÓN</th>
-              </tr>
-              <tr>
-                <th>NORMA CREACIÓN</th>
-                <th>FECHA CREACIÓN</th>
-                <th>FECHA REGISTRO SNIES</th>
-                <th>ANTIGUEDAD (AÑOS)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{data.programa.norma}}</td>
-                <td>{{data.programa.fechaCreacion | date: 'dd/MM/yyyy'}}</td>
-                <td>
-                  {{data.programa.fechaRegistroSnies | date: 'dd/MM/yyyy'}}
-                </td>
-                <td>{{aniosPasados}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="row pl-4 pr-4">
-        <div class="col">
-          <table class="table table-bordered text-center shadow-sm">
-            <thead
-              class="font-weight-bold"
-              style="background-color: #edeff0 !important; color: black"
-            >
-              <th colspan="2">CLASIFICACIÓN CINE</th>
-              <th>CÓDIGO CINE</th>
-            </thead>
-            <tbody>
-              <tr>
-                <th
-                  class="font-weight-bold"
-                  style="background-color: #edeff0 !important; color: black"
-                >
-                  CAMPO AMPLIO (CA)
-                </th>
-                <td>{{data.programa.campoDetallado.amplio}}</td>
-                <td>{{data.programa.campoDetallado.amplioCine}}</td>
-              </tr>
-              <tr>
-                <th
-                  class="font-weight-bold"
-                  style="background-color: #edeff0 !important; color: black"
-                >
-                  CAMPO ESPECÍFICO (CE)
-                </th>
-                <td>{{data.programa.campoDetallado.especifico}}</td>
-                <td>{{data.programa.campoDetallado.especificoCine}}</td>
-              </tr>
-              <tr>
-                <th
-                  class="font-weight-bold"
-                  style="background-color: #edeff0 !important; color: black"
-                >
-                  CAMPO DETALLADO (CD)
-                </th>
-                <td>{{data.programa.campoDetallado.nombre}}</td>
-                <td>{{data.programa.campoDetallado.cine}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="row pl-4 pr-4">
-        <div class="col">
-          <table class="table table-bordered text-center shadow-sm">
-            <thead
-              class="font-weight-bold"
-              style="background-color: #edeff0 !important; color: black"
-            >
-              <th>AREA DE CONOCIMIENTO</th>
-              <th>NBC</th>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{data.programa.areaConocimiento}}</td>
-                <td>{{data.programa.nbc}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="row pl-4 pr-4">
-        <div class="col">
-          <table class="table table-bordered text-center shadow-sm">
-            <thead
-              class="font-weight-bold"
-              style="background-color: #edeff0 !important; color: black"
-            >
-              <tr>
-                <th colspan="4">INFORMACIÓN DEL PROGRAMA</th>
-              </tr>
-              <tr>
-                <th>TIPO DE ADMISION</th>
-                <th>DURACIÓN</th>
-                <th>CRÉDITOS</th>
-                <th>CUPOS</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{data.programa.tipoAdmision}}</td>
-                <td>
-                  {{data.programa.duracion}} {{data.programa.tipoDuracion}}
-                </td>
-                <td>{{data.programa.creditos}}</td>
-                <td>{{data.programa.cupos}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <br /><br />
-    </form>
+    </div>
     <div class="row">
+      <div class="col mx-auto">
+        <table class="table table-bordered text-center shadow-sm">
+          <thead
+            class="font-weight-bold"
+            style="background-color: #edeff0 !important; color: black"
+          >
+            <th>SNIES</th>
+            <th>ESTADO EN SNIES</th>
+            <th>CONVENIO</th>
+            <th>¿SE OFERTA?</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{data.programa.snies}}</td>
+              <td>{{data.programa.estadoSnies}}</td>
+              <td>
+                <span *ngIf="data.programa.convenio==0">NO</span
+                ><span *ngIf="data.programa.convenio==1">SI</span>
+              </td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col mx-auto">
+        <table class="table table-bordered text-center shadow-sm">
+          <thead
+            class="font-weight-bold"
+            style="background-color: #edeff0 !important; color: black"
+          >
+            <th>MODALIDAD</th>
+            <th>NIVEL ACADÉMICO</th>
+            <th>NIVEL DE FORMACIÓN</th>
+            <th>OFRECE CICLOS PROPEDEÚTICOS</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{data.programa.modalidad}}</td>
+              <td>{{data.programa.nivelAcademico}}</td>
+              <td>{{data.programa.nivelFormacion}}</td>
+              <td>{{data.programa.ciclos}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col mx-auto">
+        <table class="table table-bordered text-center shadow-sm">
+          <thead
+            class="font-weight-bold"
+            style="background-color: #edeff0 !important; color: black"
+          >
+            <tr>
+              <th colspan="4">UBICACIÓN DEL PROGRAMA</th>
+            </tr>
+            <tr>
+              <th>DEPARTAMENTO</th>
+              <th>MUNICIPIO</th>
+              <th>SEDE</th>
+              <th>FACULTAD</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{data.programa.facultad.sede.departamento.nombre}}</td>
+              <td>{{data.programa.facultad.sede.municipio.nombre}}</td>
+              <td>{{data.programa.facultad.sede.nombre}}</td>
+              <td>{{data.programa.facultad.nombre}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col mx-auto">
+        <table class="table table-bordered text-center shadow-sm">
+          <thead
+            class="font-weight-bold"
+            style="background-color: #edeff0 !important; color: black"
+          >
+            <tr>
+              <th colspan="4">INFORMACIÓN DE CREACIÓN</th>
+            </tr>
+            <tr>
+              <th>NORMA CREACIÓN</th>
+              <th>FECHA CREACIÓN</th>
+              <th>FECHA REGISTRO SNIES</th>
+              <th>ANTIGUEDAD (AÑOS)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{data.programa.norma}}</td>
+              <td>{{data.programa.fechaCreacion | date: 'dd/MM/yyyy'}}</td>
+              <td>{{data.programa.fechaRegistroSnies | date: 'dd/MM/yyyy'}}</td>
+              <td>{{aniosPasados}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col mx-auto">
+        <table class="table table-bordered text-center shadow-sm">
+          <thead
+            class="font-weight-bold"
+            style="background-color: #edeff0 !important; color: black"
+          >
+            <th colspan="2">CLASIFICACIÓN CINE</th>
+            <th>CÓDIGO CINE</th>
+          </thead>
+          <tbody>
+            <tr>
+              <th
+                class="font-weight-bold"
+                style="background-color: #edeff0 !important; color: black"
+              >
+                CAMPO AMPLIO (CA)
+              </th>
+              <td>{{data.programa.campoDetallado.amplio}}</td>
+              <td>{{data.programa.campoDetallado.amplioCine}}</td>
+            </tr>
+            <tr>
+              <th
+                class="font-weight-bold"
+                style="background-color: #edeff0 !important; color: black"
+              >
+                CAMPO ESPECÍFICO (CE)
+              </th>
+              <td>{{data.programa.campoDetallado.especifico}}</td>
+              <td>{{data.programa.campoDetallado.especificoCine}}</td>
+            </tr>
+            <tr>
+              <th
+                class="font-weight-bold"
+                style="background-color: #edeff0 !important; color: black"
+              >
+                CAMPO DETALLADO (CD)
+              </th>
+              <td>{{data.programa.campoDetallado.nombre}}</td>
+              <td>{{data.programa.campoDetallado.cine}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col mx-auto">
+        <table class="table table-bordered text-center shadow-sm">
+          <thead
+            class="font-weight-bold"
+            style="background-color: #edeff0 !important; color: black"
+          >
+            <th>AREA DE CONOCIMIENTO</th>
+            <th>NBC</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{data.programa.areaConocimiento}}</td>
+              <td>{{data.programa.nbc}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col mx-auto">
+        <table class="table table-bordered text-center shadow-sm">
+          <thead
+            class="font-weight-bold"
+            style="background-color: #edeff0 !important; color: black"
+          >
+            <tr>
+              <th colspan="4">INFORMACIÓN DEL PROGRAMA</th>
+            </tr>
+            <tr>
+              <th>TIPO DE ADMISION</th>
+              <th>DURACIÓN</th>
+              <th>CRÉDITOS</th>
+              <th>CUPOS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{data.programa.tipoAdmision}}</td>
+              <td>{{data.programa.duracion}} {{data.programa.tipoDuracion}}</td>
+              <td>{{data.programa.creditos}}</td>
+              <td>{{data.programa.cupos}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <br /><br />
+    <div class="row text-center">
       <div class="col">
-        <img src="assets/footer.jpg" alt="CORHUILA" style="width: 100%" />
+        <img src="assets/footer.jpg" alt="CORHUILA" />
       </div>
     </div>
   </div>

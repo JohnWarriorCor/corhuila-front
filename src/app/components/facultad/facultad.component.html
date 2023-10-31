@@ -34,37 +34,37 @@
                 </td>
               </ng-container>
               <ng-container matColumnDef="nombre">
-                <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                <th mat-header-cell *matHeaderCellDef>NOMBRE</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
                   {{ element.nombre | uppercase }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="sede">
-                <th mat-header-cell *matHeaderCellDef>Sede</th>
+                <th mat-header-cell *matHeaderCellDef>SEDE</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
                   {{ element.sede.ccp.nombre }} - {{ element.sede.nombre }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="decano">
-                <th mat-header-cell *matHeaderCellDef>Decano</th>
+                <th mat-header-cell *matHeaderCellDef>DECANO</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
                   {{ element.decano | uppercase }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="correo">
-                <th mat-header-cell *matHeaderCellDef>Correo facultad</th>
+                <th mat-header-cell *matHeaderCellDef>CORREO FACULTAD</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
                   {{ element.correo }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="telefono">
-                <th mat-header-cell *matHeaderCellDef>Telefono</th>
+                <th mat-header-cell *matHeaderCellDef>TELÉFONO</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
                   {{ element.telefono }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="opciones">
-                <th mat-header-cell *matHeaderCellDef>Opciones</th>
+                <th mat-header-cell *matHeaderCellDef>OPCIONES</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
                   <button
                     *ngIf="element.estado === 1"
