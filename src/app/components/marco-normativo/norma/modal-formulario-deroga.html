@@ -132,7 +132,7 @@
                       >
                         <mat-option
                           *ngFor="let option of filteredOptions | async"
-                          [value]="option.nombre"
+                          [value]="option.nombreCompleto"
                           (click)="asignarNormaHijo(option.codigo)"
                         >
                           {{option.normaTipo}} {{option.numero}} {{option.nombre

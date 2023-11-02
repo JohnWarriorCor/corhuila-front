@@ -22,6 +22,7 @@ export class Institucion {
 	direccion!: string;
 	telefono!: string;
 	url!: string;
+  normaCodigo!: string;
 	norma!: string;
 	fechaNorma!: Date;
 	estado!: number;

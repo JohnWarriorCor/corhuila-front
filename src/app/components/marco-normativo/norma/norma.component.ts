@@ -24,14 +24,11 @@ import { NormaService } from '../../../services/norma.service';
 import { EntidadExterna } from 'src/app/models/entidad-externa';
 import { NormaTipo } from 'src/app/models/norma-tipo';
 import { Norma } from 'src/app/models/norma';
-import { saveAs } from 'file-saver';
 import { NormogramaExcelService } from 'src/app/services/nomograma-excel.service';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { NormaDeroga } from 'src/app/models/norma-deroga';
 import Swal from 'sweetalert2';
-import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-norma',
@@ -82,23 +79,29 @@ export class NormaComponent {
 
   exportToExcel() {
     this.listadoNorma = [];
+    this.dataNorma = [];
+    this.dataForExcel = [];
     this.normaService.obtenerListadoNormas().subscribe((data) => {
       this.listadoNorma = data;
-    });
-    this.dataNorma.forEach((row: any) => {
-      this.dataForExcel.push(Object.values(row));
-    });
-    let fecha = this.datePipe.transform(Date.now(), 'dd-MM-yyyy h:mm a');
-    let reportData = {
-      title: 'Normograma CORHUILA ' + fecha,
-      data: this.dataForExcel,
-      headers: Object.keys(this.dataNorma[0]),
-    };
+      if (JSON.stringify(data) !== '[]') {
+        this.crearDatasource();
+        this.dataNorma.forEach((row: any) => {
+          this.dataForExcel.push(Object.values(row));
+        });
+        let fecha = this.datePipe.transform(Date.now(), 'dd-MM-yyyy h:mm a');
+        let reportData = {
+          title: 'Normograma CORHUILA ' + fecha,
+          data: this.dataForExcel,
+          headers: Object.keys(this.dataNorma[0]),
+        };
 
-    this.normogramaExcelService.exportExcel(reportData);
+        this.normogramaExcelService.exportExcel(reportData);
+      }
+    });
   }
 
   crearDatasource() {
+    console.log('---->', this.listadoNorma.length);
     for (let index = 0; index < this.listadoNorma.length; index++) {
       let deroga = '';
       if (this.listadoNorma[index].deroga == 1) {
@@ -221,11 +224,9 @@ export class NormaComponent {
 
   obtenerListadoNormas() {
     this.normaService.obtenerListadoNormas().subscribe((data) => {
-      this.listadoNorma = data;
       this.dataSource = new MatTableDataSource<Norma>(data);
       this.paginator.firstPage();
       this.dataSource.paginator = this.paginator;
-      this.crearDatasource();
     });
   }
 
@@ -338,7 +339,6 @@ export class ModalFormularioNorma {
   fechaActual = new Date();
 
   lsitadoNormaDeroga: NormaDeroga[] = [];
-  listadoNorma: Norma[] = [];
   listadoCuerposColegiados: CuerposColegiados[] = [];
   listadoEntidadExterna: EntidadExterna[] = [];
   listadoNormaTipo: NormaTipo[] = [];
