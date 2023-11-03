@@ -31,9 +31,22 @@ import { CineAmplio } from 'src/app/models/cine-amplio';
   selector: 'app-detallado',
   templateUrl: './detallado.component.html',
   styleUrls: ['./detallado.component.css'],
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { subscriptSizing: 'dynamic' },
+    },
+  ],
 })
 export class DetalladoComponent {
   listadoCineDetallado: CineDetallado[] = [];
+  listadoCineEspecifico: CineEspecifico[] = [];
+  listadoCineAmplio: CineAmplio[] = [];
+
+  campoAmplio!: string;
+  campoEspecifico!: string;
+  campoDetallado!: string;
+  claves!: string;
 
   dataSource = new MatTableDataSource<CineDetallado>([]);
   displayedColumns: string[] = [
@@ -55,7 +68,17 @@ export class DetalladoComponent {
   ) {
     if (this.authService.validacionToken()) {
       this.obtenerListadoCineDetallado();
+      this.obtenerCampoAmplio();
+      this.obtenerCampoEspecifico();
     }
+  }
+
+  restaurar() {
+    this.obtenerListadoCineDetallado();
+    this.campoAmplio = '';
+    this.campoEspecifico = '';
+    this.campoDetallado = '';
+    this.claves = '';
   }
 
   registrarFormulario(): void {
@@ -91,6 +114,31 @@ export class DetalladoComponent {
         this.dataSource = new MatTableDataSource<CineDetallado>(data);
         this.paginator.firstPage();
         this.dataSource.paginator = this.paginator;
+      });
+  }
+
+  filtrar(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  obtenerCampoAmplio() {
+    this.clasificacionCineService
+      .obtenerListadoClasificacionCineAmplio()
+      .subscribe((data) => {
+        this.listadoCineAmplio = data;
+      });
+  }
+
+  obtenerCampoEspecifico() {
+    this.clasificacionCineService
+      .obtenerListadoClasificacionCineEspecifico()
+      .subscribe((data) => {
+        this.listadoCineEspecifico = data;
       });
   }
 

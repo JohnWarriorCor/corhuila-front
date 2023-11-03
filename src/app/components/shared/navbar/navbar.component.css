@@ -72,5 +72,5 @@ small {
 .mat-toolbar {
   position: sticky;
   top: 0; /* Fija la barra de herramientas en la parte superior */
-  z-index: 1; /* Asegura que la barra de herramientas esté por encima del contenido */
+  z-index: 2; /* Asegura que la barra de herramientas esté por encima del contenido */
 }

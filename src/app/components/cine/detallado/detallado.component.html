@@ -1,5 +1,5 @@
 <div class="mb-4 text-center">
-  <div class="card shadow-sm mt-5">
+  <div class="card shadow-sm mt-3">
     <div
       class="card-header text-left cursor-select"
       [routerLink]="['/estructura']"
@@ -8,6 +8,85 @@
       <h4 class="mt-2">Formulario campo detallado</h4>
     </div>
     <div class="card-body">
+      <fieldset class="scheduler-border shadow-sm">
+        <legend class="scheduler-border">Filtros</legend>
+        <div class="row">
+          <div class="col">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-select
+                class="font-sm-corhuila"
+                [(ngModel)]="campoAmplio"
+                placeholder="CAMPO AMPLIO"
+              >
+                <mat-option
+                  *ngFor="let item of listadoCineAmplio"
+                  class="font-sm-corhuila"
+                  [value]="item.nombre"
+                  >{{ item.nombre }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-select
+                class="font-sm-corhuila"
+                [(ngModel)]="campoEspecifico"
+                placeholder="CAMPO ESPECÍFICO"
+              >
+                <mat-option
+                  *ngFor="let item of listadoCineEspecifico"
+                  class="font-sm-corhuila"
+                  [value]="item.nombre"
+                  >{{ item.nombre }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <mat-select
+                class="font-sm-corhuila"
+                [(ngModel)]="campoDetallado"
+                placeholder="CAMPO DETALLADO"
+              >
+                <mat-option
+                  *ngFor="let item of listadoCineDetallado"
+                  class="font-sm-corhuila"
+                  [value]="item.nombre"
+                  >{{ item.nombre }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col">
+            <mat-form-field class="example-full-width" appearance="outline">
+              <input
+                matInput
+                type="text"
+                (keyup)="filtrar($event)"
+                [(ngModel)]="claves"
+                placeholder="PALABRAS CLAVES"
+              />
+              <button
+                matSuffix
+                style="text-decoration: none; background: none; border: none"
+              >
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </button>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col text-center">
+            <button class="btn btn-corhuila-p-1" (click)="restaurar()">
+              <i class="fa-solid fa-rotate-right"></i> Restaurar
+            </button>
+          </div>
+        </div>
+      </fieldset>
       <div class="row text-right">
         <div class="col">
           <button class="btn btn-info" (click)="registrarFormulario()">
@@ -17,7 +96,16 @@
       </div>
       <div class="row mt-2">
         <div class="col">
-          <table mat-table [dataSource]="dataSource" class="table shadow">
+          <table
+            mat-table
+            [dataSource]="
+              dataSource
+                | filtroCampoAmplio : 'amplio' : campoAmplio
+                | filtroCampoEspecifico : 'especifico' : campoEspecifico
+                | filtroCampoDetallado : 'nombre' : campoDetallado
+            "
+            class="table shadow"
+          >
             <ng-container matColumnDef="index">
               <th mat-header-cell *matHeaderCellDef>N°</th>
               <td

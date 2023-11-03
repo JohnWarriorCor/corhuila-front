@@ -9,6 +9,52 @@
         <h4 class="mt-2">Formulario integrantes cuerpos colegiados</h4>
       </div>
       <div class="card-body">
+        <fieldset class="scheduler-border shadow-sm">
+          <legend class="scheduler-border">Filtros</legend>
+          <div class="row">
+            <div class="col">
+              <mat-form-field
+              class="example-full-width"
+              appearance="outline"
+            >
+              <input
+                matInput
+                type="text"
+                (keyup)="filtrar($event)"
+                required
+              />
+              <button
+                matSuffix
+                style="
+                  text-decoration: none;
+                  background: none;
+                  border: none;
+                "
+              >
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </button>
+            </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" placeholder="CUERPO COLEGIADO">
+                  <mat-option class="font-sm-corhuila" value="1"
+                    >kkkkkkk</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select class="font-sm-corhuila" placeholder="ESTAMENTO">
+                  <mat-option class="font-sm-corhuila" value="1"
+                    >kkkkkkk</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </fieldset>
         <div class="row text-right">
           <div class="col">
             <button class="btn btn-info" (click)="registrarFormulario()">

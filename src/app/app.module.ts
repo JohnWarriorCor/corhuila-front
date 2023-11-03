@@ -33,6 +33,9 @@ import { AmplioComponent, ModalFormularioAmplio } from './components/cine/amplio
 import { EspecificoComponent, ModalFormularioEspecifico} from './components/cine/especifico/especifico.component';
 import { DetalladoComponent, ModalFormularioDetallado} from './components/cine/detallado/detallado.component';
 import { ProgramaComponent, ModalFormularioPrograma, ModalVistaPrograma } from './components/programa/programa.component';
+import { FiltroCampoAmplioPipe } from './pipes/filtro-campo-amplio.pipe';
+import { FiltroCampoEspecificoPipe } from './pipes/filtro-campo-especifico.pipe';
+import { FiltroCampoDetalladoPipe } from './pipes/filtro-campo-detallado.pipe';
 
 @NgModule({
   declarations: [
@@ -78,6 +81,9 @@ import { ProgramaComponent, ModalFormularioPrograma, ModalVistaPrograma } from '
     EspecificoComponent,
     DetalladoComponent,
     ProgramaComponent,
+    FiltroCampoAmplioPipe,
+    FiltroCampoEspecificoPipe,
+    FiltroCampoDetalladoPipe,
   ],
   imports: [
     BrowserModule,

@@ -29,6 +29,12 @@ import Swal from 'sweetalert2';
   selector: 'app-integrante-cuerpo-colegiado',
   templateUrl: './integrante-cuerpo-colegiado.component.html',
   styleUrls: ['./integrante-cuerpo-colegiado.component.css'],
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { subscriptSizing: 'dynamic' },
+    },
+  ],
 })
 export class IntegranteCuerpoColegiadoComponent {
   listadoCuerposColegiados: CuerposColegiados[] = [];
@@ -76,6 +82,15 @@ export class IntegranteCuerpoColegiadoComponent {
         this.paginator.firstPage();
         this.dataSource.paginator = this.paginator;
       });
+  }
+
+  filtrar(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   botonActivo(element: IntegranteCuerpoColegiado): boolean {
