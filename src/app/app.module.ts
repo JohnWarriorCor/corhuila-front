@@ -36,6 +36,14 @@ import { ProgramaComponent, ModalFormularioPrograma, ModalVistaPrograma } from '
 import { FiltroCampoAmplioPipe } from './pipes/filtro-campo-amplio.pipe';
 import { FiltroCampoEspecificoPipe } from './pipes/filtro-campo-especifico.pipe';
 import { FiltroCampoDetalladoPipe } from './pipes/filtro-campo-detallado.pipe';
+import { FiltroGeneralPipe } from './pipes/filtro-general.pipe';
+import { FiltroEntidadPipe } from './pipes/filtro-entidad.pipe';
+import { FiltroCuerpoColegiadoPipe } from './pipes/filtro-cuerpo-colegiado.pipe';
+import { FiltroNormaTipoPipe } from './pipes/filtro-norma-tipo.pipe';
+import { FiltroEntidadExternaPipe } from './pipes/filtro-entidad-externa.pipe';
+import { FiltroMedioPipe } from './pipes/filtro-medio.pipe';
+import { FiltroDerogaPipe } from './pipes/filtro-deroga.pipe';
+import { FiltroEntidadInternaPipe } from './pipes/filtro-entidad-interna.pipe';
 
 @NgModule({
   declarations: [
@@ -84,6 +92,14 @@ import { FiltroCampoDetalladoPipe } from './pipes/filtro-campo-detallado.pipe';
     FiltroCampoAmplioPipe,
     FiltroCampoEspecificoPipe,
     FiltroCampoDetalladoPipe,
+    FiltroGeneralPipe,
+    FiltroEntidadPipe,
+    FiltroCuerpoColegiadoPipe,
+    FiltroNormaTipoPipe,
+    FiltroEntidadExternaPipe,
+    FiltroMedioPipe,
+    FiltroDerogaPipe,
+    FiltroEntidadInternaPipe,
   ],
   imports: [
     BrowserModule,

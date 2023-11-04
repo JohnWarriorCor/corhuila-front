@@ -19,9 +19,161 @@
             </button>
           </div>
         </div>
+        <fieldset class="scheduler-border shadow-sm">
+          <legend class="scheduler-border">Filtros</legend>
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  placeholder="ENTIDAD"
+                  [(ngModel)]="entidad"
+                >
+                  <mat-option class="font-sm-corhuila" value="INTERNA"
+                    >INTERNA</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="EXTERNA"
+                    >EXTERNA</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  placeholder="ENTIDAD INTERNA"
+                  [(ngModel)]="entidadInterna"
+                >
+                  <mat-option class="font-sm-corhuila" value="1"
+                    >RECTORÍA</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="0"
+                    >CUERPO COLEGIADO</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  placeholder="CUERPO COLEGIADO"
+                  [(ngModel)]="cuerpoColegiado"
+                >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let cuerpoColegiado of listadoCuerposColegiados"
+                    [value]="cuerpoColegiado.nombre"
+                    >{{ cuerpoColegiado.nombreCorto }} -
+                    {{ cuerpoColegiado.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  placeholder="ENTIDAD EXTERNA"
+                  [(ngModel)]="entidadExterna"
+                >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let item of listadoEntidadExterna"
+                    [value]="item.nombre"
+                    >{{ item.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  placeholder="TIPO DE NORMA"
+                  [(ngModel)]="tipoNorma"
+                >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let item of listadoNormaTipo"
+                    [value]="item.nombre"
+                    >{{ item.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  placeholder="MEDIO EN QUE SE ENCUENTRA"
+                  [(ngModel)]="medio"
+                >
+                  <mat-option class="font-sm-corhuila" value="DIGITAL"
+                    >DIGITAL</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="FÍSICO"
+                    >FÍSICO</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-sm-2">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  placeholder="DEROGA"
+                  [(ngModel)]="deroga"
+                >
+                  <mat-option class="font-sm-corhuila" value="1">SI</mat-option>
+                  <mat-option class="font-sm-corhuila" value="0">NO</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  type="text"
+                  (keyup)="filtrar($event)"
+                  [(ngModel)]="claves"
+                  placeholder="PALABRAS CLAVES"
+                />
+                <button
+                  matSuffix
+                  style="text-decoration: none; background: none; border: none"
+                >
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-2">
+              <button class="btn btn-corhuila-p-1" (click)="restaurar()">
+                <i class="fa-solid fa-rotate-right"></i> Restaurar
+              </button>
+            </div>
+          </div>
+        </fieldset>
         <div class="row mt-2">
           <div class="col">
-            <table mat-table [dataSource]="dataSource">
+            <table
+              mat-table
+              [dataSource]="
+                dataSource
+                  | filtroEntidad : 'entidad' : entidad
+                  | filtroCuerpoColegiado : 'cuerpoColegiado' : cuerpoColegiado
+                  | filtroNormaTipo : 'normaTipo' : tipoNorma
+                  | filtroEntidadExterna : 'entidadExterna' : entidadExterna
+                  | filtroMedio : 'medio' : medio
+                  | filtroDeroga : 'deroga' : deroga
+                  | filtroEntidadInterna : 'rectoria' : entidadInterna
+              "
+            >
               <ng-container matColumnDef="index">
                 <th mat-header-cell *matHeaderCellDef>N°</th>
                 <td
@@ -33,7 +185,9 @@
                 </td>
               </ng-container>
               <ng-container matColumnDef="nombreEntidad">
-                <th mat-header-cell *matHeaderCellDef>ENTIDAD</th>
+                <th style="width: 20%" mat-header-cell *matHeaderCellDef>
+                  ENTIDAD
+                </th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
                   <span
                     *ngIf="element.entidadCodigo == 1 && element.rectoria == 0"
@@ -48,7 +202,9 @@
                 </td>
               </ng-container>
               <ng-container matColumnDef="nombre">
-                <th mat-header-cell *matHeaderCellDef>NOMBRE</th>
+                <th style="width: 20%" mat-header-cell *matHeaderCellDef>
+                  NOMBRE
+                </th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
                   {{ element.normaTipo }} {{ element.numero }}
                   {{ element.nombre | uppercase }}

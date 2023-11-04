@@ -55,6 +55,9 @@ export class IntegranteCuerpoColegiadoComponent {
 
   dialogRef!: MatDialogRef<any>;
 
+  cuerpoColegiado!: string;
+  claves!: string;
+
   constructor(
     private formBuilder: FormBuilder,
     public cuerposColegiadosService: CuerposColegiadosService,
@@ -68,6 +71,12 @@ export class IntegranteCuerpoColegiadoComponent {
       this.obtenerCuerposColegiados();
       this.obtenerIntegrantesCuerpoColegiado();
     }
+  }
+
+  restaurar() {
+    this.obtenerIntegrantesCuerpoColegiado();
+    this.cuerpoColegiado = '';
+    this.claves = '';
   }
 
   obtenerIntegrantesCuerpoColegiado() {

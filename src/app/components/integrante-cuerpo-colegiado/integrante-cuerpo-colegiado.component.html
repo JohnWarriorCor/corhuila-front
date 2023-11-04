@@ -13,45 +13,42 @@
           <legend class="scheduler-border">Filtros</legend>
           <div class="row">
             <div class="col">
-              <mat-form-field
-              class="example-full-width"
-              appearance="outline"
-            >
-              <input
-                matInput
-                type="text"
-                (keyup)="filtrar($event)"
-                required
-              />
-              <button
-                matSuffix
-                style="
-                  text-decoration: none;
-                  background: none;
-                  border: none;
-                "
-              >
-                <i class="fa-solid fa-magnifying-glass"></i>
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  type="text"
+                  (keyup)="filtrar($event)"
+                  [(ngModel)]="claves"
+                  placeholder="PALABRAS CLAVES"
+                />
+                <button
+                  matSuffix
+                  style="text-decoration: none; background: none; border: none"
+                >
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  [(ngModel)]="cuerpoColegiado"
+                  placeholder="CUERPO COLEGIADO"
+                >
+                  <mat-option
+                    *ngFor="let item of listadoCuerposColegiados"
+                    class="font-sm-corhuila"
+                    [value]="item.nombre"
+                    >{{ item.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-2">
+              <button class="btn btn-corhuila-p-1" (click)="restaurar()">
+                <i class="fa-solid fa-rotate-right"></i> Restaurar
               </button>
-            </mat-form-field>
-            </div>
-            <div class="col">
-              <mat-form-field class="example-full-width" appearance="outline">
-                <mat-select class="font-sm-corhuila" placeholder="CUERPO COLEGIADO">
-                  <mat-option class="font-sm-corhuila" value="1"
-                    >kkkkkkk</mat-option
-                  >
-                </mat-select>
-              </mat-form-field>
-            </div>
-            <div class="col">
-              <mat-form-field class="example-full-width" appearance="outline">
-                <mat-select class="font-sm-corhuila" placeholder="ESTAMENTO">
-                  <mat-option class="font-sm-corhuila" value="1"
-                    >kkkkkkk</mat-option
-                  >
-                </mat-select>
-              </mat-form-field>
             </div>
           </div>
         </fieldset>
@@ -66,7 +63,10 @@
           <div class="col">
             <table
               mat-table
-              [dataSource]="dataSource"
+              [dataSource]="
+                dataSource
+                  | filtroGeneral : 'nombreCuerpoColegiado' : cuerpoColegiado
+              "
               class="table table-hover shadow"
             >
               <ng-container matColumnDef="index">
@@ -94,7 +94,7 @@
               <ng-container matColumnDef="cc">
                 <th mat-header-cell *matHeaderCellDef>Cuerpo Colegiado</th>
                 <td mat-cell *matCellDef="let element" class="font-sm-usco">
-                  {{ element.cuerpoColegiado.nombre }}
+                  {{ element.nombreCuerpoColegiado }}
                 </td>
               </ng-container>
               <ng-container matColumnDef="fechaInicio">

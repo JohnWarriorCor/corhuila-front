@@ -5,6 +5,7 @@ import { UsuarioTipo } from './usuario-tipo';
 export class IntegranteCuerpoColegiado {
   codigo!: number;
   cuerpoColegiado!: CuerposColegiados;
+  nombreCuerpoColegiado!: string;
   personaCodigo!: number;
   personaIdentificacion!: string;
   personaNombre!: string;

@@ -5,9 +5,16 @@
       [routerLink]="['/estructura']"
       routerLinkActive="router-link-active"
     >
-      <h4 class="mt-2">Formulario campo detallado</h4>
+      <h4 class="mt-2">Campo detallado</h4>
     </div>
     <div class="card-body">
+      <div class="row text-right">
+        <div class="col">
+          <button class="btn btn-info" (click)="registrarFormulario()">
+            <i class="fa-solid fa-plus"></i> Registrar
+          </button>
+        </div>
+      </div>
       <fieldset class="scheduler-border shadow-sm">
         <legend class="scheduler-border">Filtros</legend>
         <div class="row">
@@ -78,22 +85,13 @@
               </button>
             </mat-form-field>
           </div>
-        </div>
-        <div class="row mt-3">
-          <div class="col text-center">
+          <div class="col-sm-2">
             <button class="btn btn-corhuila-p-1" (click)="restaurar()">
               <i class="fa-solid fa-rotate-right"></i> Restaurar
             </button>
           </div>
         </div>
       </fieldset>
-      <div class="row text-right">
-        <div class="col">
-          <button class="btn btn-info" (click)="registrarFormulario()">
-            <i class="fa-solid fa-plus"></i> Registrar
-          </button>
-        </div>
-      </div>
       <div class="row mt-2">
         <div class="col">
           <table
@@ -117,7 +115,9 @@
               </td>
             </ng-container>
             <ng-container matColumnDef="detallado">
-              <th mat-header-cell *matHeaderCellDef>CAMPO DETALLADO</th>
+              <th style="width: 20%" mat-header-cell *matHeaderCellDef>
+                CAMPO DETALLADO
+              </th>
               <td mat-cell *matCellDef="let element" class="font-sm-usco">
                 {{ element.cine }} - {{ element.nombre }}
               </td>

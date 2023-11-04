@@ -62,6 +62,19 @@ export class NormaComponent {
   dataForExcel: any[] = [];
   dataNorma: any[] = [];
 
+  listadoCuerposColegiados: CuerposColegiados[] = [];
+  listadoEntidadExterna: EntidadExterna[] = [];
+  listadoNormaTipo: NormaTipo[] = [];
+
+  entidad!: string;
+  entidadInterna!: string;
+  entidadExterna!: string;
+  cuerpoColegiado!: string;
+  tipoNorma!: string;
+  medio!: string;
+  deroga!: string;
+  claves!: string;
+
   fechaActual = new Date();
 
   constructor(
@@ -70,11 +83,47 @@ export class NormaComponent {
     private router: Router,
     private datePipe: DatePipe,
     public normaService: NormaService,
-    public normogramaExcelService: NormogramaExcelService
+    public normogramaExcelService: NormogramaExcelService,
+    public cuerposColegiadosService: CuerposColegiadosService
   ) {
     if (this.authService.validacionToken()) {
       this.obtenerListadoNormas();
+      this.obtenerCuerposColegiados();
+      this.obtenerEntidadesExternas();
+      this.obtenerNormasTipo(2);
     }
+  }
+
+  restaurar() {
+    this.obtenerListadoNormas();
+    this.claves = '';
+    this.entidad = '';
+    this.cuerpoColegiado = '';
+    this.tipoNorma = '';
+    this.entidadExterna = '';
+    this.entidadInterna = '';
+    this.deroga = '';
+    this.medio = '';
+  }
+
+  obtenerCuerposColegiados() {
+    this.cuerposColegiadosService
+      .obtenerListadoCuerposColegiados()
+      .subscribe((data) => {
+        this.listadoCuerposColegiados = data;
+      });
+  }
+
+  obtenerEntidadesExternas() {
+    this.normaService.obtenerEntidadesExternas().subscribe((data) => {
+      this.listadoEntidadExterna = data;
+    });
+  }
+
+  obtenerNormasTipo(codigo: number) {
+    this.normaService.obtenerNormasTipo(codigo).subscribe((data) => {
+      this.listadoNormaTipo = data;
+    });
   }
 
   exportToExcel() {
@@ -101,7 +150,6 @@ export class NormaComponent {
   }
 
   crearDatasource() {
-    console.log('---->', this.listadoNorma.length);
     for (let index = 0; index < this.listadoNorma.length; index++) {
       let deroga = '';
       if (this.listadoNorma[index].deroga == 1) {
@@ -228,6 +276,15 @@ export class NormaComponent {
       this.paginator.firstPage();
       this.dataSource.paginator = this.paginator;
     });
+  }
+
+  filtrar(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   botonActivo(element: Norma): boolean {

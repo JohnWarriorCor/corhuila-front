@@ -6,7 +6,7 @@
         [routerLink]="['/estructura']"
         routerLinkActive="router-link-active"
       >
-        <h4 class="mt-2">Formulario institución</h4>
+        <h4 class="mt-2">Institución</h4>
       </div>
       <div class="card-body">
         <div class="row text-right">
@@ -49,7 +49,7 @@
               </ng-container>
               <ng-container matColumnDef="nombre">
                 <th mat-header-cell *matHeaderCellDef>NOMBRE</th>
-                <td mat-cell *matCellDef="let element" class="font-sm-corhuila">
+                <td style="width: 20%;" mat-cell *matCellDef="let element" class="font-sm-corhuila">
                   {{ element.nombre | uppercase }}
                 </td>
               </ng-container>
