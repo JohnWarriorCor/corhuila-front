@@ -39,10 +39,43 @@
         <div class="col">
           <fieldset class="scheduler-border shadow-sm">
             <legend class="scheduler-border">Clasificado</legend>
+            <div class="row mb-3">
+              <div class="col-sm-6">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-select
+                    class="font-sm-corhuila"
+                    placeholder="ENTIDAD"
+                    [(ngModel)]="entidadAsignada"
+                  >
+                    <mat-option class="font-sm-corhuila" value="INTERNA"
+                      >INTERNA</mat-option
+                    >
+                    <mat-option class="font-sm-corhuila" value="EXTERNA"
+                      >EXTERNA</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-6">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-select
+                    class="font-sm-corhuila"
+                    placeholder="TIPO DE NORMA"
+                    [(ngModel)]="tipoNormaAsignada"
+                  >
+                    <mat-option
+                      class="font-sm-corhuila"
+                      *ngFor="let item of listadoNormaTipo"
+                      [value]="item.nombre"
+                      >{{ item.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
             <div class="row">
               <div class="col">
                 <div class="form-group">
-                  <label>Palabras claves<span class="requerido">*</span></label>
                   <mat-form-field
                     class="example-full-width"
                     appearance="outline"
@@ -51,7 +84,8 @@
                       matInput
                       type="text"
                       (keyup)="filtrarCalsificado($event)"
-                      required
+                      placeholder="PALABRAS CLAVES"
+                      [(ngModel)]="palabrasClavesAsignada"
                     />
                     <button
                       matSuffix
@@ -66,8 +100,19 @@
                   </mat-form-field>
                 </div>
               </div>
+              <div class="col-sm-4">
+                <button
+                  class="btn btn-corhuila-p-1"
+                  (click)="restaurarAsignada()"
+                >
+                  <i class="fa-solid fa-rotate-right"></i> Restaurar
+                </button>
+              </div>
             </div>
-            <table mat-table [dataSource]="dataSourceClasificado">
+            <table
+              mat-table
+              [dataSource]="dataSourceClasificado | filtroEntidad : 'entidad' : entidadAsignada | filtroNormaTipo : 'normaTipo' : tipoNormaAsignada"
+            >
               <ng-container matColumnDef="index">
                 <th mat-header-cell *matHeaderCellDef>N°</th>
                 <td
@@ -117,7 +162,7 @@
             </table>
             <mat-paginator
               #MatPaginatorClasificado="matPaginator"
-              [pageSizeOptions]="[10, 20, 30]"
+              [pageSizeOptions]="[5, 10, 15]"
               showFirstLastButtons
             ></mat-paginator>
           </fieldset>
@@ -125,10 +170,43 @@
         <div class="col">
           <fieldset class="scheduler-border shadow-sm">
             <legend class="scheduler-border">General</legend>
+            <div class="row mb-3">
+              <div class="col-sm-6">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-select
+                    class="font-sm-corhuila"
+                    placeholder="ENTIDAD"
+                    [(ngModel)]="entidadGeneral"
+                  >
+                    <mat-option class="font-sm-corhuila" value="INTERNA"
+                      >INTERNA</mat-option
+                    >
+                    <mat-option class="font-sm-corhuila" value="EXTERNA"
+                      >EXTERNA</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-6">
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <mat-select
+                    class="font-sm-corhuila"
+                    placeholder="TIPO DE NORMA"
+                    [(ngModel)]="tipoNormaGeneral"
+                  >
+                    <mat-option
+                      class="font-sm-corhuila"
+                      *ngFor="let item of listadoNormaTipo"
+                      [value]="item.nombre"
+                      >{{ item.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
             <div class="row">
               <div class="col">
                 <div class="form-group">
-                  <label>Palabras claves<span class="requerido">*</span></label>
                   <mat-form-field
                     class="example-full-width"
                     appearance="outline"
@@ -137,7 +215,8 @@
                       matInput
                       type="text"
                       (keyup)="filtrarGeneral($event)"
-                      required
+                      placeholder="PALABRAS CLAVES"
+                      [(ngModel)]="palabrasClavesGeneral"
                     />
                     <button
                       matSuffix
@@ -152,8 +231,19 @@
                   </mat-form-field>
                 </div>
               </div>
+              <div class="col-sm-4">
+                <button
+                  class="btn btn-corhuila-p-1"
+                  (click)="restaurarGeneral()"
+                >
+                  <i class="fa-solid fa-rotate-right"></i> Restaurar
+                </button>
+              </div>
             </div>
-            <table mat-table [dataSource]="dataSourceGeneral">
+            <table
+              mat-table
+              [dataSource]="dataSourceGeneral | filtroEntidad : 'entidad' : entidadGeneral | filtroNormaTipo : 'normaTipo' : tipoNormaGeneral"
+            >
               <ng-container matColumnDef="index">
                 <th mat-header-cell *matHeaderCellDef>N°</th>
                 <td
@@ -203,7 +293,7 @@
             </table>
             <mat-paginator
               #MatPaginatorGeneral="matPaginator"
-              [pageSizeOptions]="[10, 20, 30]"
+              [pageSizeOptions]="[5, 10, 15]"
               showFirstLastButtons
             ></mat-paginator>
           </fieldset>

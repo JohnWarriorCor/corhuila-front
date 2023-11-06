@@ -21,6 +21,7 @@ export class Programa {
   nbcCodigo!: number;
   nbc!: string;
   facultad!: Facultad;
+  sede!: string;
   creditos!: number;
   tipoDuracionCodigo!: number;
   tipoDuracion!: string;

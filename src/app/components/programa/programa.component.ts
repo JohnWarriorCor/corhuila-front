@@ -57,6 +57,12 @@ import { ProgramaPdfService } from '../../services/programa-pdf.service';
   selector: 'app-programa',
   templateUrl: './programa.component.html',
   styleUrls: ['./programa.component.css'],
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { subscriptSizing: 'dynamic' },
+    },
+  ],
 })
 export class ProgramaComponent {
   dataSource = new MatTableDataSource<Programa>([]);
@@ -75,15 +81,110 @@ export class ProgramaComponent {
 
   dialogRef!: MatDialogRef<any>;
 
+  listadoNivelFormacion: NivelFormacion[] = [];
+  listadoAreaConocimiento: AreaConocimiento[] = [];
+  listadoNbc: Nbc[] = [];
+  listadoSede: Sede[] = [];
+  listadoFacultad: Facultad[] = [];
+  listadoCineAmplio: CineAmplio[] = [];
+  listadoCineEspecifico: CineEspecifico[] = [];
+  listadoCineDetallado: CineDetallado[] = [];
+
+  palabrasClaves!: string;
+  estadoSnies!: string;
+  nivelAcademico!: string;
+  nivelFormacion!: string;
+  modalidad!: string;
+  areaConocimiento!: string;
+  sede!: string;
+
   constructor(
     public ubicacionService: UbicacionService,
     public programaService: ProgramaService,
     public dialog: MatDialog,
-    private authService: AuthService
+    private authService: AuthService,
+    public sedeService: SedeService,
+    public facultadService: FacultadService,
+    public clasificacionCineService: ClasificacionCineService
   ) {
     if (this.authService.validacionToken()) {
       this.obtenerListadoProgramas();
+      this.obtenerListadoAreaConocimiento();
+      this.obtenerSedes();
+      this.obtenerCampoAmplio();
+      this.obtenerNivelFormacion();
     }
+  }
+
+  restaurar() {
+    this.obtenerListadoProgramas();
+    this.palabrasClaves = '';
+    this.estadoSnies = '';
+    this.nivelAcademico = '';
+    this.nivelFormacion = '';
+    this.modalidad = '';
+    this.areaConocimiento = '';
+    this.sede = '';
+  }
+
+  obtenerNivelFormacion() {
+    this.programaService.obtenerListadoNivelesFormacion().subscribe((data) => {
+      this.listadoNivelFormacion = data;
+    });
+  }
+
+  obtenerListadoAreaConocimiento() {
+    this.programaService.obtenerListadoAreaConocimiento().subscribe((data) => {
+      this.listadoAreaConocimiento = data;
+    });
+  }
+
+  obtenerListadoNbc(codigo: number) {
+    this.listadoNbc = [];
+    this.programaService.obtenerListadoNbc(codigo).subscribe((data) => {
+      this.listadoNbc = data;
+    });
+  }
+
+  obtenerSedes() {
+    this.sedeService.obtenerListadoSedes().subscribe((data) => {
+      this.listadoSede = data;
+    });
+  }
+
+  obtenerCampoAmplio() {
+    this.clasificacionCineService
+      .obtenerListadoClasificacionCineAmplio()
+      .subscribe((data) => {
+        this.listadoCineAmplio = data;
+      });
+  }
+
+  obtenerCampoEspecifico(codigo: number) {
+    this.listadoCineEspecifico = [];
+    this.clasificacionCineService
+      .obtenerListadoEspecificoAmplio(codigo)
+      .subscribe((data) => {
+        this.listadoCineEspecifico = data;
+      });
+  }
+
+  obtenerCampoDetallado(codigo: number) {
+    this.listadoCineDetallado = [];
+    this.clasificacionCineService
+      .obtenerListadoDetalladoEspecifico(codigo)
+      .subscribe((data) => {
+        this.listadoCineDetallado = data;
+      });
+  }
+
+  obtenerFacultades(codigo: number) {
+    this.listadoFacultad = [];
+    this.facultadService
+      .obtenerListadoFacultadSede(codigo)
+      .subscribe((data) => {
+        this.listadoFacultad = data;
+      });
   }
 
   registrarFormulario(): void {
@@ -124,6 +225,15 @@ export class ProgramaComponent {
       this.paginator.firstPage();
       this.dataSource.paginator = this.paginator;
     });
+  }
+
+  filtrar(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   actualizarPrograma(porgrama: Programa) {

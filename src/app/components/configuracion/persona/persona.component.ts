@@ -49,6 +49,9 @@ import Swal from 'sweetalert2';
 })
 export class PersonaComponent {
   listadoPersona: Persona[] = [];
+  municipios: Municipio[] = [];
+  generos: SexoBilogico[] = [];
+  estratos: Estrato[] = [];
 
   formPersona!: FormGroup;
 
@@ -66,6 +69,11 @@ export class PersonaComponent {
 
   dialogRef!: MatDialogRef<any>;
 
+  palabrasClaves!: string;
+  estrato!: string;
+  sexo!: string;
+  municipio!: string;
+
   constructor(
     private formBuilder: FormBuilder,
     public ubicacionService: UbicacionService,
@@ -77,7 +85,28 @@ export class PersonaComponent {
   ) {
     if (this.authService.validacionToken()) {
       this.obtenerPersonas();
+      this.obtenerEstratos();
+      this.obtenerGenero();
+      this.obtenerMunicipios();
     }
+  }
+
+  obtenerGenero() {
+    this.personaService.obtenerGenero().subscribe((data) => {
+      this.generos = data;
+    });
+  }
+
+  obtenerMunicipios() {
+    this.ubicacionService.obtenerMunicipios().subscribe((data) => {
+      this.municipios = data;
+    });
+  }
+
+  obtenerEstratos() {
+    this.personaService.obtenerEstratos().subscribe((data) => {
+      this.estratos = data;
+    });
   }
 
   registrarFormulario(): void {
@@ -88,6 +117,23 @@ export class PersonaComponent {
     this.dialogRef.afterClosed().subscribe(() => {
       this.onModalClosed();
     });
+  }
+
+  filtrar(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  restaurar() {
+    this.obtenerPersonas();
+    this.palabrasClaves = '';
+    this.sexo = '';
+    this.estrato = '';
+    this.municipio = '';
   }
 
   editarFormulario(element: any): void {

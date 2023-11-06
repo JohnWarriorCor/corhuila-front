@@ -18,6 +18,7 @@ export class Persona {
   nombre!: string;
   apellido!: string;
   sexoBiologico!: SexoBilogico;
+  sexoBiologicoNombre!: string;
   lugarExpedicion!: string;
   fechaExpedicion!: Date;
   fechaNacimiento!: Date;
@@ -27,6 +28,7 @@ export class Persona {
   estadoCivil!: EstadoCivil;
   lugarNacimiento!: string;
   estrato!: Estrato;
+  estratoNombre!: string;
   paisResidencia!: number;
   departamentoResidencia!: string;
   municipioResidencia!: string;

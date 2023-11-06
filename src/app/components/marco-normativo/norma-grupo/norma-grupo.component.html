@@ -16,7 +16,34 @@
             </button>
           </div>
         </div>
-        <div class="row mt-2">
+        <fieldset class="scheduler-border shadow-sm">
+          <legend class="scheduler-border">Filtros</legend>
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  type="text"
+                  (keyup)="filtrar($event)"
+                  [(ngModel)]="palabrasClaves"
+                  placeholder="PALABRAS CLAVES"
+                />
+                <button
+                  matSuffix
+                  style="text-decoration: none; background: none; border: none"
+                >
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-2">
+              <button class="btn btn-corhuila-p-1" (click)="restaurar()">
+                <i class="fa-solid fa-rotate-right"></i> Restaurar
+              </button>
+            </div>
+          </div>
+        </fieldset>
+        <div class="row ">
           <div class="col">
             <table mat-table [dataSource]="dataSource" class="table shadow">
               <ng-container matColumnDef="index">
@@ -70,7 +97,11 @@
                   >
                     <i class="fa-solid fa-trash fa-xs"></i>
                   </button>
-                  <button class="btn btn-corhuila-editar btn-sm" (click)="editarFormulario(element)" title="Editar">
+                  <button
+                    class="btn btn-corhuila-editar btn-sm"
+                    (click)="editarFormulario(element)"
+                    title="Editar"
+                  >
                     <i class="fa-solid fa-folder-tree"></i>
                   </button>
                 </td>

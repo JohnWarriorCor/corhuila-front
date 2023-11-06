@@ -98,7 +98,7 @@ export class ProgramaPdfService {
           width: 600,
           height: 120,
           alignment: 'center',
-          opacity: 1,
+          opacity: 0.5,
           margin: [0, 704, 30, 0],
         },
       ],
@@ -108,6 +108,7 @@ export class ProgramaPdfService {
         image: this.header,
         width: 600,
         height: 90,
+        opacity: 0.5,
       },
       footer: function (
         currentPage: { toString: () => string },
@@ -156,7 +157,7 @@ export class ProgramaPdfService {
                 {
                   border: [false, false, false, false],
                   text: 'Fecha de impresión:  ' + date,
-                  fillColor: '#152e49',
+                  fillColor: '#8996a4',
                   bold: true,
                   alignment: 'left',
                 },
@@ -164,7 +165,7 @@ export class ProgramaPdfService {
                   border: [false, false, false, false],
                   text:
                     'Pagina: ' + currentPage.toString() + ' de ' + pageCount,
-                  fillColor: '#152e49',
+                  fillColor: '#8996a4',
                   bold: true,
                   alignment: 'right',
                 },

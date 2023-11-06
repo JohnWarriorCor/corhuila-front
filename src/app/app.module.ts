@@ -44,6 +44,15 @@ import { FiltroEntidadExternaPipe } from './pipes/filtro-entidad-externa.pipe';
 import { FiltroMedioPipe } from './pipes/filtro-medio.pipe';
 import { FiltroDerogaPipe } from './pipes/filtro-deroga.pipe';
 import { FiltroEntidadInternaPipe } from './pipes/filtro-entidad-interna.pipe';
+import { FiltroEstadoSniesPipe } from './pipes/filtro-estado-snies.pipe';
+import { FiltroNivelFormacionPipe } from './pipes/filtro-nivel-formacion.pipe';
+import { FiltroNivelAcademicoPipe } from './pipes/filtro-nivel-academico.pipe';
+import { FiltroModalidadPipe } from './pipes/filtro-modalidad.pipe';
+import { FiltroAreaConocimientoPipe } from './pipes/filtro-area-conocimiento.pipe';
+import { FiltroSedePipe } from './pipes/filtro-sede.pipe';
+import { FiltroSexoBiologicoPipe } from './pipes/filtro-sexo-biologico.pipe';
+import { FiltroEstratoPipe } from './pipes/filtro-estrato.pipe';
+import { FiltroMunicipioPipe } from './pipes/filtro-municipio.pipe';
 
 @NgModule({
   declarations: [
@@ -100,6 +109,15 @@ import { FiltroEntidadInternaPipe } from './pipes/filtro-entidad-interna.pipe';
     FiltroMedioPipe,
     FiltroDerogaPipe,
     FiltroEntidadInternaPipe,
+    FiltroEstadoSniesPipe,
+    FiltroNivelFormacionPipe,
+    FiltroNivelAcademicoPipe,
+    FiltroModalidadPipe,
+    FiltroAreaConocimientoPipe,
+    FiltroSedePipe,
+    FiltroSexoBiologicoPipe,
+    FiltroEstratoPipe,
+    FiltroMunicipioPipe,
   ],
   imports: [
     BrowserModule,

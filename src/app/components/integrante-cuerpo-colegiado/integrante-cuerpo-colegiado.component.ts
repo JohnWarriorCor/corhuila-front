@@ -56,7 +56,7 @@ export class IntegranteCuerpoColegiadoComponent {
   dialogRef!: MatDialogRef<any>;
 
   cuerpoColegiado!: string;
-  claves!: string;
+  palabrasClaves!: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -76,7 +76,7 @@ export class IntegranteCuerpoColegiadoComponent {
   restaurar() {
     this.obtenerIntegrantesCuerpoColegiado();
     this.cuerpoColegiado = '';
-    this.claves = '';
+    this.palabrasClaves = '';
   }
 
   obtenerIntegrantesCuerpoColegiado() {

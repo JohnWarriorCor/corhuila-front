@@ -25,6 +25,12 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
   selector: 'app-representante-legal',
   templateUrl: './representante-legal.component.html',
   styleUrls: ['./representante-legal.component.css'],
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { subscriptSizing: 'dynamic' },
+    },
+  ],
 })
 export class RepresentanteLegalComponent {
   listadoPersona: Persona[] = [];
@@ -44,6 +50,7 @@ export class RepresentanteLegalComponent {
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
   dialogRef!: MatDialogRef<any>;
+  claves!: string;
 
   constructor(
     public personaService: PersonaService,
@@ -98,6 +105,20 @@ export class RepresentanteLegalComponent {
         this.paginator.firstPage();
         this.dataSource.paginator = this.paginator;
       });
+  }
+
+  filtrar(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  restaurar() {
+    this.obtenerListadoRepresentanteLegal();
+    this.claves = '';
   }
 
   botonActivo(element: RepresentanteLegal): boolean {

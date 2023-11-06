@@ -16,11 +16,93 @@
             </button>
           </div>
         </div>
+        <fieldset class="scheduler-border shadow-sm">
+          <legend class="scheduler-border">Filtros</legend>
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  placeholder="SEXO BIOLÓGICO"
+                  [(ngModel)]="sexo"
+                >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let item of generos"
+                    [value]="item.nombre"
+                    >{{ item.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  placeholder="ESTRATO"
+                  [(ngModel)]="estrato"
+                >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let item of estratos"
+                    [value]="item.nombre"
+                    >{{ item.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  placeholder="MUNICIPIO"
+                  [(ngModel)]="municipio"
+                >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let item of municipios"
+                    [value]="item.nombre"
+                    >{{ item.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  type="text"
+                  (keyup)="filtrar($event)"
+                  [(ngModel)]="palabrasClaves"
+                  placeholder="PALABRAS CLAVES"
+                />
+                <button
+                  matSuffix
+                  style="text-decoration: none; background: none; border: none"
+                >
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-2">
+              <button class="btn btn-corhuila-p-1" (click)="restaurar()">
+                <i class="fa-solid fa-rotate-right"></i> Restaurar
+              </button>
+            </div>
+          </div>
+        </fieldset>
         <div class="row mt-2">
           <div class="col">
             <table
               mat-table
-              [dataSource]="dataSource"
+              [dataSource]="
+                dataSource
+                  | filtroSexoBiologico : 'sexoBiologicoNombre' : sexo
+                  | filtroEstrato : 'estratoNombre' : estrato
+                  | filtroMunicipio : 'municipioResidencia' : municipio
+              "
               class="table table-hover shadow"
             >
               <ng-container matColumnDef="index">

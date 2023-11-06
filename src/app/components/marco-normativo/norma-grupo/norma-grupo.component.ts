@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  Inject,
-  ElementRef,
-} from '@angular/core';
+import { Component, ViewChild, Inject } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -19,23 +13,15 @@ import {
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
-import { Pais } from 'src/app/models/pais';
-import { UbicacionService } from 'src/app/services/ubicacion.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { Departamento } from 'src/app/models/departamento';
-import { InstitucionService } from 'src/app/services/institucion.service';
-import { Institucion } from 'src/app/models/institucion';
-import { CabecerasCentrosPoblados } from 'src/app/models/cabeceras-centros-poblados';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
-import { SedeTipo } from 'src/app/models/sede-tipo';
 import { MatSort } from '@angular/material/sort';
-import { SedeService } from 'src/app/services/sede.service';
-import { Sede } from 'src/app/models/sede';
 import { NormaGrupo } from 'src/app/models/norma-grupo';
 import { NormaService } from '../../../services/norma.service';
 import { Norma } from 'src/app/models/norma';
 import { NormaClasificada } from 'src/app/models/norma-clasificada';
+import Swal from 'sweetalert2';
+import { NormaTipo } from 'src/app/models/norma-tipo';
 
 @Component({
   selector: 'app-norma-grupo',
@@ -53,6 +39,8 @@ export class NormaGrupoComponent {
   displayedColumns: string[] = ['index', 'grupo', 'cantidad', 'opciones'];
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
   dialogRef!: MatDialogRef<any>;
+  listadoNormaTipo: NormaTipo[] = [];
+  palabrasClaves!: string;
 
   constructor(
     public normaService: NormaService,
@@ -63,6 +51,10 @@ export class NormaGrupoComponent {
     if (this.authService.validacionToken()) {
       this.obtenerNormaGruposAgrupados();
     }
+  }
+
+  restaurar() {
+    this.palabrasClaves = '';
   }
 
   registrarFormulario(): void {
@@ -76,7 +68,7 @@ export class NormaGrupoComponent {
 
   editarFormulario(element: any): void {
     this.dialogRef = this.dialog.open(ModalFormularioNormaGrupo, {
-      width: '70%',
+      width: '80%',
       disableClose: true,
       data: { grupo: element },
     });
@@ -95,6 +87,15 @@ export class NormaGrupoComponent {
       this.paginator.firstPage();
       this.dataSource.paginator = this.paginator;
     });
+  }
+
+  filtrar(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   mensajeSuccses() {
@@ -149,6 +150,14 @@ export class ModalFormularioNormaGrupo {
   listadoNormaSinClasificar: Norma[] = [];
   grupo: number = 0;
 
+  listadoNormaTipo: NormaTipo[] = [];
+  palabrasClavesAsignada!: string;
+  palabrasClavesGeneral!: string;
+  tipoNormaAsignada!: string;
+  entidadAsignada!: string;
+  tipoNormaGeneral!: string;
+  entidadGeneral!: string;
+
   //MAT TABLE SIN CLASIFICAR
   dataSourceGeneral = new MatTableDataSource<Norma>([]);
   displayedColumnsGeneral: string[] = ['index', 'entidad', 'norma', 'opciones'];
@@ -180,17 +189,35 @@ export class ModalFormularioNormaGrupo {
         this.grupo = data.grupo.codigo;
         this.obtenerNormaClasificada(this.grupo);
         this.obtenerNormaSinClasificar(this.grupo);
-        console.log('Entra');
-      } else {
-        console.log('No entra');
+        this.obtenerNormasTipo(2);
       }
     }
+  }
+
+  restaurarAsignada() {
+    this.obtenerNormaClasificada(this.grupo);
+    this.palabrasClavesAsignada = '';
+    this.entidadAsignada = '';
+    this.tipoNormaAsignada = '';
+  }
+
+  restaurarGeneral() {
+    this.obtenerNormaSinClasificar(this.grupo);
+    this.palabrasClavesGeneral = '';
+    this.entidadGeneral = '';
+    this.tipoNormaGeneral = '';
   }
 
   obtenerNormaGrupos() {
     this.normaService.obtenerNormaGrupos().subscribe((data) => {
       this.listadoNormaGrupo = data;
       console.log('Grupo', this.listadoNormaGrupo);
+    });
+  }
+
+  obtenerNormasTipo(codigo: number) {
+    this.normaService.obtenerNormasTipo(codigo).subscribe((data) => {
+      this.listadoNormaTipo = data;
     });
   }
 

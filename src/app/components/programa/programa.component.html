@@ -6,7 +6,7 @@
         [routerLink]="['/estructura']"
         routerLinkActive="router-link-active"
       >
-        <h4 class="mt-2">Formulario programa</h4>
+        <h4 class="mt-2">Programas</h4>
       </div>
       <div class="card-body">
         <div class="row text-right">
@@ -16,9 +16,156 @@
             </button>
           </div>
         </div>
+        <fieldset class="scheduler-border shadow-sm">
+          <legend class="scheduler-border">Filtros</legend>
+          <div class="row">
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  placeholder="ENTIDAD"
+                  [(ngModel)]="estadoSnies"
+                >
+                  <mat-option class="font-sm-corhuila" value="ACTIVO"
+                    >ACTIVO</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="INACTIVO"
+                    >INACTIVO</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  placeholder="NIVEL ACADÉMICO"
+                  [(ngModel)]="nivelAcademico"
+                >
+                  <mat-option class="font-sm-corhuila" value="PREGRADO"
+                    >PREGRADO</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="POSGRADO"
+                    >POSGRADO</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  placeholder="NIVEL DE FORMACIÓN"
+                  [(ngModel)]="nivelFormacion"
+                >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let listado of listadoNivelFormacion"
+                    [value]="listado.nombre"
+                    >{{ listado.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  placeholder="MODALIDAD"
+                  [(ngModel)]="modalidad"
+                >
+                  <mat-option class="font-sm-corhuila" value="PRESENCIAL"
+                    >PRESENCIAL</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="VIRTUAL"
+                    >VIRTUAL</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="A DISTANCIA"
+                    >A DISTANCIA</mat-option
+                  >
+                  <mat-option class="font-sm-corhuila" value="DUAL"
+                    >DUAL</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  placeholder="ÁREA DEL CONOCIMIENTO"
+                  [(ngModel)]="areaConocimiento"
+                >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let listado of listadoAreaConocimiento"
+                    [value]="listado.nombre"
+                    >{{ listado.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <mat-select
+                  class="font-sm-corhuila"
+                  placeholder="SEDE"
+                  [(ngModel)]="sede"
+                >
+                  <mat-option
+                    class="font-sm-corhuila"
+                    *ngFor="let listado of listadoSede"
+                    [value]="listado.nombre"
+                    >{{ listado.nombre }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col">
+              <mat-form-field class="example-full-width" appearance="outline">
+                <input
+                  matInput
+                  type="text"
+                  (keyup)="filtrar($event)"
+                  [(ngModel)]="palabrasClaves"
+                  placeholder="PALABRAS CLAVES"
+                />
+                <button
+                  matSuffix
+                  style="text-decoration: none; background: none; border: none"
+                >
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-2">
+              <button class="btn btn-corhuila-p-1" (click)="restaurar()">
+                <i class="fa-solid fa-rotate-right"></i> Restaurar
+              </button>
+            </div>
+          </div>
+        </fieldset>
         <div class="row mt-2">
           <div class="col">
-            <table mat-table [dataSource]="dataSource" class="table shadow">
+            <table
+              mat-table
+              [dataSource]="
+                dataSource
+                  | filtroEstadoSnies : 'estadoSnies' : estadoSnies
+                  | filtroNivelAcademico : 'nivelAcademico' : nivelAcademico
+                  | filtroNivelFormacion : 'nivelFormacion' : nivelFormacion
+                  | filtroModalidad : 'modalidad' : modalidad
+                  | filtroAreaConocimiento
+                    : 'areaConocimiento'
+                    : areaConocimiento
+                  | filtroSede : 'sede' : sede
+              "
+              class="table shadow"
+            >
               <ng-container matColumnDef="index">
                 <th mat-header-cell *matHeaderCellDef>N°</th>
                 <td

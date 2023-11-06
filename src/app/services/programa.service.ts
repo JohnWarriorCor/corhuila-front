@@ -59,6 +59,21 @@ export class ProgramaService {
       );
   }
 
+  obtenerListadoNivelesFormacion(): Observable<NivelFormacion[]> {
+    return this.http
+      .get<NivelFormacion[]>(`${this.url}/obtener-listado-niveles-formacion`, {
+        headers: this.aggAutorizacionHeader(),
+      })
+      .pipe(
+        catchError((e) => {
+          if (this.isNoAutorizado(e)) {
+            return throwError(e);
+          }
+          return throwError(e);
+        })
+      );
+  }
+
   obtenerListadoNivelFormacion(codigo: number): Observable<NivelFormacion[]> {
     return this.http
       .get<NivelFormacion[]>(
